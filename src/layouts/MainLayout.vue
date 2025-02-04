@@ -28,7 +28,7 @@
         <q-item-label
           header
         >
-          Essential Links
+         Örnek Linkler
         </q-item-label>
 
         <EssentialLink
@@ -74,12 +74,7 @@ const linksList: EssentialLinkProps[] = [
     icon: 'record_voice_over',
     link: 'https://forum.quasar.dev'
   },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
+
   {
     title: 'Facebook',
     caption: '@QuasarFramework',
