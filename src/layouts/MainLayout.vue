@@ -1,6 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <!-- Header -->
+    <q-header elevated class="header">
       <q-toolbar>
         <q-btn
           flat
@@ -10,88 +11,95 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
         <q-toolbar-title>
-          Quasar App
+          Eren Hediyelik Liste Uygulaması
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-avatar>
+          <img src="https://r.resimlink.com/-xGLkwV41O.jpg" class="krkit" />
+        </q-avatar>
+        <div>Krkit Bilişim</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <!-- Sol Menü (Drawer) -->
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered class="solrenk">
       <q-list>
-        <q-item-label
-          header
-        >
-         Örnek Linkler
-        </q-item-label>
+        <!-- Logo -->
+        <q-img>
+          <img src="https://r.resimlink.com/FBGpL.png" class="logo" />
+        </q-img>
+        <hr />
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+        <!-- Menü Öğeleri -->
+        <q-item clickable v-ripple @click="navigateTo('/login')">
+          <q-item-section avatar>
+            <q-icon name="login" />
+          </q-item-section>
+          <q-item-section>
+            Giriş Yap
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple @click="navigateTo('/prepare-list')">
+          <q-item-section avatar>
+            <q-icon name="list" />
+          </q-item-section>
+          <q-item-section>
+            Liste Hazırla
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
+    <!-- Sayfa İçeriği -->
     <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+<script>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
+export default {
+  setup() {
+    const leftDrawerOpen = ref(false)
+    const router = useRouter()
 
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    function toggleLeftDrawer() {
+      leftDrawerOpen.value = !leftDrawerOpen.value
+    }
+
+    function navigateTo(path) {
+      router.push(path)
+    }
+
+    return {
+      leftDrawerOpen,
+      toggleLeftDrawer,
+      navigateTo
+    }
   }
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<style>
+/* Header Rengi */
+.header {
+  background-color: #495867; /* Daha koyu bir mavi-gri tonu */
+  color: white; /* Yazının görünürlüğü için beyaz renk */
+}
+
+/* Sol Menü Rengi */
+.solrenk {
+  background-color: #ffe6e6; /* Soft kırmızı tonu */
+}
+
+/* Logo Stil Ayarları */
+.logo {
+  max-width: 200px;
+  margin-left: 50px;
+  margin-top: 35px;
+}
+</style>
