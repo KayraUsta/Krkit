@@ -3,7 +3,7 @@
     <q-page-container class="q-pa-md">
       <div class="table-container">
         <div class="header-section q-mb-md">
-          <q-img src="https://r.resimlink.com/FBGpL.png"alt="logo" height="130px" width="300px" class="q-mb-md" />
+          <q-img src="https://r.resimlink.com/FBGpL.png" alt="logo" height="130px" width="300px" class="q-mb-md" />
 
           <!-- Firma İsmi ve Listeyi Hazırlayan Kişi -->
           <div class="input-section">

@@ -1,127 +1,152 @@
 <template>
-  <div class="arkaplanrenk">
-    <q-page class="column items-center">
-      <div class="todo-container">
-        <h4 class="custom-h4">Yapılacaklar Listesi</h4>
-        <!-- Yeni Yapılacak Ekle -->
-        <q-input
-          v-model="newTodoContent"
-          outlined
-          placeholder="Yeni yapılacak ekle"
-          class="q-mb-md"
-        >
-          <template #append>
-            <q-btn @click="addTodo" label="Ekle" color="primary" />
-          </template>
-        </q-input>
+  <div>
+    <h1>To-Do List</h1>
 
-        <!-- Yapılacaklar Listesi -->
-        <q-list bordered>
-          <q-item v-for="todo in todos" :key="todo.id" class="q-my-sm">
-            <q-item-section>
-              <q-input
-                v-model="todo.content"
-                outlined
-                dense
-                @blur="updateTodo(todo.id, todo.content)"
-              />
-            </q-item-section>
-            <q-item-section side>
-              <q-btn
-                icon="delete"
-                color="negative"
-                flat
-                round
-                dense
-                @click="deleteTodo(todo.id)"
-              />
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </div>
-    </q-page>
+    <!-- Add New To-Do -->
+    <div>
+      <input v-model="newTask.title" placeholder="Task title" />
+      <textarea v-model="newTask.description" placeholder="Task description"></textarea>
+      <button @click="addTask">Add Task</button>
+    </div>
+
+    <!-- Task List -->
+    <ul v-if="tasks.length > 0">
+      <li v-for="task in tasks" :key="task.id">
+        <div>
+          <h3>{{ task.title }}</h3>
+          <p>{{ task.description }}</p>
+          <p>Created at: {{ task.createdAt }}</p>
+          <p>Status: {{ task.isCompleted ? 'Completed' : 'Not completed' }}</p>
+        </div>
+
+        <!-- Edit Button -->
+        <button @click="editTask(task)">Edit</button>
+
+        <!-- Delete Button -->
+        <button @click="deleteTask(task)">Delete</button>
+      </li>
+    </ul>
+
+    <!-- Update Task Form -->
+    <div v-if="editingTask" class="edit-task">
+      <h3>Edit Task</h3>
+      <input v-model="editingTask.title" placeholder="Edit task title" />
+      <textarea v-model="editingTask.description" placeholder="Edit task description"></textarea>
+      <button @click="updateTask">Save Changes</button>
+      <button @click="cancelEdit">Cancel</button>
+    </div>
+
+    <p v-else>No tasks found.</p>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import type { Todo } from 'components/models';
+<script setup>
+import { ref, onMounted } from 'vue';
+import { toDoList } from 'src/composables/toDoList'; // API fonksiyonlarını içe aktar
 
-// Yapılacaklar tipi
-const todos = ref<Todo[]>([
-  { id: 1, content: 'Liste Hazırla' },
-]);
+const {
+  getAllToDo,
+  addToDo,
+  updateToDo,
+  deleteToDo,
+} = toDoList()
 
-// Yeni yapılacak için model
-const newTodoContent = ref<string>('');
+// Reaktif veri tanımları
+const tasks = ref([]);
+const newTask = ref({
+  title: '',
+  description: ''
+});
+const editingTask = ref(null);
 
-// Yapılacak Ekleme Fonksiyonu
-function addTodo() {
-  if (!newTodoContent.value.trim()) {
-    return;
+// Veriyi yüklemek için kullanacağımız fonksiyon
+const loadTasks = async () => {
+  try {
+    const result = await getAllToDo(); // API'den tüm görevleri al
+    if (result.ok === "Success" && Array.isArray(result.data)) {
+      tasks.value = result.data; // Veriyi başarıyla aldık, tasks dizisine ata
+    } else {
+      console.error('Failed to load tasks:', result.errors || result.ok);
+    }
+  } catch (error) {
+    console.error('Failed to load tasks:', error);
   }
+};
 
-  const newTodo = {
-    id: Date.now(),
-    content: newTodoContent.value,
-  };
-
-  todos.value.push(newTodo);
-  newTodoContent.value = ''; // Girdi alanını temizle
-}
-
-// Yapılacak Silme Fonksiyonu
-function deleteTodo(id: number) {
-  todos.value = todos.value.filter((todo) => todo.id !== id);
-}
-
-// Yapılacak Güncelleme Fonksiyonu
-function updateTodo(id: number, content: string) {
-  const todo = todos.value.find((todo) => todo.id === id);
-  if (todo) {
-    todo.content = content;
+// Görev ekleme fonksiyonu
+const addTask = async () => {
+  if (newTask.value.title && newTask.value.description) {
+    try {
+      const result = await addToDo(newTask.value); // Yeni görevi ekle
+      if (result.ok === "Success") {
+        tasks.value.push({
+          ...newTask.value,
+          id: Date.now(), // Geçici bir ID ekleyelim, API ID dönecek
+          createdAt: new Date().toLocaleString(),
+          isCompleted: false,
+        });
+        newTask.value = { title: '', description: '' }; // Formu sıfırla
+      } else {
+        console.error('Failed to add task:', result.errors || result.ok);
+      }
+    } catch (error) {
+      console.error('Failed to add task:', error);
+    }
+  } else {
+    console.error('Both title and description are required.');
   }
-}
+};
+
+// Görev silme fonksiyonu
+const deleteTask = async (task) => {
+  try {
+    const result = await deleteToDo({ id: task.id }); // API'den silme isteği gönder
+    if (result.ok === "Success") {
+      tasks.value = tasks.value.filter(t => t.id !== task.id); // Silinen görev listeden çıkar
+    } else {
+      console.error('Failed to delete task:', result.errors || result.ok);
+    }
+  } catch (error) {
+    console.error('Failed to delete task:', error);
+  }
+};
+
+// Görev düzenleme fonksiyonu
+const editTask = (task) => {
+  editingTask.value = { ...task }; // Düzenlenecek görevi al
+};
+
+// Güncelleme işlemi
+const updateTask = async () => {
+  try {
+    const result = await updateToDo(editingTask.value); // API'den güncelleme isteği gönder
+    if (result.ok === "Success") {
+      const index = tasks.value.findIndex(t => t.id === editingTask.value.id);
+      tasks.value[index] = { ...editingTask.value }; // Görev listesinde güncellemeyi yap
+      editingTask.value = null; // Düzenleme modunu kapat
+    } else {
+      console.error('Failed to update task:', result.errors || result.ok);
+    }
+  } catch (error) {
+    console.error('Failed to update task:', error);
+  }
+};
+
+// Düzenleme iptal işlemi
+const cancelEdit = () => {
+  editingTask.value = null; // Düzenleme modunu kapat
+};
+
+// Sayfa yüklendiğinde görevleri al
+onMounted(loadTasks);
 </script>
 
 <style scoped>
-/* Genel arka plan rengi */
-.arkaplanrenk {
-  background-color: #f8f4f4; /* Soft bir pastel pembe ton */
-  min-height: 100vh;
-  padding: 2rem 0;
-}
-
-/* Yapılacaklar konteyneri */
-.todo-container {
-  max-width: 750px;
-  width: 100%;
-  margin-top: 2rem;
-  text-align: center;
-  padding: 2rem;
-  background-color: #ffffff; /* Beyaz kart tasarımı */
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
-}
-
-/* h4 tasarımı */
-.custom-h4 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: transparent;
-  background: linear-gradient(90deg, #000000, #000000);
-  -webkit-background-clip: text;
-  background-clip: text;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  margin-bottom: 1.5rem;
-}
-
-/* Form ve liste boşlukları */
-.q-mb-md {
-  margin-bottom: 1rem;
-}
-
-.q-my-sm {
-  margin: 0.5rem 0;
+/* Stil ekleyebilirsiniz */
+.edit-task {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 </style>

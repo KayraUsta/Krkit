@@ -47,6 +47,7 @@
 import { ref } from 'vue';
 import type { Todo } from 'components/models';
 
+
 // Yapılacaklar tipi
 const todos = ref<Todo[]>([
   { id: 1, content: 'Liste Hazırla' },
