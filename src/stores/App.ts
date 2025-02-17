@@ -7,8 +7,8 @@ export const App = () => {
       version: "v0.1.3",
       // LOCAL //
 
-      apiUrl: 'http://localhost:5137/api',
-      uploads: 'http://localhost:5137/',
+      apiUrl: 'https://localhost:7213/api',
+      uploads: 'https://localhost:7213/',
       // LOCAL //
 
       // TEST //

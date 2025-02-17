@@ -8,9 +8,11 @@ export function toDoList() {
   // Tüm görevleri al
   const getAllToDo = async () => {
     try {
-      let response = await api.get('/api/ToDo');
+      let response = await api.get('/ToDo');
+
+      // console.log("response", response);
       if (response.status === 200) {
-        return response.data; // Backend'den dönen tüm görev verilerini döndürüyoruz
+        return response; // Backend'den dönen tüm görev verilerini döndürüyoruz
       }
     } catch (error: any) {
       console.log("Hata:", error);
@@ -35,9 +37,9 @@ export function toDoList() {
   };
 
   // Belirli bir görevi güncelle
-  const updateToDo = async (id: number, data: any) => {
+  const updateToDo = async (data: any) => {
     try {
-      let response = await api.put(`/api/ToDo/update/${id}`, data); // Endpoint'teki id'yi dinamik hale getiriyoruz
+      let response = await api.put(`/ToDo/update`, data); // Endpoint'teki id'yi dinamik hale getiriyoruz
       if (response.status === 200) {
         return { ok: "Success" };
       }
@@ -61,7 +63,7 @@ export function toDoList() {
   // Yeni görev ekle
   const addToDo = async (data: any) => {
     try {
-      let response = await api.post('/api/ToDo/add', data);
+      let response = await api.post('/ToDo/add', data);
       if (response.status === 201) { // Backend'den dönen yanıtın `Created` olması bekleniyor (201)
         return { ok: "Success" };
       }
@@ -81,10 +83,10 @@ export function toDoList() {
   };
 
   // Görev sil
-  const deleteToDo = async (id: number) => {
+  const deleteToDo = async (data: any) => {
     try {
-      let response = await api.delete(`/api/ToDo/delete/${id}`); // Endpoint'teki id'yi dinamik hale getiriyoruz
-      if (response.status === 204) { // Silme işlemi başarılıysa (No Content, 204)
+      let response = await api.delete(`/ToDo/delete`, {data}); // Endpoint'teki id'yi dinamik hale getiriyoruz
+      if (response.status === 200) { // Silme işlemi başarılıysa (No Content, 204)
         return { ok: "Success" };
       } else {
         return { error: "Beklenmeyen durum kodu" };

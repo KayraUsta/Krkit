@@ -7,6 +7,7 @@
       <input v-model="newTask.title" placeholder="Task title" />
       <textarea v-model="newTask.description" placeholder="Task description"></textarea>
       <button @click="addTask">Add Task</button>
+
     </div>
 
     <!-- Task List -->
@@ -23,7 +24,7 @@
         <button @click="editTask(task)">Edit</button>
 
         <!-- Delete Button -->
-        <button @click="deleteTask(task)">Delete</button>
+        <button @click="deleteTask(task.id)">Delete</button>
       </li>
     </ul>
 
@@ -54,16 +55,20 @@ const {
 // Reaktif veri tanımları
 const tasks = ref([]);
 const newTask = ref({
-  title: '',
-  description: ''
 });
 const editingTask = ref(null);
+const deletingTask = ref(null);
 
 // Veriyi yüklemek için kullanacağımız fonksiyon
 const loadTasks = async () => {
   try {
     const result = await getAllToDo(); // API'den tüm görevleri al
-    if (result.ok === "Success" && Array.isArray(result.data)) {
+
+console.log("easdasdas",result)
+console.log("denesucce",result.data)
+
+
+    if (result.status === 200 && Array.isArray(result.data)) {
       tasks.value = result.data; // Veriyi başarıyla aldık, tasks dizisine ata
     } else {
       console.error('Failed to load tasks:', result.errors || result.ok);
@@ -81,11 +86,13 @@ const addTask = async () => {
       if (result.ok === "Success") {
         tasks.value.push({
           ...newTask.value,
-          id: Date.now(), // Geçici bir ID ekleyelim, API ID dönecek
+          id:result.id, // Geçici bir ID ekleyelim, API ID dönecek
           createdAt: new Date().toLocaleString(),
           isCompleted: false,
         });
         newTask.value = { title: '', description: '' }; // Formu sıfırla
+
+loadTasks(); // Yeni görev eklendi, tüm görevleri tekrar yükle
       } else {
         console.error('Failed to add task:', result.errors || result.ok);
       }
@@ -100,9 +107,11 @@ const addTask = async () => {
 // Görev silme fonksiyonu
 const deleteTask = async (task) => {
   try {
-    const result = await deleteToDo({ id: task.id }); // API'den silme isteği gönder
+    const result = await deleteToDo( {id:task} ); // API'den silme isteği gönder
+
+    console.log("2",result)
     if (result.ok === "Success") {
-      tasks.value = tasks.value.filter(t => t.id !== task.id); // Silinen görev listeden çıkar
+      tasks.value = tasks.value.filter(t => t.id !== task); // Silinen görev listeden çıkar
     } else {
       console.error('Failed to delete task:', result.errors || result.ok);
     }
