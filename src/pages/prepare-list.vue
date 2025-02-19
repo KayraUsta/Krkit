@@ -28,35 +28,34 @@
 
         <!-- Tablo -->
         <q-table
-  :rows="rows"
-  :columns="columns"
-  :rows-per-page="rows.length"
-  class="q-mb-md"
->
-  <template v-slot:body="props">
-    <q-tr :props="props">
-      <q-td v-for="col in props.cols" :key="col.name">
-        <q-input
-          v-if="col.name !== 'toplamFiyat'"
-          v-model="props.row[col.name]"
-          :placeholder="col.label"
-          dense
-          filled
-          @input="calculateTotal(props.row)"
-        />
-        <q-input
-          v-else
-          v-model="props.row[col.name]"
-          dense
-          filled
-          readonly
-          class="text-right"
-        />
-      </q-td>
-    </q-tr>
-  </template>
-</q-table>
-
+          :rows="rows"
+          :columns="columns"
+          :rows-per-page="rows.length"
+          class="q-mb-md"
+        >
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td v-for="col in props.cols" :key="col.name">
+                <q-input
+                  v-if="col.name !== 'toplamFiyat'"
+                  v-model="props.row[col.name]"
+                  :placeholder="col.label"
+                  dense
+                  filled
+                  @input="calculateTotal(props.row)"
+                />
+                <q-input
+                  v-else
+                  v-model="props.row[col.name]"
+                  dense
+                  filled
+                  readonly
+                  class="text-right"
+                />
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
 
         <!-- Butonlar -->
         <div class="button-container">
@@ -70,78 +69,81 @@
   </q-layout>
 </template>
 
-<script>
-import { ref } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
+import { product } from 'src/composables/product'; // API fonksiyonlarını içe aktar
 
-export default {
-  setup() {
-    const companyName = ref("");
-    const preparedBy = ref("");
-    const rows = ref([
-      {
-        barkodNo: "",
-        aciklama: "",
-        fiyat: "",
-        adet: "",
-        toplamFiyat: ""
-      }
-    ]);
+const {
+  getAllProduct,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} = product();
 
-    const columns = [
-      { name: "barkodNo", label: "Barkod Numarası", align: "left" },
-      { name: "aciklama", label: "Açıklama", align: "left" },
-      { name: "fiyat", label: "Fiyat", align: "left" },
-      { name: "adet", label: "Adet", align: "left" },
-      { name: "toplamFiyat", label: "Toplam Fiyat", align: "right" }
-    ];
+const companyName = ref("");
+const preparedBy = ref("");
+const rows = ref([]);
 
-    const calculateTotal = (row) => {
-      const price = parseFloat(row.fiyat);
-      const quantity = parseInt(row.adet);
-      if (price && quantity) {
-        row.toplamFiyat = (price * quantity).toFixed(2);
-      } else {
-        row.toplamFiyat = "";
-      }
-    };
+const columns = [
+  { name: "barkodNo", label: "Barkod Numarası", align: "left" },
+  { name: "aciklama", label: "Açıklama", align: "left" },
+  { name: "fiyat", label: "Fiyat", align: "left" },
+  { name: "adet", label: "Adet", align: "left" },
+  { name: "toplamFiyat", label: "Toplam Fiyat", align: "right" }
+];
 
-    const addRow = () => {
-      rows.value.push({
-        barkodNo: "",
-        aciklama: "",
-        fiyat: "",
-        adet: "",
-        toplamFiyat: ""
-      });
-    };
-
-    const deleteRow = () => {
-      if (rows.value.length > 1) {
-        rows.value.pop();
-      }
-    };
-
-    const printTable = () => {
-      window.print();
-    };
-
-    const goBack = () => {
-      window.history.back();
-    };
-
-    return {
-      companyName,
-      preparedBy,
-      rows,
-      columns,
-      addRow,
-      deleteRow,
-      calculateTotal,
-      printTable,
-      goBack
-    };
+const calculateTotal = (row) => {
+  const price = parseFloat(row.fiyat);
+  const quantity = parseInt(row.adet);
+  if (price && quantity) {
+    row.toplamFiyat = (price * quantity).toFixed(2);
+  } else {
+    row.toplamFiyat = "";
   }
 };
+
+const addRow = () => {
+  rows.value.push({
+    barkodNo: "",
+    aciklama: "",
+    fiyat: "",
+    adet: "",
+    toplamFiyat: ""
+  });
+};
+
+const deleteRow = () => {
+  if (rows.value.length > 1) {
+    rows.value.pop();
+  }
+};
+
+const printTable = () => {
+  window.print();
+};
+
+const goBack = () => {
+  window.history.back();
+};
+
+const fetchProducts = async () => {
+  try {
+    const products = await getAllProduct();
+    rows.value = products.map(product => ({
+      barkodNo: product.barkodNo,
+      aciklama: product.aciklama,
+      fiyat: product.fiyat,
+      adet: product.adet,
+      toplamFiyat: (product.fiyat * product.adet).toFixed(2)
+    }));
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
+
+onMounted(() => {
+  fetchProducts();
+});
 </script>
 
 <style scoped>
