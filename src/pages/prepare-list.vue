@@ -105,6 +105,20 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
+
+      <!-- Kamera Kapat Butonu -->
+      <q-dialog v-model="isCameraOpen" persistent>
+        <q-card>
+          <q-card-section class="row items-center">
+            <q-btn
+              icon="close"
+              color="negative"
+              @click="closeCamera"
+              label="Kamerayı Kapat"
+            />
+          </q-card-section>
+        </q-card>
+      </q-dialog>
     </q-page-container>
   </q-layout>
 </template>
@@ -113,13 +127,16 @@
 import { ref, onMounted } from "vue";
 import { product } from 'src/composables/product';
 import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
+import { useQuasar } from 'quasar';
 
+const $q = useQuasar();
 const { getAllProduct, addProduct } = product();
 
 const companyName = ref("");
 const preparedBy = ref("");
 const rows = ref([]);
 const isAddModalOpen = ref(false);
+const isCameraOpen = ref(false); // Kamera açık/kapalı durumu
 
 const newProduct = ref({
   companyName: "",
@@ -225,19 +242,56 @@ const fetchProducts = async () => {
 const scanBarcode = async (row) => {
   try {
     const permission = await BarcodeScanner.checkPermission({ force: true });
+
     if (!permission.granted) {
-      console.error("Kamera izni verilmedi.");
+      $q.dialog({
+        title: 'Kamera İzni Gerekli',
+        message: 'Barkod taramak için kameraya erişim izni vermelisiniz.',
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        await BarcodeScanner.checkPermission({ force: true });
+      });
       return;
     }
+
+    // Kamera açıldığını belirt
+    isCameraOpen.value = true;
+
+    // Kamerayı başlat
+    await BarcodeScanner.startScan();
 
     const result = await BarcodeScanner.startScan();
     if (result.hasContent) {
       row.barkodNo = result.content;
+      $q.notify({
+        type: 'positive',
+        message: 'Barkod başarıyla okundu.'
+      });
+
+      // Barkod okunduğunda kamerayı kapat
+      closeCamera();
     } else {
-      console.error("Barkod okunamadı.");
+      $q.notify({
+        type: 'negative',
+        message: 'Barkod okunamadı.'
+      });
     }
   } catch (error) {
     console.error("Barkod tarama hatası:", error);
+    $q.notify({
+      type: 'negative',
+      message: 'Barkod tarama sırasında bir hata oluştu.'
+    });
+  }
+};
+
+const closeCamera = async () => {
+  try {
+    await BarcodeScanner.stopScan();
+    isCameraOpen.value = false; // Kamera kapalı durumu
+  } catch (error) {
+    console.error("Kamera kapatma hatası:", error);
   }
 };
 
