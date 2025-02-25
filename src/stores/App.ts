@@ -18,8 +18,8 @@ export const App = () => {
 
       // LIVE //
 
-    // apiUrl: 'https://api.arge360.com.tr/api',
-    // uploads: 'https://api.arge360.com.tr/',
+    // apiUrl: 'https://api.sitrancelik.com.tr/api',
+    // uploads: 'https://api.sitrancelik.com.tr/',
       // LIVE //
     }
   )
