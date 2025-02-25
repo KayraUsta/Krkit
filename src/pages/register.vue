@@ -24,7 +24,7 @@ const router = useRouter();
 
 const register = async () => {
   try {
-    const response = await axios.post('https://localhost:7213/api/auth/register', {
+    const response = await axios.post('https://testapi.sitrancelik.com/api/auth/register', {
       username: username.value,
       password: password.value,
     });

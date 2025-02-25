@@ -22,6 +22,21 @@ const api = axios.create({
   baseURL: project.value.apiUrl
 })
 
+
+// Request interceptor: Her isteğe otomatik olarak token ekler
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token'); // LocalStorage'dan token'ı al
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Header'a ekle
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 

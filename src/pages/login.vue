@@ -17,6 +17,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { ClientRequest } from 'node:http';
 
 const username = ref('');
 const password = ref('');
@@ -24,11 +25,12 @@ const router = useRouter();
 
 const login = async () => {
   try {
-    const response = await axios.post('https://localhost:7213/api/auth/login', {
+    const response = await axios.post('https://testapi.sitrancelik.com/api/auth/login', {
       username: username.value,
       password: password.value,
     });
-    localStorage.setItem('token', response.data.Token);
+
+    localStorage.setItem('token', response.data.token);
     router.push('/prepare-list');
   } catch (error) {
     console.error('Giriş başarısız', error);
