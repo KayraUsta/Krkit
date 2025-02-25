@@ -31,7 +31,7 @@ const login = async () => {
     });
 
     localStorage.setItem('token', response.data.token);
-    router.push('/prepare-list');
+    router.push('/toDoList');
   } catch (error) {
     console.error('Giriş başarısız', error);
   }

@@ -6,7 +6,6 @@
           <q-img src="https://r.resimlink.com/FBGpL.png" alt="logo" height="130px" width="300px" class="q-mb-md" />
 
           <div class="input-section">
-            <!-- Firma İsmi Giriş Alanı -->
             <q-input
               filled
               v-model="companyName"
@@ -34,6 +33,16 @@
                 />
                 <q-input v-else v-model="props.row[col.name]" dense filled readonly class="text-right" />
               </q-td>
+              <q-td>
+                <q-btn
+                  v-if="props.cols.some(col => col.name === 'barkodNo')"
+                  icon="camera_alt"
+                  @click="scanBarcode(props.row)"
+                  dense
+                  flat
+                  color="primary"
+                />
+              </q-td>
             </q-tr>
           </template>
         </q-table>
@@ -54,7 +63,6 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <!-- Firma İsmi Alanı -->
             <q-input
               filled
               v-model="newProduct.companyName"
@@ -63,17 +71,6 @@
               dense
               :rules="[(val) => !!val || 'Firma ismi gereklidir.']"
             />
-            <q-input
-  filled
-  v-model="newProduct.barcode"
-  label="Barkod Numarası"
-  class="q-mb-sm"
-  dense
-  :rules="[(val) => !!val || 'Barkod numarası gereklidir.']"
-  @click="scanBarcode(newProduct)"
-  readonly
-/>
-
             <q-input
               filled
               v-model="newProduct.description"
@@ -117,7 +114,6 @@ import { ref, onMounted } from "vue";
 import { product } from 'src/composables/product';
 import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
 
-
 const { getAllProduct, addProduct } = product();
 
 const companyName = ref("");
@@ -157,7 +153,6 @@ const showAddModal = () => {
 
 const addRow = async () => {
   try {
-    // Kontrol edilen veriler
     if (!newProduct.value.companyName || !newProduct.value.barcode || !newProduct.value.description || newProduct.value.price <= 0 || newProduct.value.quantity <= 0) {
       console.log("Eksik ya da hatalı veri girildi.");
       return;
@@ -227,21 +222,17 @@ const fetchProducts = async () => {
   }
 };
 
-
-// 📌 Barkod Tarayıcı Fonksiyonu
 const scanBarcode = async (row) => {
   try {
-    // Kamera erişim izni iste
     const permission = await BarcodeScanner.checkPermission({ force: true });
     if (!permission.granted) {
       console.error("Kamera izni verilmedi.");
       return;
     }
 
-    // Kamera aç ve barkodu tara
     const result = await BarcodeScanner.startScan();
     if (result.hasContent) {
-      row.barkodNo = result.content; // Barkod numarasını ilgili satıra yaz
+      row.barkodNo = result.content;
     } else {
       console.error("Barkod okunamadı.");
     }
@@ -249,7 +240,6 @@ const scanBarcode = async (row) => {
     console.error("Barkod tarama hatası:", error);
   }
 };
-
 
 onMounted(() => {
   fetchProducts();

@@ -25,7 +25,7 @@
         <hr />
 
         <!-- Menü Öğeleri -->
-        <q-item clickable v-ripple @click="navigateTo('/login')">
+        <q-item clickable v-ripple @click="navigateTo('/')">
           <q-item-section avatar>
             <q-icon name="login" />
           </q-item-section>
