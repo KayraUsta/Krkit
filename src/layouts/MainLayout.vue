@@ -31,14 +31,7 @@
         <hr />
 
         <!-- Menü Öğeleri -->
-        <q-item clickable v-ripple @click="navigateTo('/login')">
-          <q-item-section avatar>
-            <q-icon name="login" />
-          </q-item-section>
-          <q-item-section>
-            Giriş Yap
-          </q-item-section>
-        </q-item>
+
 
         <q-item clickable v-ripple @click="navigateTo('/prepare-list')">
           <q-item-section avatar>

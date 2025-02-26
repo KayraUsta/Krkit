@@ -1,4 +1,5 @@
 <template>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&amp;display=swap" rel="stylesheet">
   <div class="login-container">
     <div class="login-card">
       <img src="https://r.resimlink.com/FBGpL.png" alt="Logo" class="logo" />
@@ -8,7 +9,7 @@
         <q-input dense outlined type="password" v-model="password" label="Şifre" class="input-field" />
         <q-btn unelevated color="primary" type="submit" class="login-button">Giriş Yap</q-btn>
       </form>
-      <p class="register-text">Hesabınız yok mu? <router-link to="/register">Kayıt Olun</router-link></p>
+      <p class="register-text">Hesabınız yok ise yöneticinize başvurun</p>
     </div>
   </div>
 </template>
@@ -16,24 +17,63 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 import axios from 'axios';
 import { ClientRequest } from 'node:http';
 
 const username = ref('');
 const password = ref('');
 const router = useRouter();
+const $q = useQuasar();
 
 const login = async () => {
+  if (!username.value || !password.value) {
+    $q.notify({
+      message: 'Lütfen kullanıcı adı ve şifrenizi girin!',
+      color: 'orange',
+      position: 'top',
+      timeout: 2500,
+    });
+    return;
+  }
+
   try {
     const response = await axios.post('https://testapi.sitrancelik.com/api/auth/login', {
       username: username.value,
       password: password.value,
     });
 
-    localStorage.setItem('token', response.data.token);
-    router.push('/toDoList');
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+
+      $q.notify({
+        message: 'Giriş başarılı, anasayfaya yönlendiriliyorsunuz...',
+        color: 'green',
+        position: 'top',
+        timeout: 2000,
+      });
+
+      setTimeout(() => {
+        router.push('/toDoList');
+      }, 2000);
+    } else {
+      throw new Error('Beklenmedik bir hata oluştu.');
+    }
   } catch (error) {
     console.error('Giriş başarısız', error);
+
+    let errorMessage = 'Giriş başarısız, lütfen tekrar deneyiniz.';
+
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage = error.response.data.message;
+    }
+
+    $q.notify({
+      message: errorMessage,
+      color: 'red',
+      position: 'top',
+      timeout: 3000,
+    });
   }
 };
 </script>
@@ -76,10 +116,11 @@ const login = async () => {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
+  
 }
 
 .register-text {
   margin-top: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
 }
 </style>

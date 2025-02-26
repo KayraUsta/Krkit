@@ -16,22 +16,75 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 import axios from 'axios';
 
 const username = ref('');
 const password = ref('');
 const router = useRouter();
+const $q = useQuasar();
+
+// Şifre validasyon fonksiyonu (Büyük harf, küçük harf ve rakam zorunlu)
+const validatePassword = (password: string) => {
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+  return passwordRegex.test(password);
+};
 
 const register = async () => {
+  // Kullanıcı adı ve şifre kontrolü
+  if (!username.value || !password.value) {
+    $q.notify({
+      message: 'Lütfen kullanıcı adı ve şifrenizi girin!',
+      color: 'orange',
+      position: 'top',
+      timeout: 2500,
+    });
+    return;
+  }
+
+  // Şifre validasyonu
+  if (!validatePassword(password.value)) {
+    $q.notify({
+      message: 'Şifreniz en az bir büyük harf, bir küçük harf ve bir rakam içermelidir.',
+      color: 'red',
+      position: 'top',
+      timeout: 2500,
+    });
+    return;
+  }
+
   try {
+    // API ile kayıt işlemi
     const response = await axios.post('https://testapi.sitrancelik.com/api/auth/register', {
       username: username.value,
       password: password.value,
     });
-    alert(response.data);
+
+    // Kayıt başarılı mesajı
+    $q.notify({
+      message: 'Kayıt başarılı! Giriş yapabilirsiniz.',
+      color: 'green',
+      position: 'top',
+      timeout: 2500,
+    });
+
+    // Kayıt başarılıysa login sayfasına yönlendirme
     router.push('/login');
   } catch (error) {
     console.error('Kayıt başarısız', error);
+
+    let errorMessage = 'Kayıt başarısız, lütfen tekrar deneyiniz.';
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage = error.response.data.message;
+    }
+
+    // Hata mesajı
+    $q.notify({
+      message: errorMessage,
+      color: 'red',
+      position: 'top',
+      timeout: 3000,
+    });
   }
 };
 </script>
@@ -56,7 +109,6 @@ const register = async () => {
 
 .logo {
   width: 280px;
-
 }
 
 .login-title {

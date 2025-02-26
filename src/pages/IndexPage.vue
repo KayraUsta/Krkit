@@ -2,46 +2,44 @@
   <div class="todo-container">
     <h1 class="title">Yapılacaklar Listesi</h1>
 
-    <!-- Add New To-Do -->
+    <!-- Add New To-Do (Minimalist Design) -->
     <div class="form-container">
-      <input v-model="newTask.title" class="input" placeholder="Görev başlığı" />
-      <textarea v-model="newTask.description" class="textarea" placeholder="Görev açıklaması"></textarea>
-      <button @click="addTask" class="btn-add">Ekle</button>
+      <input v-model="newTask.title" class="input minimal-input" placeholder="Görev başlığı" />
+      <textarea v-model="newTask.description" class="textarea minimal-textarea" placeholder="Görev açıklaması"></textarea>
+      <button @click="addTask" class="btn-add minimal-btn btn-blue">Ekle</button>
     </div>
 
-
-    <!-- Task List -->
+    <!-- Task List (Minimalist Card Design) -->
     <ul v-if="tasks.length > 0" class="task-list">
-      <li v-for="task in tasks" :key="task.id" class="task-card">
+      <li v-for="task in tasks" :key="task.id" class="task-card minimal-card">
         <div class="task-info">
           <h3 class="task-title">{{ task.title }}</h3>
           <p class="task-description">{{ task.description }}</p>
-          <p class="task-meta">Oluşturulma tarihi: {{ task.createdAt }}</p>
-          <p class="task-status">Durum: {{ task.isCompleted ? 'Tamamlandı' : 'Tamamlanmadı' }}</p>
         </div>
 
         <div class="task-actions">
-          <!-- Edit Button -->
-          <button @click="editTask(task)" class="btn-edit">Düzenle</button>
-          <!-- Delete Button -->
-          <button @click="deleteTask(task.id)" class="btn-delete">Sil</button>
+          <button @click="editTask(task)" class="btn-edit minimal-btn btn-yellow">Düzenle</button>
+          <button @click="deleteTask(task.id)" class="btn-delete minimal-btn btn-red">Sil</button>
         </div>
       </li>
     </ul>
 
     <p v-else>Görev Bulunamadı</p>
 
-    <!-- Update Task Form -->
-    <div v-if="editingTask" class="edit-task">
-      <h3>Görevi Değiştir</h3>
-      <input v-model="editingTask.title" class="input" placeholder="Görev başlığını değiştir" />
-      <textarea v-model="editingTask.description" class="textarea" placeholder="Görev açıklamasını değiştir"></textarea>
-      <button @click="updateTask" class="btn-update">Değişiklikleri Kaydet</button>
-      <button @click="cancelEdit" class="btn-cancel">İptal Et</button>
+    <!-- Update Task Modal (Modern Pop-up Design) -->
+    <div v-if="editingTask" class="edit-task-modal">
+      <div class="modal-content">
+        <h3>Görevi Düzenle</h3>
+        <input v-model="editingTask.title" class="input modal-input" placeholder="Başlık" />
+        <textarea v-model="editingTask.description" class="textarea modal-textarea" placeholder="Açıklama"></textarea>
+        <div class="modal-actions">
+          <button @click="updateTask" class="btn-update modal-btn btn-green">Kaydet</button>
+          <button @click="cancelEdit" class="btn-cancel modal-btn btn-gray">İptal</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -56,8 +54,7 @@ const {
 
 // Reaktif veri tanımları
 const tasks = ref([]);
-const newTask = ref({
-});
+const newTask = ref({});
 const editingTask = ref(null);
 const isLoading = ref(false);
 
@@ -139,153 +136,147 @@ onMounted(loadTasks);
 </script>
 
 <style scoped>
-/* Yükleniyor göstergesi */
-.loader {
-  text-align: center;
-  font-size: 1.5rem;
-  color: #333;
-  padding: 20px;
+.title{
+  font-size:40px;
 }
-
+.task-title{
+  font-size:20px;
+  font-weight:bold;
+}
+/* Container */
 .todo-container {
-  max-width: 800px;
-  margin: 0 auto;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  margin: 0 200px; /* Sağ ve soldan boşluk eklendi */
+  margin-top:-50px;
 }
 
-.title {
-  font-size: 2rem;
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+/* Minimal Tasarım */
+.minimal-input, .minimal-textarea, .modal-input, .modal-textarea {
+  padding: 8px;
+  font-size: 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
 }
 
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.input, .textarea {
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  transition: border-color 0.3s;
-}
-
-.input:focus, .textarea:focus {
+.minimal-input:focus, .minimal-textarea:focus, .modal-input:focus, .modal-textarea:focus {
   border-color: #5beb63;
 }
 
-.textarea {
-  height: 100px;
-}
-
-.btn-add, .btn-edit, .btn-delete, .btn-update, .btn-cancel {
-  padding: 10px 15px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-add {
+/* Minimal Buton Tasarımı */
+.minimal-btn {
   background-color: #5beb63;
   color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
 }
 
-.btn-add:hover {
-  background-color: #4db14a;
+.minimal-btn:hover {
+  opacity: 0.85;
 }
 
-.btn-edit {
+/* Farklı Buton Renkleri */
+.btn-blue {
+  background-color: #007bff;
+}
+
+.btn-blue:hover {
+  background-color: #0056b3;
+}
+
+.btn-yellow {
   background-color: #ffc107;
-  color: white;
 }
 
-.btn-edit:hover {
+.btn-yellow:hover {
   background-color: #e0a800;
 }
 
-.btn-delete {
+.btn-red {
   background-color: #dc3545;
-  color: white;
+  margin-left:15px;
 }
 
-.btn-delete:hover {
+.btn-red:hover {
   background-color: #c82333;
 }
 
-.btn-update {
-  background-color: #007bff;
-  color: white;
+.btn-green {
+  background-color: #28a745;
 }
 
-.btn-update:hover {
-  background-color: #0069d9;
+.btn-green:hover {
+  background-color: #218838;
+  color:white;
 }
 
-.btn-cancel {
+.btn-gray {
   background-color: #6c757d;
-  color: white;
+    color:white;
 }
 
-.btn-cancel:hover {
+.btn-gray:hover {
   background-color: #5a6268;
 }
 
-.task-list {
-  list-style: none;
-  padding: 0;
-}
-
-.task-card {
-  border: 1px solid #ccc;
-  padding: 20px;
-  margin-bottom: 15px;
+/* Görev Kartı */
+.minimal-card {
+  background-color: #f8f9fa;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  padding: 12px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  margin-bottom: 12px;
 }
 
-.task-card:hover {
-  transform: scale(1.02);
-}
-
-.task-info {
-  margin-bottom: 15px;
-}
-
-.task-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.task-description {
-  font-size: 1rem;
-  color: #555;
-}
-
-.task-meta, .task-status {
-  font-size: 0.875rem;
-  color: #777;
-}
-
-.task-actions {
+/* Modal Pop-up Tasarımı */
+.edit-task-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.edit-task {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f9f9f9;
+.modal-content {
+  background-color: white;
+  padding: 30px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  max-width: 450px; /* Modal boyutunu büyüttüm */
+  width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-btn {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>
