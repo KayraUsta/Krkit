@@ -4,25 +4,24 @@
 
     <!-- Add New To-Do (Minimalist Design) -->
     <div class="form-container">
-      <input v-model="newTask.title" class="input minimal-input" placeholder="Görev başlığı" />
-      <textarea v-model="newTask.description" class="textarea minimal-textarea" placeholder="Görev açıklaması"></textarea>
-      <button @click="addTask" class="btn-add minimal-btn btn-blue">Ekle</button>
+      <q-input v-model="newTask.title" class="minimal-input" placeholder="Görev başlığı" />
+      <q-input v-model="newTask.description" class="minimal-textarea" type="textarea" placeholder="Görev açıklaması" />
+      <q-btn @click="addTask" class="btn-add minimal-btn btn-blue" label="Ekle" />
     </div>
 
     <!-- Task List (Minimalist Card Design) -->
-    <ul v-if="tasks.length > 0" class="task-list">
-      <li v-for="task in tasks" :key="task.id" class="task-card minimal-card">
-        <div class="task-info">
+    <q-list v-if="tasks.length > 0" class="task-list">
+      <q-item v-for="task in tasks" :key="task.id" class="task-card minimal-card">
+        <q-item-section>
           <h3 class="task-title">{{ task.title }}</h3>
           <p class="task-description">{{ task.description }}</p>
-        </div>
-
-        <div class="task-actions">
-          <button @click="editTask(task)" class="btn-edit minimal-btn btn-yellow">Düzenle</button>
-          <button @click="deleteTask(task.id)" class="btn-delete minimal-btn btn-red">Sil</button>
-        </div>
-      </li>
-    </ul>
+        </q-item-section>
+        <q-item-section side>
+          <q-btn @click="editTask(task)" class="btn-edit minimal-btn btn-yellow" label="Düzenle" />
+          <q-btn @click="deleteTask(task.id)" class="btn-delete minimal-btn btn-red" label="Sil" />
+        </q-item-section>
+      </q-item>
+    </q-list>
 
     <p v-else>Görev Bulunamadı</p>
 
@@ -30,11 +29,11 @@
     <div v-if="editingTask" class="edit-task-modal">
       <div class="modal-content">
         <h3>Görevi Düzenle</h3>
-        <input v-model="editingTask.title" class="input modal-input" placeholder="Başlık" />
-        <textarea v-model="editingTask.description" class="textarea modal-textarea" placeholder="Açıklama"></textarea>
+        <q-input v-model="editingTask.title" class="input modal-input" placeholder="Başlık" />
+        <q-input v-model="editingTask.description" class="textarea modal-textarea" type="textarea" placeholder="Açıklama" />
         <div class="modal-actions">
-          <button @click="updateTask" class="btn-update modal-btn btn-green">Kaydet</button>
-          <button @click="cancelEdit" class="btn-cancel modal-btn btn-gray">İptal</button>
+          <q-btn @click="updateTask" class="btn-update modal-btn btn-green" label="Kaydet" />
+          <q-btn @click="cancelEdit" class="btn-cancel modal-btn btn-gray" label="İptal" />
         </div>
       </div>
     </div>
@@ -136,27 +135,31 @@ onMounted(loadTasks);
 </script>
 
 <style scoped>
-.title{
-  font-size:40px;
+.title {
+  font-size: 40px;
+  margin-left: 25%;
 }
-.task-title{
-  font-size:20px;
-  font-weight:bold;
-}
+
 /* Container */
 .todo-container {
   padding: 20px;
-  margin: 0 200px; /* Sağ ve soldan boşluk eklendi */
-  margin-top:-50px;
+  margin: 0 auto;
+  max-width: 1000px; /* Maksimum genişlik */
+
+}
+.form-container{  
+margin-left: 25%;
+}
+.task-list {
+  padding-left: 0;
 }
 
-/* Minimal Tasarım */
 .minimal-input, .minimal-textarea, .modal-input, .modal-textarea {
-  padding: 8px;
+  padding: 1px;
   font-size: 0.85rem;
   border: 1px solid #ddd;
   border-radius: 6px;
-  width: 100%;
+  width: 60%;
   margin-bottom: 12px;
   transition: all 0.3s ease;
 }
@@ -165,7 +168,7 @@ onMounted(loadTasks);
   border-color: #5beb63;
 }
 
-/* Minimal Buton Tasarımı */
+/* Buton Tasarımları */
 .minimal-btn {
   background-color: #5beb63;
   color: white;
@@ -181,48 +184,24 @@ onMounted(loadTasks);
   opacity: 0.85;
 }
 
-/* Farklı Buton Renkleri */
 .btn-blue {
   background-color: #007bff;
-}
-
-.btn-blue:hover {
-  background-color: #0056b3;
 }
 
 .btn-yellow {
   background-color: #ffc107;
 }
 
-.btn-yellow:hover {
-  background-color: #e0a800;
-}
-
 .btn-red {
   background-color: #dc3545;
-  margin-left:15px;
-}
-
-.btn-red:hover {
-  background-color: #c82333;
 }
 
 .btn-green {
   background-color: #28a745;
 }
 
-.btn-green:hover {
-  background-color: #218838;
-  color:white;
-}
-
 .btn-gray {
   background-color: #6c757d;
-    color:white;
-}
-
-.btn-gray:hover {
-  background-color: #5a6268;
 }
 
 /* Görev Kartı */
@@ -253,7 +232,7 @@ onMounted(loadTasks);
   background-color: white;
   padding: 30px;
   border-radius: 8px;
-  max-width: 450px; /* Modal boyutunu büyüttüm */
+  max-width: 450px;
   width: 90%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -263,20 +242,27 @@ onMounted(loadTasks);
   justify-content: space-between;
 }
 
-.modal-btn {
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .todo-container {
+    padding: 10px;
+  }
+
+  .task-card {
+    padding: 10px;
+  }
+
+  .modal-content {
+    padding: 20px;
   }
 }
 </style>
