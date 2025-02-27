@@ -106,6 +106,8 @@
         </q-card>
       </q-dialog>
 
+
+
       <!-- Kamera Kapat Butonu -->
       <q-dialog v-model="isCameraOpen" persistent>
         <q-card>
@@ -119,6 +121,28 @@
           </q-card-section>
         </q-card>
       </q-dialog>
+
+
+
+      <div class="controls" :style="{display: isActive ? 'none' : '' }">
+    <button v-on:click="startCamera">
+      Start Camera
+    </button>
+  </div>
+  <div class="vision-camera" :style="{display: isActive ? '' : 'none' }">
+    <LocalVisionCamera
+      :isActive="isActive"
+      :desiredResolution="{width:1280,height:720}"
+      desiredCamera="founder"
+      facingMode="environment"
+      @devicesLoaded="devicesLoaded"
+      @closed="closed"
+      @opened="opened"
+    >
+      <button class="close-btn" v-on:click="closeCamera" >Close</button>
+    </LocalVisionCamera>
+  </div>
+
     </q-page-container>
   </q-layout>
 </template>
@@ -128,6 +152,37 @@ import { ref, onMounted } from "vue";
 import { product } from 'src/composables/product';
 import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
 import { useQuasar } from 'quasar';
+import LocalVisionCamera from 'components/VisionCamera.vue';
+
+
+
+
+
+const isActive = ref(false);
+
+const startCamera = () => {
+  isActive.value = true;
+};
+
+const closeCamera = () => {
+  isActive.value = false;
+};
+
+const devicesLoaded = (devices) => {
+  console.log(devices);
+};
+
+const opened = (camera) => {
+  console.log(arguments);
+  console.log(camera);
+  console.log("emit opened");
+};
+
+const closed = () => {
+  console.log("emit closed");
+};
+
+
 
 const $q = useQuasar();
 const { getAllProduct, addProduct } = product();
@@ -286,14 +341,7 @@ const scanBarcode = async (row) => {
   }
 };
 
-const closeCamera = async () => {
-  try {
-    await BarcodeScanner.stopScan();
-    isCameraOpen.value = false; // Kamera kapalı durumu
-  } catch (error) {
-    console.error("Kamera kapatma hatası:", error);
-  }
-};
+
 
 onMounted(() => {
   fetchProducts();
@@ -340,4 +388,18 @@ onMounted(() => {
 .q-btn {
   flex: 1;
 }
+.vision-camera {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.close-btn {
+  top: 0;
+  right: 0;
+  position: absolute;
+}
+
 </style>
