@@ -12,11 +12,12 @@ export default {
   name: 'LocalVisionCamera',
   emits: ['opened','closed','devicesLoaded'],
   props: {
-    desiredCamera: String,
-    desiredResolution: {width:Number,height:Number},
-    isActive: Boolean,
-    facingMode: String,a
-  },
+  desiredCamera: String,
+  desiredResolution: { width: Number, height: Number },
+  isActive: Boolean,
+  facingMode: String
+},
+
   setup(props,context) {
     const camera = ref(null);
     let devices = null;
