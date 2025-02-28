@@ -124,23 +124,8 @@
 
 
 
-      <div class="controls" :style="{display: isActive ? 'none' : '' }">
-    <button v-on:click="startCamera">
-      Start Camera
-    </button>
-  </div>
-  <div class="vision-camera" :style="{display: isActive ? '' : 'none' }">
-    <LocalVisionCamera
-      :isActive="isActive"
-      :desiredResolution="{width:1280,height:720}"
-      desiredCamera="founder"
-      facingMode="environment"
-      @devicesLoaded="devicesLoaded"
-      @closed="closed"
-      @opened="opened"
-    >
-      <button class="close-btn" v-on:click="closeCamera" >Close</button>
-    </LocalVisionCamera>
+      <div class="q-pa-md">
+    <VisionCamera />
   </div>
 
     </q-page-container>
@@ -152,7 +137,7 @@ import { ref, onMounted } from "vue";
 import { product } from 'src/composables/product';
 import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
 import { useQuasar } from 'quasar';
-import LocalVisionCamera from 'components/VisionCamera.vue';
+import VisionCamera from 'components/VisionCamera.vue';
 
 
 
