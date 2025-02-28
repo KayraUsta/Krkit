@@ -18,6 +18,8 @@
     "@zxing/library": "^0.21.3",
     "axios": "^1.7.9",
     "html5-qrcode": "^2.3.8",
+    "jspdf": "^3.0.0",
+    "jspdf-autotable": "^5.0.2",
     "pinia": "^2.0.11",
     "quagga": "^0.12.1",
     "quasar": "^2.16.0",

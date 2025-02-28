@@ -1,5 +1,5 @@
 <template>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&amp;display=swap" rel="stylesheet">
   <div class="login-container">
     <div class="login-card">
       <img src="https://r.resimlink.com/FBGpL.png" alt="Logo" class="logo" />
@@ -19,7 +19,6 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import axios from 'axios';
-import { ClientRequest } from 'node:http';
 
 const username = ref('');
 const password = ref('');
@@ -45,17 +44,32 @@ const login = async () => {
 
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('username', username.value); // Kullanıcı adını localStorage'a kaydet
 
-      $q.notify({
-        message: 'Giriş başarılı, anasayfaya yönlendiriliyorsunuz...',
-        color: 'green',
-        position: 'top',
-        timeout: 2000,
-      });
+      // Admin kontrolü yapılır
+      if (username.value === 'admin' && password.value === 'admin') {
+        $q.notify({
+          message: 'Admin giriş başarılı, admin sayfasına yönlendiriliyorsunuz...',
+          color: 'green',
+          position: 'top',
+          timeout: 2000,
+        });
 
-      setTimeout(() => {
-        router.push('/toDoList');
-      }, 2000);
+        setTimeout(() => {
+          router.push('/admin'); // Admin sayfasına yönlendiriliyor
+        }, 2000);
+      } else {
+        $q.notify({
+          message: 'Giriş başarılı, anasayfaya yönlendiriliyorsunuz...',
+          color: 'green',
+          position: 'top',
+          timeout: 2000,
+        });
+
+        setTimeout(() => {
+          router.push('/toDoList'); // Normal kullanıcı sayfasına yönlendiriliyor
+        }, 2000);
+      }
     } else {
       throw new Error('Beklenmedik bir hata oluştu.');
     }
@@ -76,6 +90,7 @@ const login = async () => {
     });
   }
 };
+
 </script>
 
 <style scoped>
@@ -98,7 +113,6 @@ const login = async () => {
 
 .logo {
   width: 280px;
-
 }
 
 .login-title {
@@ -116,7 +130,6 @@ const login = async () => {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
-  
 }
 
 .register-text {

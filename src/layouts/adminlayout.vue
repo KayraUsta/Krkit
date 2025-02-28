@@ -30,7 +30,7 @@
             <q-icon name="login" />
           </q-item-section>
           <q-item-section>
-            Giriş Yap
+            Kullanıcı Değiştir
           </q-item-section>
         </q-item>
 
