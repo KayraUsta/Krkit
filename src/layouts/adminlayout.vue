@@ -42,7 +42,15 @@
             Kullanıcı Oluştur
           </q-item-section>
         </q-item>
-
+ <!-- Kullanıcıları Görüntüle Ekleme -->
+ <q-item clickable v-ripple @click="navigateTo('/view-users')">
+  <q-item-section avatar>
+    <q-icon name="people" />  <!-- Kullanıcıları temsil eden uygun bir ikon -->
+  </q-item-section>
+  <q-item-section>
+    Kullanıcıları Görüntüle
+  </q-item-section>
+</q-item>
         <q-item clickable v-ripple @click="navigateTo('/prepare-list')">
           <q-item-section avatar>
             <q-icon name="list" />
@@ -52,14 +60,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple @click="navigateTo('/view-lists')">
-          <q-item-section avatar>
-            <q-icon name="view_list" />
-          </q-item-section>
-          <q-item-section>
-            Listeleri Görüntüle
-          </q-item-section>
-        </q-item>
+       
 
         <q-item clickable v-ripple @click="navigateTo('/stocks')">
           <q-item-section avatar>
@@ -70,10 +71,10 @@
           </q-item-section>
         </q-item>
 
-        <!-- Güncellenmiş İkon -->
+        <!-- Stokları Görüntüle -->
         <q-item clickable v-ripple @click="navigateTo('/views-stocks')">
           <q-item-section avatar>
-            <q-icon name="storefront" />  <!-- Stoklarla ilgili uygun bir ikon -->
+            <q-icon name="storefront" />
           </q-item-section>
           <q-item-section>
             Stokları Görüntüle

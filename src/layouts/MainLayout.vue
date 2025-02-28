@@ -32,7 +32,14 @@
 
         <!-- Menü Öğeleri -->
 
-
+        <q-item clickable v-ripple @click="navigateTo('/')">
+          <q-item-section avatar>
+            <q-icon name="login" />
+          </q-item-section>
+          <q-item-section>
+            Kullanıcı Değiştir
+          </q-item-section>
+        </q-item>
         <q-item clickable v-ripple @click="navigateTo('/prepare-list')">
           <q-item-section avatar>
             <q-icon name="list" />
@@ -44,14 +51,7 @@
 
 
 
-        <q-item clickable v-ripple @click="navigateTo('/register')">
-          <q-item-section avatar>
-            <q-icon name="person_add" />
-          </q-item-section>
-          <q-item-section>
-            Kullanıcı Oluştur
-          </q-item-section>
-        </q-item>
+    
 
 
 
@@ -65,14 +65,7 @@
         </q-item> -->
 
         <!-- Güncellenmiş İkon -->
-        <q-item clickable v-ripple @click="navigateTo('/views-stocks')">
-          <q-item-section avatar>
-            <q-icon name="storefront" />  <!-- Stoklarla ilgili uygun bir ikon -->
-          </q-item-section>
-          <q-item-section>
-            Stokları Görüntüle
-          </q-item-section>
-        </q-item>
+
 
 
       </q-list>

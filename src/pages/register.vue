@@ -2,13 +2,33 @@
   <div class="login-container">
     <div class="login-card">
       <img src="https://r.resimlink.com/FBGpL.png" alt="Logo" class="logo" />
-      <h2 class="login-title">Kayıt Ol</h2>
+      <h2 class="login-title">Kayıt Oluştur</h2>
       <form @submit.prevent="register">
-        <q-input dense outlined v-model="username" label="Kullanıcı Adı" class="input-field" />
-        <q-input dense outlined type="password" v-model="password" label="Şifre" class="input-field" />
-        <q-btn unelevated color="primary" type="submit" class="login-button">Kayıt Ol</q-btn>
+        <q-input 
+          dense 
+          outlined 
+          v-model="username" 
+          label="Kullanıcı Adı" 
+          class="input-field" 
+        />
+        <div class="password-field">
+          <q-input 
+            dense 
+            outlined 
+            :type="passwordVisible ? 'text' : 'password'" 
+            v-model="password" 
+            label="Şifre" 
+            class="input-field"
+          />
+          <span 
+            class="eye-icon" 
+            @click="togglePasswordVisibility"
+          >
+            <q-icon :name="passwordVisible ? 'visibility_off' : 'visibility'" />
+          </span>
+        </div>
+        <q-btn unelevated color="primary" type="submit" class="login-button">Kayıt Oluştur</q-btn>
       </form>
-      <p class="register-text">Zaten hesabınız var mı? <router-link to="/login">Giriş Yapın</router-link></p>
     </div>
   </div>
 </template>
@@ -21,6 +41,7 @@ import axios from 'axios';
 
 const username = ref('');
 const password = ref('');
+const passwordVisible = ref(false); // Şifre görünürlüğünü kontrol eden değişken
 const router = useRouter();
 const $q = useQuasar();
 
@@ -31,7 +52,6 @@ const validatePassword = (password: string) => {
 };
 
 const register = async () => {
-  // Kullanıcı adı ve şifre kontrolü
   if (!username.value || !password.value) {
     $q.notify({
       message: 'Lütfen kullanıcı adı ve şifrenizi girin!',
@@ -42,7 +62,6 @@ const register = async () => {
     return;
   }
 
-  // Şifre validasyonu
   if (!validatePassword(password.value)) {
     $q.notify({
       message: 'Şifreniz en az bir büyük harf, bir küçük harf ve bir rakam içermelidir.',
@@ -54,13 +73,11 @@ const register = async () => {
   }
 
   try {
-    // API ile kayıt işlemi
     const response = await axios.post('https://testapi.sitrancelik.com/api/auth/register', {
       username: username.value,
       password: password.value,
     });
 
-    // Kayıt başarılı mesajı
     $q.notify({
       message: 'Kayıt başarılı! Giriş yapabilirsiniz.',
       color: 'green',
@@ -68,8 +85,7 @@ const register = async () => {
       timeout: 2500,
     });
 
-    // Kayıt başarılıysa login sayfasına yönlendirme
-    router.push('/login');
+    router.push('/admin');
   } catch (error) {
     console.error('Kayıt başarısız', error);
 
@@ -78,7 +94,6 @@ const register = async () => {
       errorMessage = error.response.data.message;
     }
 
-    // Hata mesajı
     $q.notify({
       message: errorMessage,
       color: 'red',
@@ -86,6 +101,11 @@ const register = async () => {
       timeout: 3000,
     });
   }
+};
+
+// Şifre görünürlüğünü değiştiren fonksiyon
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
 };
 </script>
 
@@ -122,14 +142,21 @@ const register = async () => {
   margin-bottom: 1rem;
 }
 
+.password-field {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
 .login-button {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
-}
-
-.register-text {
-  margin-top: 1rem;
-  font-size: 0.9rem;
 }
 </style>
