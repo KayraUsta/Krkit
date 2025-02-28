@@ -256,10 +256,13 @@ const printTable = () => {
 const goBack = () => {
   window.history.back();
 };
+const veriModeli = ref({
+  Barcode: "",
 
-const fetchProducts = async () => {
+});
+const fetchProducts = async (verimodeli) => {
   try {
-    const response = await getAllProduct();
+    const response = await getAllProduct(veriModeli.value);
     console.log("API Yanıtı:", response);
 
     if (response && response.data && Array.isArray(response.data)) {
@@ -304,6 +307,7 @@ const scanBarcode = async (row) => {
     const result = await BarcodeScanner.startScan();
     if (result.hasContent) {
       row.barkodNo = result.content;
+      
       $q.notify({
         type: 'positive',
         message: 'Barkod başarıyla okundu.'

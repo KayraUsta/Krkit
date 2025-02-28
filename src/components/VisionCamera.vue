@@ -28,7 +28,7 @@ const startScanner = async () => {
       },
       (errorMessage) => {
         // Error callback
-        console.log(errorMessage);
+        // console.log(errorMessage);
       }
     );
   } catch (err) {
@@ -64,6 +64,7 @@ const handleScanSuccess = (decodedText: string) => {
   // Add to scanned codes list if not already present
   if (!scannedCodes.value.includes(decodedText)) {
     scannedCodes.value.unshift(decodedText);
+
   }
 
   // Flash effect
