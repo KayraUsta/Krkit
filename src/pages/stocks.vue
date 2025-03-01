@@ -10,11 +10,11 @@
           <div class="input-section">
             <q-input
               filled
-              v-model="companyName"
+              v-model="barcodeNo"
               label="Barkod Numarası"
               class="q-mb-sm"
               dense
-              style="width: 500px;"
+              style="width: 100%; max-width: 500px;"
             />
             <q-input
               filled
@@ -22,7 +22,7 @@
               label="Ürün Açıklaması"
               class="q-mb-sm"
               dense
-              style="width: 500px;"
+              style="width: 100%; max-width: 500px;"
             />
             <q-input
               filled
@@ -30,7 +30,7 @@
               label="Fiyat"
               class="q-mb-sm"
               dense
-              style="width: 500px;"
+              style="width: 100%; max-width: 500px;"
             />
           </div>
         </div>
@@ -51,10 +51,15 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { product } from 'src/composables/product' // product.ts dosyasındaki fonksiyonu import ediyoruz
+const { addProduct } = product() // product.ts dosyasındaki fonksiyonu kullanabilmek için import ediyoruz
+
 
 export default {
   setup() {
-    const companyName = ref('')
+    const router = useRouter()
+    const barcodeNo = ref('')
     const preparedBy = ref('')
     const price = ref('')
 
@@ -63,20 +68,32 @@ export default {
       console.log("Sayfa başarıyla yüklendi.")
     })
 
-    const saveStock = () => {
-      if (companyName.value && preparedBy.value && price.value) {
-        console.log("Stok kaydedildi:", {
-          companyName: companyName.value,
-          preparedBy: preparedBy.value,
-          price: price.value,
-        })
+    // Stok kaydını kaydetme fonksiyonu
+    const saveStock = async () => {
+      if (barcodeNo.value && preparedBy.value && price.value) {
+        const data = {
+          companyName: barcodeNo.value,
+          description: preparedBy.value,
+          price: parseFloat(price.value),
+          quantity: 1, // Varsayılan olarak 1 ekledim, gerekirse değiştirilebilir
+          barcode: barcodeNo.value,
+        }
+
+        // product.ts dosyasındaki addProduct fonksiyonunu çağırıyoruz
+        const result = await addProduct(data) // API'yi burada çağırıyoruz
+
+        if (result.ok === "Success") {
+          console.log("Stok kaydedildi:", data)
+        } else {
+          console.log("Hata oluştu:", result.errors)
+        }
       } else {
         console.log("Lütfen tüm alanları doldurun.")
       }
     }
 
     return {
-      companyName,
+      barcodeNo,
       preparedBy,
       price,
       saveStock,
@@ -92,7 +109,8 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 75vh; /* Tam ekran yüksekliği */
+  height: 75vh; /* Flexible screen height */
+  padding: 20px; /* Padding for better spacing */
 }
 
 /* Başlık Stil */
@@ -105,6 +123,7 @@ h4 {
   background-clip: text;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   margin-bottom: 1.5rem;
+  text-align: center; /* Center the header */
 }
 
 /* Kaydet Butonu */
@@ -112,6 +131,8 @@ h4 {
   margin-top: 2rem;
   width: 100%;
   max-width: 300px;
+  display: flex;
+  justify-content: center;
 }
 
 /* Input alanlarının hizalanması */
@@ -120,5 +141,6 @@ h4 {
   flex-direction: column;
   gap: 10px;
   align-items: center;
+  width: 100%;
 }
 </style>
