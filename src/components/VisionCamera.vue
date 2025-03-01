@@ -166,24 +166,9 @@ onUnmounted(() => {
       <div id="scanner" ref="scannerRef" class="scanner-box"></div>
     </div>
 
-    <div class="scanned-codes q-pa-md">
-      <h3>Scanned Products:</h3>
-      <q-table
-  flat
-  bordered
-  title="Ürün Listesi"
-  :rows="rows"
-  :columns="columns"
-  row-key="barkodNo"
-  :loading="loading"
->
-  <template v-slot:loading>
-    <q-inner-loading showing color="primary" />
-  </template>
-</q-table>
+
 
     </div>
-  </div>
 </template>
 
 
