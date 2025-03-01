@@ -6,9 +6,9 @@ export function product() {
   const router = useRouter();
 
   // Tüm görevleri al
-  const getAllProduct = async () => {
+  const getAllProduct = async (GetProductByFilterRequestDto:any) => {
     try {
-      let response = await api.get('/Product');
+      let response = await api.post('/Product',GetProductByFilterRequestDto);
 
       // console.log("response", response);
       if (response.status === 200) {
