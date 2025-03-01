@@ -6,7 +6,21 @@
       <h2 class="login-title">Giriş Yap</h2>
       <form @submit.prevent="login">
         <q-input dense outlined v-model="username" label="Kullanıcı Adı" class="input-field" />
-        <q-input dense outlined type="password" v-model="password" label="Şifre" class="input-field" />
+        
+        <div class="password-field">
+          <q-input 
+            dense 
+            outlined 
+            :type="passwordVisible ? 'text' : 'password'" 
+            v-model="password" 
+            label="Şifre" 
+            class="input-field"
+          />
+          <span class="eye-icon" @click="togglePasswordVisibility">
+            <q-icon :name="passwordVisible ? 'visibility_off' : 'visibility'" />
+          </span>
+        </div>
+
         <q-btn unelevated color="primary" type="submit" class="login-button">Giriş Yap</q-btn>
       </form>
       <p class="register-text">Hesabınız yok ise yöneticinize başvurun</p>
@@ -22,6 +36,7 @@ import axios from 'axios';
 
 const username = ref('');
 const password = ref('');
+const passwordVisible = ref(false); // Şifre görünürlüğünü kontrol eden değişken
 const router = useRouter();
 const $q = useQuasar();
 
@@ -47,7 +62,7 @@ const login = async () => {
       localStorage.setItem('username', username.value); // Kullanıcı adını localStorage'a kaydet
 
       // Admin kontrolü yapılır
-      if (username.value === 'admin' && password.value === 'admin') {
+      if (username.value === 'admin' && password.value === 'Admin1') {
         $q.notify({
           message: 'Admin giriş başarılı, admin sayfasına yönlendiriliyorsunuz...',
           color: 'green',
@@ -91,6 +106,10 @@ const login = async () => {
   }
 };
 
+// Şifre görünürlüğünü değiştiren fonksiyon
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
 </script>
 
 <style scoped>
@@ -124,6 +143,18 @@ const login = async () => {
 
 .input-field {
   margin-bottom: 1rem;
+}
+
+.password-field {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .login-button {

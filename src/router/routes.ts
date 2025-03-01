@@ -28,6 +28,11 @@ const routes: RouteRecordRaw[] = [
     path: '/prepare-list',
     children: [{ path: '', component: () => import('pages/prepare-list.vue') }],
   },
+  {
+    path: '/view-users',
+    component: () => import('layouts/adminlayout.vue'),
+    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
