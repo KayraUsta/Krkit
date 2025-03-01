@@ -100,33 +100,7 @@ const handleScanSuccess = async (decodedText: string) => {
     });
   }
 };
-const fetchProducts = async () => {
-  loading.value = true;
-  try {
-    const response = await getAllProduct(veriModeli.value);
-    console.log("API Yanıtı:", response);
 
-    if (response && response.data && Array.isArray(response.data)) {
-      rows.value = response.data.map(product => ({
-        barkodNo: product.barcode,
-        aciklama: product.description,
-        fiyat: product.price.toFixed(2),
-        adet: product.quantity,
-        toplamFiyat: (product.price * product.quantity).toFixed(2)
-      }));
-      console.log("Tabloya Eklenen Veriler:", rows.value);
-    } else {
-      console.error("Beklenmeyen API Yanıtı:", response);
-    }
-  } catch (error) {
-    console.error("Ürünler getirilirken hata oluştu:", error);
-  } finally {
-    loading.value = false;
-  }
-};
-
-// Sayfa açıldığında ürünleri getir
-onMounted(fetchProducts);
 
 
 const toggleScanner = () => {
