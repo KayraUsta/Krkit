@@ -7,13 +7,13 @@ export const App = () => {
       version: "v0.1.3",
       // LOCAL //
 
-    //  apiUrl: 'https://localhost:7213/api',
-  //  uploads: 'https://localhost:7213/',
+      apiUrl: 'https://localhost:7213/api',
+    uploads: 'https://localhost:7213/',
       // LOCAL //
 
       // TEST //
-     apiUrl: 'https://testapi.sitrancelik.com/api',
-      uploads: 'https://testapi.sitrancelik.com/',
+    // apiUrl: 'https://testapi.sitrancelik.com/api',
+  //    uploads: 'https://testapi.sitrancelik.com/',
       // TEST //
 
       // LIVE //

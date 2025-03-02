@@ -2,9 +2,25 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Html5Qrcode } from 'html5-qrcode';
 import { useQuasar } from 'quasar';
+import { product } from 'src/composables/product';
 
 const $q = useQuasar();
+const { getAllProduct } = product();
+
+const rows = ref([]);
+const columns = ref([
+  { name: "barkodNo", label: "Barkod No", field: "barkodNo", align: "left" },
+  { name: "aciklama", label: "Açıklama", field: "aciklama", align: "left" },
+  { name: "fiyat", label: "Fiyat", field: "fiyat", align: "right" },
+  { name: "adet", label: "Adet", field: "adet", align: "right" },
+  { name: "toplamFiyat", label: "Toplam Fiyat", field: "toplamFiyat", align: "right" }
+]);
+
+const loading = ref(false);
+const veriModeli = ref({}); // API çağrısına gönderilecek model
+
 const scannedCodes = ref<string[]>([]);
+const scannedProducts = ref<any[]>([]);
 const isScanning = ref(false);
 const scannerRef = ref<HTMLDivElement | null>(null);
 let html5QrCode: Html5Qrcode | null = null;
@@ -23,11 +39,9 @@ const startScanner = async () => {
         qrbox: { width: 250, height: 250 },
       },
       (decodedText) => {
-        // Success callback
         handleScanSuccess(decodedText);
       },
       (errorMessage) => {
-        // Error callback
         console.log(errorMessage);
       }
     );
@@ -52,31 +66,42 @@ const stopScanner = async () => {
   }
 };
 
-const handleScanSuccess = (decodedText: string) => {
-  // Show scanning effect
-  $q.notify({
-    type: 'positive',
-    message: 'Barcode detected!',
-    position: 'center',
-    timeout: 500
-  });
-
-  // Add to scanned codes list if not already present
+const handleScanSuccess = async (decodedText: string) => {
   if (!scannedCodes.value.includes(decodedText)) {
     scannedCodes.value.unshift(decodedText);
   }
 
-  // Flash effect
-  $q.loading.show({
-    message: 'Scanning...',
-    backgroundColor: 'primary',
-    spinnerColor: 'white'
-  });
+  // API'yi çağırarak ürünü getir
+  try {
+    const response = await getAllProduct({ barcode: decodedText });
 
-  setTimeout(() => {
-    $q.loading.hide();
-  }, 300);
+    if (response && response.data && response.data.length > 0) {
+      scannedProducts.value.unshift(...response.data);
+      $q.notify({
+        type: 'positive',
+        message: 'Ürün bulundu!',
+        position: 'center',
+        timeout: 1000
+      });
+    } else {
+      $q.notify({
+        type: 'warning',
+        message: 'Ürün bulunamadı!',
+        position: 'center',
+        timeout: 1000
+      });
+    }
+  } catch (error) {
+    console.error("Ürün bilgisi alınırken hata:", error);
+    $q.notify({
+      type: 'negative',
+      message: 'Ürün bilgisi alınamadı!',
+      position: 'center'
+    });
+  }
 };
+
+
 
 const toggleScanner = () => {
   if (isScanning.value) {
@@ -87,15 +112,17 @@ const toggleScanner = () => {
 };
 
 onMounted(() => {
-  // Auto-start scanner
   startScanner();
 });
 
 onUnmounted(() => {
-  // Clean up
   stopScanner();
 });
+
 </script>
+
+
+
 
 <template>
   <div class="scanner-container">
@@ -111,29 +138,14 @@ onUnmounted(() => {
 
     <div class="scanner-view q-pa-md">
       <div id="scanner" ref="scannerRef" class="scanner-box"></div>
-
-      <div class="scanner-overlay" v-if="isScanning">
-        <div class="scanner-line"></div>
-      </div>
     </div>
 
-    <div class="scanned-codes q-pa-md">
-      <h3>Scanned Barcodes:</h3>
-      <q-list bordered separator>
-        <q-item v-for="(code, index) in scannedCodes" :key="index">
-          <q-item-section>
-            <q-item-label>{{ code }}</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item v-if="scannedCodes.length === 0">
-          <q-item-section>
-            <q-item-label class="text-grey">No barcodes scanned yet</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
+
+
     </div>
-  </div>
 </template>
+
+
 
 <style scoped>
 .scanner-container {
