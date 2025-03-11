@@ -6,12 +6,15 @@
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          Eren Hediyelik Liste Uygulaması
+          📋 Eren Hediyelik Liste Uygulaması
         </q-toolbar-title>
-        <q-avatar>
+
+        <q-space />
+
+        <q-avatar size="40px">
           <img src="https://r.resimlink.com/-xGLkwV41O.jpg" class="krkit" />
         </q-avatar>
-        <div>Krkit Bilişim</div>
+        <div class="company-name">KRKIT Bilişim</div>
       </q-toolbar>
     </q-header>
 
@@ -42,15 +45,16 @@
             Kullanıcı Oluştur
           </q-item-section>
         </q-item>
- <!-- Kullanıcıları Görüntüle Ekleme -->
- <q-item clickable v-ripple @click="navigateTo('/view-users')">
-  <q-item-section avatar>
-    <q-icon name="people" />  <!-- Kullanıcıları temsil eden uygun bir ikon -->
-  </q-item-section>
-  <q-item-section>
-    Kullanıcıları Görüntüle
-  </q-item-section>
-</q-item>
+
+        <q-item clickable v-ripple @click="navigateTo('/view-users')">
+          <q-item-section avatar>
+            <q-icon name="people" />
+          </q-item-section>
+          <q-item-section>
+            Kullanıcıları Görüntüle
+          </q-item-section>
+        </q-item>
+
         <q-item clickable v-ripple @click="navigateTo('/prepare-list')">
           <q-item-section avatar>
             <q-icon name="list" />
@@ -59,8 +63,6 @@
             Liste Hazırla
           </q-item-section>
         </q-item>
-
-       
 
         <q-item clickable v-ripple @click="navigateTo('/stocks')">
           <q-item-section avatar>
@@ -71,7 +73,6 @@
           </q-item-section>
         </q-item>
 
-        <!-- Stokları Görüntüle -->
         <q-item clickable v-ripple @click="navigateTo('/views-stocks')">
           <q-item-section avatar>
             <q-icon name="storefront" />
@@ -116,15 +117,25 @@ export default {
 </script>
 
 <style>
-/* Header Rengi */
+/* Header 3-4 Renk Geçişli Mor Gradyan */
 .header {
-  background-color: #495867; /* Daha koyu bir mavi-gri tonu */
-  color: white; /* Yazının görünürlüğü için beyaz */
+  background-color: #2b2b2b;
+  color: #ffffff;
+  padding: 0 16px;
 }
 
-/* Sol Menü Rengi */
+/* Şirket İsmi */
+.company-name {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #ffffff;
+}
+
+/* Sol Menü 3-4 Renk Geçişli Mor Gradyan */
 .solrenk {
-  background-color: #ffe6e6; /* Soft kırmızı tonu */
+  background: linear-gradient(135deg, #adefff, #ffd5ea);
+  color: #2b2b2b;
 }
 
 /* Logo Stil Ayarları */
@@ -132,5 +143,11 @@ export default {
   max-width: 200px;
   margin-left: 50px;
   margin-top: 35px;
+}
+
+/* Menü öğeleri için hover efekti */
+.q-item:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: background-color 0.3s ease;
 }
 </style>

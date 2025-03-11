@@ -3,21 +3,18 @@
     <!-- Header -->
     <q-header elevated class="header">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+
         <q-toolbar-title>
-          Eren Hediyelik Liste Uygulaması
+          📋 Eren Hediyelik Liste Uygulaması
         </q-toolbar-title>
-        <q-avatar>
+
+        <q-space />
+
+        <q-avatar size="40px">
           <img src="https://r.resimlink.com/-xGLkwV41O.jpg" class="krkit" />
         </q-avatar>
-        <div>Krkit Bilişim</div>
+        <div class="company-name">KRKIT Bilişim</div>
       </q-toolbar>
     </q-header>
 
@@ -107,8 +104,17 @@ export default {
 <style>
 /* Header Rengi */
 .header {
-  background-color: #495867; /* Daha koyu bir mavi-gri tonu */
-  color: white; /* Yazının görünürlüğü için beyaz renk */
+  background-color: #2b2b2b;
+  color: #ffffff;
+  padding: 0 16px;
+}
+
+/* Şirket İsmi */
+.company-name {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #ffffff;
 }
 
 /* Sol Menü Rengi */
