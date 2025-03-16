@@ -8,7 +8,7 @@ export function product() {
   // Tüm görevleri al
   const getAllProduct = async (GetProductByFilterRequestDto:any) => {
     try {
-      let response = await api.post('/Product',GetProductByFilterRequestDto);
+      let response = await api.get('/Product',GetProductByFilterRequestDto);
 
       // console.log("response", response);
       if (response.status === 200) {

@@ -75,7 +75,7 @@ const handleScanSuccess = async (decodedText: string) => {
   try {
     const response = await getAllProduct({ barcode: decodedText });
 
-    if (response && response.data && response.data.length > 0) {
+    if (response && 'data' in response && Array.isArray(response.data) && response.data.length > 0) {
       scannedProducts.value.unshift(...response.data);
       $q.notify({
         type: 'positive',
