@@ -119,7 +119,8 @@ export default {
 
 /* Sol Menü Rengi */
 .solrenk {
-  background-color: #ffe6e6; /* Soft kırmızı tonu */
+  background: linear-gradient(135deg, #adefff, #ffd5ea);
+  color: #2b2b2b;
 }
 
 /* Logo Stil Ayarları */
