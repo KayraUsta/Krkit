@@ -15,44 +15,40 @@
               style="width: 400px;"
               :rules="[(val) => !!val || 'Firma ismi gereklidir.']"
             />
-            <q-input filled v-model="preparedBy" label="Listeyi Hazırlayan Kişi" class="q-mb-sm" dense style="width: 400px;" />
-          </div>
+            <q-input 
+            filled 
+            v-model="preparedBy" 
+            label="Listeyi Hazırlayan Kişi" 
+            class="q-mb-sm" 
+            dense 
+            style="width: 400px;" 
+            disable 
+          />
+          
         </div>
-
-        <q-table :rows="rows" :columns="columns" :rows-per-page="rows.length" class="q-mb-md">
+        <div v-if="!companyName" class="text-negative q-mt-sm">
+          * Firma ismi zorunludur!
+        </div>
+        <q-table :rows="rows" :columns="columns" class="q-mb-md">
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td v-for="col in props.cols" :key="col.name">
-                <q-input
-                  v-if="col.name !== 'toplamFiyat'"
-                  v-model="props.row[col.name]"
-                  :placeholder="col.label"
-                  dense
-                  filled
-                  @input="calculateTotal(props.row)"
-                />
-                <q-input v-else v-model="props.row[col.name]" dense filled readonly class="text-right" />
+                <span>{{ props.row[col.name] }}</span>
               </q-td>
               <q-td>
-                <q-btn
-                  v-if="props.cols.some(col => col.name === 'barkodNo')"
-                  icon="camera_alt"
-                  @click="scanBarcode(props.row)"
-                  dense
-                  flat
-                  color="primary"
-                />
+                <q-btn icon="delete" dense flat color="negative" @click="deleteRow(props.row)" />
               </q-td>
             </q-tr>
           </template>
         </q-table>
 
         <div class="button-container">
-          <q-btn label="Yazdır" color="primary" class="q-mr-sm" @click="printTable" />
+          <q-btn label="Yazdır" color="primary" class="q-mr-sm" @click="generatePDF" />
           <q-btn label="Yeni Satır Ekle" color="secondary" class="q-mr-sm" @click="showAddModal" />
-          <q-btn label="Satır Sil" color="negative" class="q-mr-sm" @click="deleteRow" />
+  
           <q-btn label="Geri Dön" color="accent" @click="goBack" />
         </div>
+      </div>
       </div>
 
       <!-- Ürün Ekleme Modali -->
@@ -66,10 +62,10 @@
             <q-input
               filled
               v-model="newProduct.companyName"
-              label="Firma İsmi"
+              label="Barkod Numarası"
               class="q-mb-sm"
               dense
-              :rules="[(val) => !!val || 'Firma ismi gereklidir.']"
+              :rules="[(val) => !!val || 'Barkod Numarası gereklidir.']"
             />
             <q-input
               filled
@@ -143,6 +139,8 @@ import VisionCamera from 'components/VisionCamera.vue';
 
 
 
+
+
 const isActive = ref(false);
 
 const startCamera = () => {
@@ -173,7 +171,7 @@ const $q = useQuasar();
 const { getAllProduct, addProduct } = product();
 
 const companyName = ref("");
-const preparedBy = ref("");
+const preparedBy = ref(localStorage.getItem('username') || "");
 const rows = ref([]);
 const isAddModalOpen = ref(false);
 const isCameraOpen = ref(false); // Kamera açık/kapalı durumu
@@ -243,15 +241,64 @@ const addRow = async () => {
   }
 };
 
-const deleteRow = () => {
-  if (rows.value.length > 1) {
-    rows.value.pop();
+const deleteRow = (row) => {
+  const index = rows.value.findIndex(item => item.barkodNo === row.barkodNo);
+  if (index !== -1) {
+    rows.value.splice(index, 1);
+    $q.notify({ color: 'positive', message: 'Ürün başarıyla silindi!', icon: 'check' });
   }
 };
 
-const printTable = () => {
-  window.print();
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+const generatePDF = () => {
+  if (!companyName.value) {
+    $q.notify({
+      type: "negative",
+      message: "Lütfen firma ismini giriniz!",
+    });
+    return;
+  }
+  const doc = new jsPDF();
+  
+  // Sayfanın başına Firma İsmi, Hazırlayan Kişi ve Tarih bilgisi ekleyelim
+  const currentDate = new Date().toLocaleDateString("tr-TR");
+  const fileName = `${currentDate}_${companyName.value}_${preparedBy.value}.pdf`;
+
+  doc.setFontSize(16);
+  doc.text("Ürün Listesi", 14, 20);
+  doc.setFontSize(12);
+  doc.text(`Firma İsmi: ${companyName.value}`, 14, 30);
+  doc.text(`Listeyi Hazırlayan: ${preparedBy.value}`, 14, 40);
+  doc.text(`Tarih: ${currentDate}`, 14, 50);
+
+  // Tablo başlıkları
+  const tableHeaders = ["Barkod Numarası", "Açıklama", "Fiyat", "Adet", "Toplam Fiyat"];
+
+  // Tablo içeriği
+  const tableData = rows.value.map(row => [
+    row.barkodNo,
+    row.aciklama,
+    row.fiyat,
+    row.adet,
+    row.toplamFiyat
+  ]);
+
+  // Tabloyu oluştur
+  autoTable(doc, {
+    startY: 60, // Tablo başlangıç noktası
+    head: [tableHeaders],
+    body: tableData,
+    theme: "grid",
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [63, 81, 181] } // Başlık rengi (Mavi)
+  });
+
+  // PDF'i kaydet
+  doc.save(fileName);
 };
+
 
 const goBack = () => {
   window.history.back();
@@ -355,6 +402,11 @@ onMounted(() => {
   justify-content: space-between;
   gap: 15px;
 }
+@media (max-width: 960px) {
+  .input-section{
+  display: block;
+  }
+}
 
 .q-table {
   max-width: 100%;
@@ -368,7 +420,7 @@ onMounted(() => {
 }
 
 .button-container {
-  display: flex;
+
   justify-content: space-between;
   gap: 10px;
   margin-top: 20px;
