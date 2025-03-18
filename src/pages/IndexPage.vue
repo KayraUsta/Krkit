@@ -5,8 +5,9 @@
     <!-- Add New To-Do -->
     <div class="add-task-container">
       <q-input v-model="newTask.title" class="task-input" placeholder="Görev başlığını yazın" />
-      <q-btn @click="addTask" class="add-task-btn" label="Görev Ekle" />
+      <q-input v-model="newTask.description" class="task-input" placeholder="Görev açıklamasını yazın" />
     </div>
+    <q-btn @click="addTask" class="add-task-btn" label="Görev Ekle" />
 
     <!-- Task List -->
     <div v-if="tasks.length > 0" class="tasks-list">
@@ -334,7 +335,7 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
- 
+
 
   .task-input {
     font-size: 14px;

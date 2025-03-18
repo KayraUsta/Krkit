@@ -3,7 +3,13 @@
     <q-page-container class="q-pa-md">
       <div class="table-container">
         <div class="header-section q-mb-md">
-          <q-img src="https://r.resimlink.com/FBGpL.png" alt="logo" height="130px" width="300px" class="q-mb-md" />
+          <q-img
+            src="https://r.resimlink.com/FBGpL.png"
+            alt="logo"
+            height="130px"
+            width="300px"
+            class="q-mb-md"
+          />
 
           <div class="input-section">
             <q-input
@@ -12,43 +18,69 @@
               label="Firma İsmi"
               class="q-mb-sm"
               dense
-              style="width: 400px;"
+              style="width: 400px"
               :rules="[(val) => !!val || 'Firma ismi gereklidir.']"
             />
-            <q-input 
-            filled 
-            v-model="preparedBy" 
-            label="Listeyi Hazırlayan Kişi" 
-            class="q-mb-sm" 
-            dense 
-            style="width: 400px;" 
-            disable 
-          />
-          
-        </div>
-        <div v-if="!companyName" class="text-negative q-mt-sm">
-          * Firma ismi zorunludur!
-        </div>
-        <q-table :rows="rows" :columns="columns" class="q-mb-md">
-          <template v-slot:body="props">
-            <q-tr :props="props">
-              <q-td v-for="col in props.cols" :key="col.name">
-                <span>{{ props.row[col.name] }}</span>
-              </q-td>
-              <q-td>
-                <q-btn icon="delete" dense flat color="negative" @click="deleteRow(props.row)" />
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
+            <q-input
+              filled
+              v-model="preparedBy"
+              label="Listeyi Hazırlayan Kişi"
+              class="q-mb-sm"
+              dense
+              style="width: 400px"
+              disable
+            />
+          </div>
+          <div v-if="!companyName" class="text-negative q-mt-sm">
+            * Firma ismi zorunludur!
+          </div>
+          <q-table :rows="rows" :columns="columns" class="q-mb-md">
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td v-for="col in props.cols" :key="col.name">
+                  <template v-if="col.name === 'adet' || col.name === 'fiyat'">
+                    <q-input
+                      v-model.number="props.row[col.name]"
+                      dense
+                      type="number"
+                      min="0"
+                      @update:model-value="updateTotal(props.row)"
+                    />
+                  </template>
+                  <template v-else>
+                    <span>{{ props.row[col.name] }}</span>
+                  </template>
+                </q-td>
+                <q-td>
+                  <q-btn
+                    icon="delete"
+                    dense
+                    flat
+                    color="negative"
+                    @click="deleteRow(props.row)"
+                  />
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
 
-        <div class="button-container">
-          <q-btn label="Yazdır" color="primary" class="q-mr-sm" @click="generatePDF" />
-          <q-btn label="Yeni Satır Ekle" color="secondary" class="q-mr-sm" @click="showAddModal" />
-  
-          <q-btn label="Geri Dön" color="accent" @click="goBack" />
+          <div class="button-container">
+            <q-btn
+              label="Yazdır"
+              color="primary"
+              class="q-mr-sm"
+              @click="generatePDF"
+            />
+            <q-btn
+              label="Yeni Satır Ekle"
+              color="secondary"
+              class="q-mr-sm"
+              @click="showAddModal"
+            />
+
+            <q-btn label="Geri Dön" color="accent" @click="goBack" />
+          </div>
         </div>
-      </div>
       </div>
 
       <!-- Ürün Ekleme Modali -->
@@ -96,13 +128,16 @@
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn label="İptal" color="negative" flat @click="isAddModalOpen = false" />
+            <q-btn
+              label="İptal"
+              color="negative"
+              flat
+              @click="isAddModalOpen = false"
+            />
             <q-btn label="Ekle" color="primary" @click="addRow" />
           </q-card-actions>
         </q-card>
       </q-dialog>
-
-
 
       <!-- Kamera Kapat Butonu -->
       <q-dialog v-model="isCameraOpen" persistent>
@@ -118,140 +153,49 @@
         </q-card>
       </q-dialog>
 
-
-
       <div class="q-pa-md">
-    <VisionCamera />
-  </div>
+        <div class="scanner-container">
+          <div class="scanner-header">
+            <h2>Barcode Scanner</h2>
+            <q-btn
+              :color="isScanning ? 'negative' : 'primary'"
+              :label="isScanning ? 'Stop Scanner' : 'Start Scanner'"
+              @click="toggleScanner"
+              :icon="isScanning ? 'stop' : 'play_arrow'"
+            />
+          </div>
 
+          <div class="scanner-view q-pa-md">
+            <div id="scanner" ref="scannerRef" class="scanner-box"></div>
+          </div>
+        </div>
+      </div>
     </q-page-container>
   </q-layout>
 </template>
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { useQuasar } from "quasar";
+import { product } from "src/composables/product";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { Html5Qrcode } from "html5-qrcode";
+const updateTotal = (row) => {
+  if (row.adet < 0) row.adet = 0; // Negatif değer engelle
+  if (row.fiyat < 0) row.fiyat = 0;
 
-<script setup>
-import { ref, onMounted } from "vue";
-import { product } from 'src/composables/product';
-import { BarcodeScanner } from "@capacitor-community/barcode-scanner";
-import { useQuasar } from 'quasar';
-import VisionCamera from 'components/VisionCamera.vue';
-
-
-
-
-
-
-
-const isActive = ref(false);
-
-const startCamera = () => {
-  isActive.value = true;
+  row.toplamFiyat = (row.adet * row.fiyat).toFixed(2);
 };
-
-const closeCamera = () => {
-  isActive.value = false;
-};
-
-const devicesLoaded = (devices) => {
-  console.log(devices);
-};
-
-const opened = (camera) => {
-  console.log(arguments);
-  console.log(camera);
-  console.log("emit opened");
-};
-
-const closed = () => {
-  console.log("emit closed");
-};
-
-
-
 const $q = useQuasar();
 const { getAllProduct, addProduct } = product();
 
-const companyName = ref("");
-const preparedBy = ref(localStorage.getItem('username') || "");
-const rows = ref([]);
-const isAddModalOpen = ref(false);
-const isCameraOpen = ref(false); // Kamera açık/kapalı durumu
-
-const newProduct = ref({
-  companyName: "",
-  barcode: "",
-  description: "",
-  price: 0,
-  quantity: 0
-});
-
-const columns = [
-  { name: "barkodNo", label: "Barkod Numarası", align: "left" },
-  { name: "aciklama", label: "Açıklama", align: "left" },
-  { name: "fiyat", label: "Fiyat", align: "left" },
-  { name: "adet", label: "Adet", align: "left" },
-  { name: "toplamFiyat", label: "Toplam Fiyat", align: "right" }
-];
-
-const calculateTotal = (row) => {
-  const price = parseFloat(row.fiyat);
-  const quantity = parseInt(row.adet);
-  if (price && quantity) {
-    row.toplamFiyat = (price * quantity).toFixed(2);
-  } else {
-    row.toplamFiyat = "";
-  }
-};
-
-const showAddModal = () => {
-  isAddModalOpen.value = true;
-};
-
-const addRow = async () => {
-  try {
-    if (!newProduct.value.companyName || !newProduct.value.barcode || !newProduct.value.description || newProduct.value.price <= 0 || newProduct.value.quantity <= 0) {
-      console.log("Eksik ya da hatalı veri girildi.");
-      return;
-    }
-
-    const response = await addProduct({
-      companyName: newProduct.value.companyName,
-      barcode: newProduct.value.barcode,
-      description: newProduct.value.description,
-      price: newProduct.value.price,
-      quantity: newProduct.value.quantity
-    });
-
-    if (response && response.isSuccessful) {
-      rows.value.push({
-        barkodNo: response.data.barcode,
-        aciklama: response.data.description,
-        fiyat: response.data.price,
-        adet: response.data.quantity,
-        toplamFiyat: (response.data.price * response.data.quantity).toFixed(2)
-      });
-
-      console.log("Yeni ürün başarıyla eklendi:", response.data);
-      isAddModalOpen.value = false;
-      newProduct.value = { companyName: "", barcode: "", description: "", price: 0, quantity: 0 };
-    } else {
-      console.error("Ürün eklenirken hata oluştu:", response);
-    }
-  } catch (error) {
-    console.error("Ürün ekleme hatası:", error);
-  }
-};
-
-const deleteRow = (row) => {
-  const index = rows.value.findIndex(item => item.barkodNo === row.barkodNo);
-  if (index !== -1) {
-    rows.value.splice(index, 1);
-    $q.notify({ color: 'positive', message: 'Ürün başarıyla silindi!', icon: 'check' });
-  }
-};
-
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-
+interface Product {
+  barkodNo: string;
+  aciklama: string;
+  fiyat: number;
+  adet: number;
+  toplamFiyat?: string;
+}
 const generatePDF = () => {
   if (!companyName.value) {
     $q.notify({
@@ -261,7 +205,7 @@ const generatePDF = () => {
     return;
   }
   const doc = new jsPDF();
-  
+
   // Sayfanın başına Firma İsmi, Hazırlayan Kişi ve Tarih bilgisi ekleyelim
   const currentDate = new Date().toLocaleDateString("tr-TR");
   const fileName = `${currentDate}_${companyName.value}_${preparedBy.value}.pdf`;
@@ -274,16 +218,21 @@ const generatePDF = () => {
   doc.text(`Tarih: ${currentDate}`, 14, 50);
 
   // Tablo başlıkları
-  const tableHeaders = ["Barkod Numarası", "Açıklama", "Fiyat", "Adet", "Toplam Fiyat"];
+  const tableHeaders = [
+    "Barkod Numarası",
+    "Açıklama",
+    "Fiyat",
+    "Adet",
+    "Toplam Fiyat",
+  ];
 
-  // Tablo içeriği
-  const tableData = rows.value.map(row => [
-    row.barkodNo,
-    row.aciklama,
-    row.fiyat,
-    row.adet,
-    row.toplamFiyat
-  ]);
+  // Tablo içeriği ve toplam hesaplama
+  let grandTotal = 0;
+  const tableData = rows.value.map((row) => {
+    const total = row.fiyat * row.adet; // Satır toplamını hesapla
+    grandTotal += total; // Genel toplamı güncelle
+    return [row.barkodNo, row.aciklama, row.fiyat, row.adet, total.toFixed(2)];
+  });
 
   // Tabloyu oluştur
   autoTable(doc, {
@@ -292,99 +241,244 @@ const generatePDF = () => {
     body: tableData,
     theme: "grid",
     styles: { fontSize: 10 },
-    headStyles: { fillColor: [63, 81, 181] } // Başlık rengi (Mavi)
+    headStyles: { fillColor: [63, 81, 181] }, // Başlık rengi (Mavi)
   });
+
+  // Toplam Tutarı yazdır
+  // Toplam Tutarı yazdır (Sayfanın en sağına hizala)
+  const finalY = doc.lastAutoTable.finalY + 10; // Tablo sonrasına ekle
+  doc.setFontSize(12);
+
+  const pageWidth = doc.internal.pageSize.width; // Sayfanın genişliğini al
+  const textWidth = doc.getTextWidth(
+    `Toplam Tutar: ${grandTotal.toFixed(2)} TL`
+  ); // Metnin genişliğini hesapla
+  const xPosition = pageWidth - textWidth - 14; // Sağ kenara hizala (sağdan biraz boşluk bırak)
+
+  doc.text(`Toplam Tutar: ${grandTotal.toFixed(2)} TL`, xPosition, finalY);
 
   // PDF'i kaydet
   doc.save(fileName);
 };
 
+const companyName = ref<string>("");
+const preparedBy = ref<string>(localStorage.getItem("username") || "");
+const rows = ref<Product[]>([]);
+const isAddModalOpen = ref<boolean>(false);
+const isScanning = ref<boolean>(false);
+const scannerRef = ref<HTMLDivElement | null>(null);
+let html5QrCode: Html5Qrcode | null = null;
 
-const goBack = () => {
-  window.history.back();
-};
-const veriModeli = ref({
-  Barcode: "",
-
+const newProduct = ref<Product>({
+  barkodNo: "",
+  aciklama: "",
+  fiyat: 0,
+  adet: 0,
 });
-const fetchProducts = async (verimodeli) => {
-  try {
-    const response = await getAllProduct(veriModeli.value);
-    console.log("API Yanıtı:", response);
 
-    if (response && response.data && Array.isArray(response.data)) {
-      rows.value = response.data.map(product => ({
-        barkodNo: product.barcode,
-        aciklama: product.description,
-        fiyat: product.price,
-        adet: product.quantity,
-        toplamFiyat: (product.price * product.quantity).toFixed(2)
-      }));
-      console.log("Tabloya Eklenen Veriler:", rows.value);
-    } else {
-      console.error("Beklenmeyen API Yanıtı:", response);
+const columns = [
+  { name: "barkodNo", label: "Barkod Numarası", align: "left" },
+  { name: "aciklama", label: "Açıklama", align: "left" },
+  { name: "fiyat", label: "Fiyat", align: "left" },
+  { name: "adet", label: "Adet", align: "left" },
+  { name: "toplamFiyat", label: "Toplam Fiyat", align: "right" },
+];
+
+const showAddModal = () => {
+  isAddModalOpen.value = true;
+};
+
+const addRow = async () => {
+  if (
+    !newProduct.value.barkodNo ||
+    !newProduct.value.aciklama ||
+    newProduct.value.fiyat <= 0 ||
+    newProduct.value.adet <= 0
+  ) {
+    $q.notify({
+      type: "negative",
+      message: "Lütfen tüm alanları eksiksiz doldurun!",
+    });
+    return;
+  }
+
+  try {
+    const response = await addProduct(newProduct.value);
+    if (response) {
+      const existingItem = rows.value.find(
+        (item) => item.barkodNo.trim() === response.data.barcode.trim()
+      );
+
+      if (!existingItem) {
+        rows.value = [
+          ...rows.value,
+          {
+            barkodNo: response.data.barcode,
+            aciklama: response.data.description,
+            fiyat: response.data.price,
+            adet: response.data.quantity,
+            toplamFiyat: (response.data.price * response.data.quantity).toFixed(
+              2
+            ),
+          },
+        ];
+        await nextTick();
+        isAddModalOpen.value = false;
+        newProduct.value = { barkodNo: "", aciklama: "", fiyat: 0, adet: 0 };
+      } else {
+        console.log("Ürün zaten eklenmiş:", existingItem);
+      }
     }
   } catch (error) {
-    console.error("Ürünler getirilirken hata oluştu:", error);
+    console.error("Ürün ekleme hatası:", error);
   }
 };
 
-const scanBarcode = async (row) => {
-  try {
-    const permission = await BarcodeScanner.checkPermission({ force: true });
+const deleteRow = (row: Product) => {
+  rows.value = rows.value.filter((item) => item.barkodNo !== row.barkodNo);
+  $q.notify({
+    color: "positive",
+    message: "Ürün başarıyla silindi!",
+    icon: "check",
+  });
+};
 
-    if (!permission.granted) {
-      $q.dialog({
-        title: 'Kamera İzni Gerekli',
-        message: 'Barkod taramak için kameraya erişim izni vermelisiniz.',
-        cancel: true,
-        persistent: true
-      }).onOk(async () => {
-        await BarcodeScanner.checkPermission({ force: true });
-      });
-      return;
-    }
+const startScanner = async () => {
+  if (!scannerRef.value) return;
+  html5QrCode = new Html5Qrcode("scanner");
+  isScanning.value = true;
 
-    // Kamera açıldığını belirt
-    isCameraOpen.value = true;
+  await html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    (decodedText) => handleScanSuccess(decodedText),
+    (errorMessage) => console.log(errorMessage)
+  );
+};
 
-    // Kamerayı başlat
-    await BarcodeScanner.startScan();
+const stopScanner = async () => {
+  if (html5QrCode?.isScanning) {
+    await html5QrCode.stop();
+    isScanning.value = false;
+  }
+};
 
-    const result = await BarcodeScanner.startScan();
-    if (result.hasContent) {
-      row.barkodNo = result.content;
-      
+const handleScanSuccess = async (decodedText: string) => {
+  const response = await getAllProduct({ barcode: decodedText });
+
+  if (response?.data?.length > 0) {
+    console.log("Taranan ürün bilgileri:", response.data);
+
+    // Zaten eklenmiş ürünleri kontrol et
+    const existingBarcodes = new Set(rows.value.map((row) => row.barkodNo));
+
+    const newProducts = response.data
+      .filter((item) => !existingBarcodes.has(item.barcode)) // Daha önce eklenmemiş ürünleri filtrele
+      .map((item) => ({
+        barkodNo: item.barcode,
+        aciklama: item.description,
+        fiyat: item.price,
+        adet: item.quantity,
+        toplamFiyat: (item.price * item.quantity).toFixed(2),
+      }));
+
+    if (newProducts.length > 0) {
+      rows.value = [...rows.value, ...newProducts];
+      await nextTick();
       $q.notify({
-        type: 'positive',
-        message: 'Barkod başarıyla okundu.'
+        type: "positive",
+        message: "Yeni ürün(ler) listeye eklendi!",
+        position: "center",
       });
-
-      // Barkod okunduğunda kamerayı kapat
-      closeCamera();
     } else {
+      console.log("Barkod zaten listede:", decodedText);
       $q.notify({
-        type: 'negative',
-        message: 'Barkod okunamadı.'
+        type: "info",
+        message: "Bu ürün zaten listede!",
+        position: "center",
       });
     }
-  } catch (error) {
-    console.error("Barkod tarama hatası:", error);
+  } else {
+    console.log("Barkod bulunamadı:", decodedText);
     $q.notify({
-      type: 'negative',
-      message: 'Barkod tarama sırasında bir hata oluştu.'
+      type: "warning",
+      message: "Ürün bulunamadı!",
+      position: "center",
     });
   }
 };
 
+const toggleScanner = () => {
+  isScanning.value ? stopScanner() : startScanner();
+};
 
-
-onMounted(() => {
-  fetchProducts();
-});
+onMounted(() => startScanner());
+onUnmounted(() => stopScanner());
 </script>
-
 <style scoped>
+.scanner-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.scanner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.scanner-view {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #000;
+}
+
+.scanner-box {
+  width: 100%;
+  height: 100%;
+}
+
+.scanner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border: 2px solid #42b883;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.scanner-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #42b883;
+  animation: scan 2s linear infinite;
+}
+
+.scanned-codes {
+  margin-top: 1rem;
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0;
+  }
+}
+
 .table-container {
   max-width: 1500px;
   margin: 0 auto;
@@ -403,8 +497,8 @@ onMounted(() => {
   gap: 15px;
 }
 @media (max-width: 960px) {
-  .input-section{
-  display: block;
+  .input-section {
+    display: block;
   }
 }
 
@@ -420,7 +514,6 @@ onMounted(() => {
 }
 
 .button-container {
-
   justify-content: space-between;
   gap: 10px;
   margin-top: 20px;
@@ -442,5 +535,4 @@ onMounted(() => {
   right: 0;
   position: absolute;
 }
-
 </style>
