@@ -34,7 +34,15 @@
           <div v-if="!companyName" class="text-negative q-mt-sm">
             * Firma ismi zorunludur!
           </div>
-          <q-table :rows="rows" :columns="columns" class="q-mb-md">
+          <q-table
+            :rows="rows"
+            :columns="columns"
+            class="q-mb-md"
+            row-key="id"
+            dense
+            :rows-per-page-options="[5, 10, 15, 20]"
+            :pagination="pagination"
+          >
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td v-for="col in props.cols" :key="col.name">
@@ -91,6 +99,22 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
+            <div class="row justify-center q-mb-sm">
+              <q-btn
+                :color="isScanning ? 'negative' : 'primary'"
+                :label="isScanning ? 'Stop Scanner' : 'Start Scanner'"
+                @click="toggleScanner"
+                :icon="isScanning ? 'stop' : 'play_arrow'"
+              />
+            </div>
+            <!-- Kamera sadece isScanning TRUE iken gözüksün -->
+            <div class="q-pa-md">
+              <div class="scanner-container">
+                <div class="scanner-view q-pa-md">
+                  <div id="scanner" ref="scannerRef" class="scanner-box"></div>
+                </div>
+              </div>
+            </div>
             <q-input
               filled
               v-model="newProduct.companyName"
@@ -138,38 +162,6 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-
-      <!-- Kamera Kapat Butonu -->
-      <q-dialog v-model="isCameraOpen" persistent>
-        <q-card>
-          <q-card-section class="row items-center">
-            <q-btn
-              icon="close"
-              color="negative"
-              @click="closeCamera"
-              label="Kamerayı Kapat"
-            />
-          </q-card-section>
-        </q-card>
-      </q-dialog>
-
-      <div class="q-pa-md">
-        <div class="scanner-container">
-          <div class="scanner-header">
-            <h2>Barcode Scanner</h2>
-            <q-btn
-              :color="isScanning ? 'negative' : 'primary'"
-              :label="isScanning ? 'Stop Scanner' : 'Start Scanner'"
-              @click="toggleScanner"
-              :icon="isScanning ? 'stop' : 'play_arrow'"
-            />
-          </div>
-
-          <div class="scanner-view q-pa-md">
-            <div id="scanner" ref="scannerRef" class="scanner-box"></div>
-          </div>
-        </div>
-      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -188,7 +180,9 @@ const updateTotal = (row) => {
 };
 const $q = useQuasar();
 const { getAllProduct, addProduct } = product();
-
+const pagination = ref({
+  rowsPerPage: 10, // Varsayılan olarak 10 kayıt göster
+});
 interface Product {
   barkodNo: string;
   aciklama: string;
@@ -398,6 +392,10 @@ const handleScanSuccess = async (decodedText: string) => {
         position: "center",
       });
     }
+
+    // 🟢 Ürün zaten varsa, dialogu kapat
+    stopScanner();
+    isAddModalOpen.value = false;
   } else {
     console.log("Barkod bulunamadı:", decodedText);
     $q.notify({
@@ -408,11 +406,15 @@ const handleScanSuccess = async (decodedText: string) => {
   }
 };
 
-const toggleScanner = () => {
-  isScanning.value ? stopScanner() : startScanner();
+const toggleScanner = async () => {
+  if (isScanning.value) {
+    await stopScanner();
+  } else {
+    await startScanner();
+  }
 };
 
-onMounted(() => startScanner());
+// onMounted(() => startScanner());
 onUnmounted(() => stopScanner());
 </script>
 <style scoped>
