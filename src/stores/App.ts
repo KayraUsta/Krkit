@@ -7,13 +7,13 @@ export const App = () => {
       version: "v0.1.3",
       // LOCAL //
 
-      apiUrl: 'https://localhost:7213/api',
-    uploads: 'https://localhost:7213/',
+    //  apiUrl: 'https://localhost:7213/api',
+   // uploads: 'https://localhost:7213/',
       // LOCAL //
 
       // TEST //
-   //  apiUrl: 'https://api.tarasat.com/api',
-  //    uploads: 'https://testapi.sitrancelik.com/',
+     apiUrl: 'https://api.tarasat.com/api',
+   // uploads: 'https://testapi.sitrancelik.com/',
       // TEST //
 
       // LIVE //
