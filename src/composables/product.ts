@@ -6,13 +6,16 @@ export function product() {
   const router = useRouter();
 
   // Tüm görevleri al
-  const getAllProduct = async (GetProductByFilterRequestDto:any) => {
+  const getAllProduct = async (GetProductByFilterRequestDto: any) => {
     try {
-      let response = await api.post('/Product',GetProductByFilterRequestDto);
+      let response = await api.post('/Product', GetProductByFilterRequestDto, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
-      // console.log("response", response);
       if (response.status === 200) {
-        return response; // Backend'den dönen tüm görev verilerini döndürüyoruz
+        return response;
       }
     } catch (error: any) {
       console.log("Hata:", error);
@@ -35,6 +38,7 @@ export function product() {
       }
     }
   };
+
 
   // Belirli bir görevi güncelle
   const updateProduct = async (data: any) => {

@@ -72,6 +72,12 @@ const veriModeli = ref({
 });
 const fetchProducts = async (verimodeli) => {
   try {
+    // console.log(verimodeli.value, "verimodeli");
+
+    // if (verimodeli.value.Barcode === "") {
+    //   verimodeli.value.Barcode = null;
+    //   console.log("Barkod Numarası Girilmedi");
+    // }
     const response = await getAllProduct(veriModeli.value);
     console.log("API Yanıtı:", response);
 

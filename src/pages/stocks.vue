@@ -16,14 +16,14 @@
             class="full-width"
             dense
           />
-          <q-input
+          <!-- <q-input
             filled
             v-model="quantity"
             label="Miktar"
             type="number"
             class="full-width"
             dense
-          />
+          /> -->
           <q-input
             filled
             v-model="productDescription"
@@ -31,13 +31,13 @@
             class="full-width"
             dense
           />
-          <q-input
+          <!-- <q-input
             filled
             v-model="companyName"
             label="Şirket İsmi"
             class="full-width"
             dense
-          />
+          /> -->
           <q-input
             filled
             v-model="price"
@@ -90,8 +90,8 @@ const saveStock = async () => {
         barcode: barcodeNumber.value,
         description: productDescription.value,
         price: price.value,
-        companyName: companyName.value,
-        quantity: quantity.value,
+        // companyName: companyName.value,
+        // quantity: quantity.value,
 
       })
 

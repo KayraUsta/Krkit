@@ -12,7 +12,7 @@ export const App = () => {
       // LOCAL //
 
       // TEST //
-    // apiUrl: 'https://testapi.sitrancelik.com/api',
+   //  apiUrl: 'https://api.tarasat.com/api',
   //    uploads: 'https://testapi.sitrancelik.com/',
       // TEST //
 
