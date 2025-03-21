@@ -1,8 +1,8 @@
 {
-  "name": "krkit",
+  "name": "TaraSat",
   "version": "0.0.1",
-  "description": "Krkit",
-  "productName": "Krkit",
+  "description": "TaraSat",
+  "productName": "TaraSat",
   "author": "Kayra Usta Halil",
   "type": "module",
   "private": true,

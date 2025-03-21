@@ -18,8 +18,23 @@
           />
           <q-input
             filled
+            v-model="quantity"
+            label="Miktar"
+            type="number"
+            class="full-width"
+            dense
+          />
+          <q-input
+            filled
             v-model="productDescription"
             label="Ürün Açıklaması"
+            class="full-width"
+            dense
+          />
+          <q-input
+            filled
+            v-model="companyName"
+            label="Şirket İsmi"
             class="full-width"
             dense
           />
@@ -46,62 +61,56 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { product } from 'src/composables/product'
 
-export default {
-  setup() {
-    const barcodeNumber = ref('')
-    const productDescription = ref('')
-    const price = ref('')
-    const $q = useQuasar()
+const { addProduct } = product()
+const $q = useQuasar()
 
-    const saveStock = async () => {
-      if (!barcodeNumber.value || !productDescription.value || !price.value) {
-        $q.notify({
-          type: 'negative',
-          message: 'Lütfen tüm alanları doldurun!',
-        })
-        return
-      }
+const barcodeNumber = ref('')
+const productDescription = ref('')
+const price = ref('')
+const companyName = ref('')
+const quantity = ref('')
 
-      try {
-        const response = await fetch('https://api.example.com/stocks', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            barcode: barcodeNumber.value,
-            description: productDescription.value,
-            price: price.value,
-          }),
-        })
+const saveStock = async () => {
+  if (!barcodeNumber.value || !productDescription.value || !price.value) {
+    $q.notify({
+      type: 'negative',
+      message: 'Lütfen tüm alanları doldurun!',
+    })
+    return
+  }
 
-        if (!response.ok) throw new Error('Stok kaydedilemedi')
+  try {
+    const response = await addProduct({
 
-        $q.notify({
-          type: 'positive',
-          message: 'Stok başarıyla kaydedildi!',
-        })
+        barcode: barcodeNumber.value,
+        description: productDescription.value,
+        price: price.value,
+        companyName: companyName.value,
+        quantity: quantity.value,
 
-        barcodeNumber.value = ''
-        productDescription.value = ''
-        price.value = ''
-      } catch (error) {
-        $q.notify({
-          type: 'negative',
-          message: 'Bir hata oluştu!',
-        })
-        console.error(error)
-      }
-    }
+      })
 
-    return {
-      barcodeNumber,
-      productDescription,
-      price,
-      saveStock,
-    }
+    if (!response.ok) throw new Error('Stok kaydedilemedi')
+
+    $q.notify({
+      type: 'positive',
+      message: 'Stok başarıyla kaydedildi!',
+    })
+
+    barcodeNumber.value = ''
+    productDescription.value = ''
+    price.value = ''
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: 'Bir hata oluştu!',
+    })
+    console.error(error)
   }
 }
 </script>
