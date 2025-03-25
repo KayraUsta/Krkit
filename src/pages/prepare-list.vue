@@ -220,9 +220,9 @@ const generatePDF = () => {
   // Başlık yazıları
   doc.setFontSize(18);
   doc.text("Ürün Listesi", 14, 20);
-  
+
   // Firma ismi, Hazırlayan kişi ve tarih bilgisi
-  
+
   doc.setFontSize(14);
   doc.text(`Firma Ismi: ${companyName.value}`, 14, 30);
   doc.text(`Listeyi Hazirlayan: ${preparedBy.value}`, 14, 40);
@@ -317,8 +317,8 @@ const showAddModal = () => {
 
 const addRow = async () => {
   // Validasyon
-  if (!newProduct.value.barcode || !newProduct.value.description ||
-      newProduct.value.price <= 0 || newProduct.value.quantity <= 0) {
+  if ( !newProduct.value.description ||
+      newProduct.value.price || newProduct.value.quantity ) {
     $q.notify({ type: "negative", message: "Lütfen tüm alanları eksiksiz doldurun!" });
     return;
   }

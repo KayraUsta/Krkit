@@ -49,8 +49,10 @@
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar';
 import { ref, onMounted } from 'vue';
 import { toDoList } from 'src/composables/toDoList'; // API fonksiyonlarını içe aktar
+const $q = useQuasar();
 
 const {
   getAllToDo,
@@ -81,26 +83,44 @@ const loadTasks = async () => {
   }
 };
 
-// Görev ekleme fonksiyonu
 const addTask = async () => {
-  if (newTask.value.title) { // Artık sadece title kontrol ediliyor
-    try {
-      const result = await addToDo(newTask.value); // Yeni görevi ekle
-      if (result.ok === "Success") {
-        tasks.value.push({
-          ...newTask.value,
-          id: result.id, // Geçici bir ID ekleyelim, API ID dönecek
-          createdAt: new Date().toLocaleString(),
-          isCompleted: false,
-        });
-        newTask.value = { title: '' }; // Formu sıfırla
-        loadTasks(); // Yeni görev eklendi, tüm görevleri tekrar yükle
-      }
-    } catch (error) {
-      console.error('Error adding task:', error);
+  if (!newTask.value.title) {
+    $q.notify({
+      type: 'negative',
+      message: 'Görev başlığı boş bırakılamaz'
+    });
+    return;
+  }
+
+  if (!newTask.value.description) {
+    $q.notify({
+      type: 'negative',
+      message: 'Görev açıklaması boş bırakılamaz'
+    });
+    return;
+  }
+
+  try {
+    const result = await addToDo(newTask.value);
+    if (result.ok === "Success") {
+      tasks.value.push({
+        ...newTask.value,
+        id: result.id,
+        createdAt: new Date().toLocaleString(),
+        isCompleted: false,
+      });
+      newTask.value = { title: '', description: '' }; // Formu sıfırla
+      loadTasks();
     }
+  } catch (error) {
+    console.error('Error adding task:', error);
+    $q.notify({
+      type: 'negative',
+      message: 'Görev eklenirken bir hata oluştu'
+    });
   }
 };
+
 
 // Görev silme fonksiyonu
 const deleteTask = async (taskId) => {
