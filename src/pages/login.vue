@@ -82,7 +82,7 @@ const login = async () => {
         });
 
         setTimeout(() => {
-          router.push('/toDoList'); // Normal kullanıcı sayfasına yönlendiriliyor
+          router.push('/welcome'); // Normal kullanıcı sayfasına yönlendiriliyor
         }, 2000);
       }
     } else {

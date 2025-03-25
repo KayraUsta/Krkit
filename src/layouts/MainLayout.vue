@@ -62,7 +62,14 @@
             Stokları Görüntüle
           </q-item-section>
         </q-item>
-
+        <q-item clickable v-ripple @click="navigateTo('/toDoList')">
+          <q-item-section avatar>
+            <q-icon name="check_box" />
+          </q-item-section>
+          <q-item-section>
+           Yapılacaklar Listesi
+          </q-item-section>
+        </q-item>
       
 
 

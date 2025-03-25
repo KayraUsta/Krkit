@@ -207,23 +207,31 @@ const generatePDF = () => {
     });
     return;
   }
+
   const doc = new jsPDF();
 
   // Sayfanın başına Firma İsmi, Hazırlayan Kişi ve Tarih bilgisi ekleyelim
   const currentDate = new Date().toLocaleDateString("tr-TR");
   const fileName = `${currentDate}_${companyName.value}_${preparedBy.value}.pdf`;
 
-  doc.setFontSize(16);
+  // Türkçe karakterler için font ayarı
+  doc.setFont('helvetica', 'normal'); // Türkçe karakterler için uygun font seçimi
+
+  // Başlık yazıları
+  doc.setFontSize(18);
   doc.text("Ürün Listesi", 14, 20);
-  doc.setFontSize(12);
-  doc.text(`Firma İsmi: ${companyName.value}`, 14, 30);
-  doc.text(`Listeyi Hazırlayan: ${preparedBy.value}`, 14, 40);
+  
+  // Firma ismi, Hazırlayan kişi ve tarih bilgisi
+  
+  doc.setFontSize(14);
+  doc.text(`Firma Ismi: ${companyName.value}`, 14, 30);
+  doc.text(`Listeyi Hazirlayan: ${preparedBy.value}`, 14, 40);
   doc.text(`Tarih: ${currentDate}`, 14, 50);
 
   // Tablo başlıkları
   const tableHeaders = [
-    "Barkod Numarası",
-    "Açıklama",
+    "Barkod Numarasi",
+    "Açiklama",
     "Fiyat",
     "Adet",
     "Toplam Fiyat",
@@ -243,26 +251,42 @@ const generatePDF = () => {
     head: [tableHeaders],
     body: tableData,
     theme: "grid",
-    styles: { fontSize: 10 },
+    styles: { fontSize: 12 }, // Yazı boyutunu büyüt
     headStyles: { fillColor: [63, 81, 181] }, // Başlık rengi (Mavi)
   });
 
   // Toplam Tutarı yazdır
-  // Toplam Tutarı yazdır (Sayfanın en sağına hizala)
   const finalY = doc.lastAutoTable.finalY + 10; // Tablo sonrasına ekle
-  doc.setFontSize(12);
+  doc.setFontSize(14); // Yazı boyutunu biraz daha büyüt
 
+  // Toplam Tutar
   const pageWidth = doc.internal.pageSize.width; // Sayfanın genişliğini al
-  const textWidth = doc.getTextWidth(
-    `Toplam Tutar: ${grandTotal.toFixed(2)} TL`
-  ); // Metnin genişliğini hesapla
+  const totalText = `Toplam Tutar: ${grandTotal.toFixed(2)} TL`;
+  const textWidth = doc.getTextWidth(totalText); // Metnin genişliğini hesapla
   const xPosition = pageWidth - textWidth - 14; // Sağ kenara hizala (sağdan biraz boşluk bırak)
 
-  doc.text(`Toplam Tutar: ${grandTotal.toFixed(2)} TL`, xPosition, finalY);
+  doc.text(totalText, xPosition, finalY);
+
+  // KDV Hesaplama (Toplam Tutarın %20'si)
+  const vat = grandTotal * 0.20;
+  const vatText = `KDV : ${vat.toFixed(2)} TL`;
+  const vatTextWidth = doc.getTextWidth(vatText); // Metnin genişliğini hesapla
+  const vatXPosition = pageWidth - vatTextWidth - 14; // Sağ kenara hizala
+
+  doc.text(vatText, vatXPosition, finalY + 10);
+
+  // KDV'li Toplam Fiyat
+  const totalWithVat = grandTotal + vat;
+  const totalWithVatText = `KDV'li Toplam Fiyat: ${totalWithVat.toFixed(2)} TL`;
+  const totalWithVatTextWidth = doc.getTextWidth(totalWithVatText); // Metnin genişliğini hesapla
+  const totalWithVatXPosition = pageWidth - totalWithVatTextWidth - 14; // Sağ kenara hizala
+
+  doc.text(totalWithVatText, totalWithVatXPosition, finalY + 20);
 
   // PDF'i kaydet
   doc.save(fileName);
 };
+
 
 const companyName = ref<string>("");
 const preparedBy = ref<string>(localStorage.getItem("username") || "");

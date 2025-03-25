@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/admin',
     component: () => import('layouts/adminLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [{ path: '', component: () => import('pages/welcome.vue') }],
   },
   {
     path: '/stocks',
@@ -37,6 +37,11 @@ const routes: RouteRecordRaw[] = [
     path: '/view-users',
     component: () => import('layouts/adminlayout.vue'),
     children: [{ path: '', component: () => import('pages/view-users.vue') }],
+  },
+  {
+    path: '/welcome',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/welcome.vue') }],
   },
   // Always leave this as last one,
   // but you can also remove it
