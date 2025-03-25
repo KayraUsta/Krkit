@@ -35,43 +35,52 @@
             * Firma ismi zorunludur!
           </div>
           <q-table
-            :rows="rows"
-            :columns="columns"
-            class="q-mb-md"
-            row-key="id"
+  :rows="rows"
+  :columns="columns"
+  class="q-mb-md"
+  row-key="id"
+  dense
+  :rows-per-page-options="[5, 10, 15, 20]"
+  :pagination="pagination"
+>
+  <template v-slot:body="props">
+    <q-tr :props="props">
+      <q-td v-for="col in props.cols" :key="col.name">
+        <!-- Tüm sayısal değerler için input (price, quantity) -->
+        <template v-if="col.name === 'price' || col.name === 'quantity'">
+          <q-input
+            v-model.number="props.row[col.name]"
             dense
-            :rows-per-page-options="[5, 10, 15, 20]"
-            :pagination="pagination"
-          >
-            <template v-slot:body="props">
-              <q-tr :props="props">
-                <q-td v-for="col in props.cols" :key="col.name">
-                  <template v-if="col.name === 'adet' || col.name === 'fiyat'">
-                    <q-input
-                      v-model.number="props.row[col.name]"
-                      dense
-                      type="number"
-                      min="0"
-                      @update:model-value="updateTotal(props.row)"
-                    />
-                  </template>
-                  <template v-else>
-                    <span>{{ props.row[col.name] }}</span>
-                  </template>
-                </q-td>
-                <q-td>
-                  <q-btn
-                    icon="delete"
-                    dense
-                    flat
-                    color="negative"
-                    @click="deleteRow(props.row)"
-                  />
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
-
+            type="number"
+            min="0"
+            @update:model-value="updateTotal(props.row)"
+          />
+        </template>
+        <!-- Barkod ve açıklama için düzenlenebilir input -->
+        <template v-else-if="col.name === 'barcode' || col.name === 'description'">
+          <q-input
+            v-model="props.row[col.name]"
+            dense
+            @blur="saveChanges(props.row)"
+          />
+        </template>
+        <!-- Toplam fiyat (salt okunur) -->
+        <template v-else>
+          <span>{{ props.row[col.name] }}</span>
+        </template>
+      </q-td>
+      <q-td>
+        <q-btn
+          icon="delete"
+          dense
+          flat
+          color="negative"
+          @click="deleteRow(props.row)"
+        />
+      </q-td>
+    </q-tr>
+  </template>
+</q-table>
           <div class="button-container">
             <q-btn
               label="Yazdır"
@@ -117,7 +126,7 @@
             </div>
             <q-input
               filled
-              v-model="newProduct.companyName"
+              v-model="newProduct.barcode"
               label="Barkod Numarası"
               class="q-mb-sm"
               dense
@@ -173,10 +182,10 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Html5Qrcode } from "html5-qrcode";
 const updateTotal = (row) => {
-  if (row.adet < 0) row.adet = 0; // Negatif değer engelle
-  if (row.fiyat < 0) row.fiyat = 0;
+  if (row.quantity < 0) row.quantity = 0; // Negatif değer engelle
+  if (row.price < 0) row.price = 0;
 
-  row.toplamFiyat = (row.adet * row.fiyat).toFixed(2);
+  row.toplamFiyat = (row.quantity * row.price).toFixed(2);
 };
 const $q = useQuasar();
 const { getAllProduct, addProduct } = product();
@@ -184,10 +193,10 @@ const pagination = ref({
   rowsPerPage: 10, // Varsayılan olarak 10 kayıt göster
 });
 interface Product {
-  barkodNo: string;
-  aciklama: string;
-  fiyat: number;
-  adet: number;
+  barcode: string;
+  description: string;
+  price: number;
+  quantity: number;
   toplamFiyat?: string;
 }
 const generatePDF = () => {
@@ -223,9 +232,9 @@ const generatePDF = () => {
   // Tablo içeriği ve toplam hesaplama
   let grandTotal = 0;
   const tableData = rows.value.map((row) => {
-    const total = row.fiyat * row.adet; // Satır toplamını hesapla
+    const total = row.price * row.quantity; // Satır toplamını hesapla
     grandTotal += total; // Genel toplamı güncelle
-    return [row.barkodNo, row.aciklama, row.fiyat, row.adet, total.toFixed(2)];
+    return [row.barcode, row.description, row.price, row.quantity, total.toFixed(2)];
   });
 
   // Tabloyu oluştur
@@ -257,24 +266,24 @@ const generatePDF = () => {
 
 const companyName = ref<string>("");
 const preparedBy = ref<string>(localStorage.getItem("username") || "");
-const rows = ref<Product[]>([]);
 const isAddModalOpen = ref<boolean>(false);
 const isScanning = ref<boolean>(false);
 const scannerRef = ref<HTMLDivElement | null>(null);
 let html5QrCode: Html5Qrcode | null = null;
 
-const newProduct = ref<Product>({
-  barkodNo: "",
-  aciklama: "",
-  fiyat: 0,
-  adet: 0,
+const newProduct = ref({
+  barcode: "",
+  description: "",
+  price: 0,
+  quantity: 0,
 });
 
+const rows = ref([]);
 const columns = [
-  { name: "barkodNo", label: "Barkod Numarası", align: "left" },
-  { name: "aciklama", label: "Açıklama", align: "left" },
-  { name: "fiyat", label: "Fiyat", align: "left" },
-  { name: "adet", label: "Adet", align: "left" },
+  { name: "barcode", label: "Barkod Numarası", align: "left" },
+  { name: "description", label: "Açıklama", align: "left" },
+  { name: "price", label: "Fiyat", align: "left" },
+  { name: "quantity", label: "Adet", align: "left" },
   { name: "toplamFiyat", label: "Toplam Fiyat", align: "right" },
 ];
 
@@ -283,53 +292,40 @@ const showAddModal = () => {
 };
 
 const addRow = async () => {
-  if (
-    !newProduct.value.barkodNo ||
-    !newProduct.value.aciklama ||
-    newProduct.value.fiyat <= 0 ||
-    newProduct.value.adet <= 0
-  ) {
-    $q.notify({
-      type: "negative",
-      message: "Lütfen tüm alanları eksiksiz doldurun!",
-    });
+  // Validasyon
+  if (!newProduct.value.barcode || !newProduct.value.description ||
+      newProduct.value.price <= 0 || newProduct.value.quantity <= 0) {
+    $q.notify({ type: "negative", message: "Lütfen tüm alanları eksiksiz doldurun!" });
     return;
   }
 
   try {
     const response = await addProduct(newProduct.value);
-    if (response) {
-      const existingItem = rows.value.find(
-        (item) => item.barkodNo.trim() === response.data.barcode.trim()
-      );
+    console.log("API Yanıtı:", response);
 
-      if (!existingItem) {
-        rows.value = [
-          ...rows.value,
-          {
-            barkodNo: response.data.barcode,
-            aciklama: response.data.description,
-            fiyat: response.data.price,
-            adet: response.data.quantity,
-            toplamFiyat: (response.data.price * response.data.quantity).toFixed(
-              2
-            ),
-          },
-        ];
-        await nextTick();
-        isAddModalOpen.value = false;
-        newProduct.value = { barkodNo: "", aciklama: "", fiyat: 0, adet: 0 };
-      } else {
-        console.log("Ürün zaten eklenmiş:", existingItem);
-      }
-    }
+    // Direkt olarak newProduct'ı ekleyin (API yanıtına güvenmiyorsanız)
+    const newItem = {
+      barcode: newProduct.value.barcode,
+      description: newProduct.value.description,
+      price: newProduct.value.price,
+      quantity: newProduct.value.quantity,
+      toplamFiyat: (newProduct.value.price * newProduct.value.quantity).toFixed(2)
+    };
+
+    rows.value.push(newItem);
+
+    // Modal'ı kapat ve formu temizle
+    isAddModalOpen.value = false;
+    newProduct.value = { barcode: "", description: "", price: 0, quantity: 0 };
+
+    $q.notify({ type: "positive", message: "Ürün başarıyla eklendi!" });
   } catch (error) {
     console.error("Ürün ekleme hatası:", error);
+    $q.notify({ type: "negative", message: "Ürün eklenirken hata oluştu!" });
   }
 };
-
 const deleteRow = (row: Product) => {
-  rows.value = rows.value.filter((item) => item.barkodNo !== row.barkodNo);
+  rows.value = rows.value.filter((item) => item.barcode !== row.barcode);
   $q.notify({
     color: "positive",
     message: "Ürün başarıyla silindi!",
@@ -364,15 +360,15 @@ const handleScanSuccess = async (decodedText: string) => {
     console.log("Taranan ürün bilgileri:", response.data);
 
     // Zaten eklenmiş ürünleri kontrol et
-    const existingBarcodes = new Set(rows.value.map((row) => row.barkodNo));
+    const existingBarcodes = new Set(rows.value.map((row) => row.barcode));
 
     const newProducts = response.data
       .filter((item) => !existingBarcodes.has(item.barcode)) // Daha önce eklenmemiş ürünleri filtrele
       .map((item) => ({
-        barkodNo: item.barcode,
-        aciklama: item.description,
-        fiyat: item.price,
-        adet: item.quantity,
+        barcode: item.barcode,
+        description: item.description,
+        price: item.price,
+        quantity: item.quantity,
         toplamFiyat: (item.price * item.quantity).toFixed(2),
       }));
 
