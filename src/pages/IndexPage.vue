@@ -14,7 +14,16 @@
       <div v-for="task in tasks" :key="task.id" class="task-card">
         <div class="task-content">
           <q-checkbox v-model="task.isCompleted" @change="updateTaskStatus(task)" class="task-checkbox" />
-          <div :class="['task-title', { completed: task.isCompleted }]">{{ task.title }}</div>
+          <div class="task-container">
+  <div :class="['task-title', { completed: task.isCompleted }]">
+    {{ task.title }}
+  </div>
+  <div v-if="task.description" class="task-description">
+    {{ task.description }}
+  </div>
+</div>
+
+
         </div>
         <div class="task-actions">
           <q-btn @click="editTask(task)" class="edit-btn" icon="edit" />
@@ -155,6 +164,24 @@ body {
   padding: 0;
   overflow-x: hidden; /* Yatay kaymayı engellemek için eklendi */
 }
+
+.task-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-title {
+  display: block; /* Ensure title is block-level */
+}
+
+.task-description {
+  display: block; /* Ensure description is block-level */
+  font-size: 0.9rem; /* Make it smaller */
+  color: #777; /* Lighter color */
+  margin-top: 4px; /* Space between title and description */
+}
+
+
 
 /* Container */
 .todo-container {

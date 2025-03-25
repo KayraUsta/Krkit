@@ -64,7 +64,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple @click="navigateTo('/stocks')">
+        <!-- <q-item clickable v-ripple @click="navigateTo('/stocks')">
           <q-item-section avatar>
             <q-icon name="inventory" />
           </q-item-section>
@@ -80,7 +80,7 @@
           <q-item-section>
             Stokları Görüntüle
           </q-item-section>
-        </q-item>
+        </q-item> -->
       </q-list>
     </q-drawer>
 

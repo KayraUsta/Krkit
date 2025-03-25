@@ -45,10 +45,28 @@
             Liste Hazırla
           </q-item-section>
         </q-item>
+        <q-item clickable v-ripple @click="navigateTo('/stocks')">
+          <q-item-section avatar>
+            <q-icon name="inventory" />
+          </q-item-section>
+          <q-item-section>
+            Stok Kayıdı Yap
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple @click="navigateTo('/views-stocks')">
+          <q-item-section avatar>
+            <q-icon name="storefront" />
+          </q-item-section>
+          <q-item-section>
+            Stokları Görüntüle
+          </q-item-section>
+        </q-item>
+
+      
 
 
 
-    
 
 
 

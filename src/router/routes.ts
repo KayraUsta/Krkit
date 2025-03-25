@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/views-stocks',
-    component: () => import('layouts/adminLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/views-stocks.vue') }],
   },
   {
@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/stocks',
-    component: () => import('layouts/adminlayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/stocks.vue') }],
   },
   {
