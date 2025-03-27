@@ -71,9 +71,9 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple @click="navigateTo('/customer')">
+        <q-item clickable v-ripple @click="navigateTo('/maintenance')">
           <q-item-section avatar>
-            <q-icon name="check_box" />
+            <q-icon name="calculate" />
           </q-item-section>
           <q-item-section>
            Müşteri Cari Hesap

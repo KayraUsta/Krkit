@@ -6,14 +6,14 @@
       <h2 class="login-title">Giriş Yap</h2>
       <form @submit.prevent="login">
         <q-input dense outlined v-model="username" label="Kullanıcı Adı" class="input-field" />
-        
+
         <div class="password-field">
-          <q-input 
-            dense 
-            outlined 
-            :type="passwordVisible ? 'text' : 'password'" 
-            v-model="password" 
-            label="Şifre" 
+          <q-input
+            dense
+            outlined
+            :type="passwordVisible ? 'text' : 'password'"
+            v-model="password"
+            label="Şifre"
             class="input-field"
           />
           <span class="eye-icon" @click="togglePasswordVisibility">
@@ -32,13 +32,14 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
-import axios from 'axios';
+import { loginApi } from 'src/composables/login.ts';
 
 const username = ref('');
 const password = ref('');
-const passwordVisible = ref(false); // Şifre görünürlüğünü kontrol eden değişken
+const passwordVisible = ref(false);
 const router = useRouter();
 const $q = useQuasar();
+const auth = loginApi(); // loginApi fonksiyonunu çağırıyoruz
 
 const login = async () => {
   if (!username.value || !password.value) {
@@ -52,16 +53,15 @@ const login = async () => {
   }
 
   try {
-    const response = await axios.post('https://testapi.sitrancelik.com/api/auth/login', {
+    const result = await auth.login({
       username: username.value,
-      password: password.value,
+      password: password.value
     });
 
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', username.value); // Kullanıcı adını localStorage'a kaydet
+    if (result.success) {
+      localStorage.setItem('username', username.value);
 
-      // Admin kontrolü yapılır
+      // Admin kontrolü
       if (username.value === 'admin' && password.value === 'Admin1') {
         $q.notify({
           message: 'Admin giriş başarılı, admin sayfasına yönlendiriliyorsunuz...',
@@ -71,7 +71,7 @@ const login = async () => {
         });
 
         setTimeout(() => {
-          router.push('/admin'); // Admin sayfasına yönlendiriliyor
+          router.push('/admin');
         }, 2000);
       } else {
         $q.notify({
@@ -82,23 +82,21 @@ const login = async () => {
         });
 
         setTimeout(() => {
-          router.push('/welcome'); // Normal kullanıcı sayfasına yönlendiriliyor
+          router.push('/welcome');
         }, 2000);
       }
     } else {
-      throw new Error('Beklenmedik bir hata oluştu.');
+      $q.notify({
+        message: result.message || 'Giriş başarısız, lütfen tekrar deneyiniz.',
+        color: 'red',
+        position: 'top',
+        timeout: 3000,
+      });
     }
   } catch (error) {
     console.error('Giriş başarısız', error);
-
-    let errorMessage = 'Giriş başarısız, lütfen tekrar deneyiniz.';
-
-    if (error.response && error.response.data && error.response.data.message) {
-      errorMessage = error.response.data.message;
-    }
-
     $q.notify({
-      message: errorMessage,
+      message: 'Beklenmeyen bir hata oluştu',
       color: 'red',
       position: 'top',
       timeout: 3000,
@@ -106,7 +104,6 @@ const login = async () => {
   }
 };
 
-// Şifre görünürlüğünü değiştiren fonksiyon
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
