@@ -16,30 +16,36 @@ export function loginApi() {
   const login = async (data: any) => {
     try {
       let response = await api.post('/Auth/login', data);
-      if (response.status === 200) {
-        localStorage.setItem('token', response.data.data.token);
-        return { success: true }; // Return an object indicating success
+      console.log('Full API response:', response); // Yanıtı incele
+
+      // Token'i doğru yoldan almayı dene
+      const token = response.data.token || response.data.data?.token;
+
+      if (token) {
+        localStorage.setItem('token', token);
+        return { success: true };
       } else {
-        return { success: false, message: 'Login failed' }; // Handle non-200 responses
+        return { success: false, message: 'Token not found in response' };
       }
     } catch (error: any) {
-      let response = error.response;
-      console.log(error);
-
-      if (response.status === 401) {
-        router.replace("/unauthorize");
-        return { success: false, message: 'Unauthorized' };
+      console.error('Login error:', error);
+      if (error.response) {
+        if (error.response.status === 401) {
+          router.replace("/unauthorize");
+          return { success: false, message: 'Unauthorized' };
+        }
+        if (error.response.status === 403) {
+          router.replace("/is-not-auth");
+          return { success: false, message: 'Forbidden' };
+        }
+        return { 
+          success: false,
+          message: error.response.data?.errors?.errors || error.response.data?.message || 'Unknown error'
+        };
       }
-
-      if (error.response.status === 403) {
-        router.replace("/is-not-auth");
-        return { success: false, message: 'Forbidden' };
-      }
-
-      return { success: false, message: error.response.data.errors.errors || 'Unknown error' };
+      return { success: false, message: 'Network error' };
     }
   };
-
   const logout = () => {
     localStorage.removeItem('token');
     router.replace('/login');
