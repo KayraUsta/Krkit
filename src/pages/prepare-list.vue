@@ -316,24 +316,49 @@ const showAddModal = () => {
 };
 
 const addRow = async () => {
-  // Validasyon
-  if ( !newProduct.value.description ||
-      newProduct.value.price || newProduct.value.quantity ) {
-    $q.notify({ type: "negative", message: "Lütfen tüm alanları eksiksiz doldurun!" });
+  // Validasyon (barcode hariç, diğer alanlar zorunlu)
+  if (!newProduct.value.description ||
+      !newProduct.value.price ||
+      !newProduct.value.quantity ||
+      newProduct.value.price <= 0 ||
+      newProduct.value.quantity <= 0) {
+
+    let errorMessage = "Lütfen zorunlu alanları doldurun!";
+
+    // Özel hata mesajları
+    if (newProduct.value.price <= 0) {
+      errorMessage = "Fiyat sıfırdan büyük olmalıdır!";
+    } else if (newProduct.value.quantity <= 0) {
+      errorMessage = "Miktar sıfırdan büyük olmalıdır!";
+    }
+
+    $q.notify({ type: "negative", message: errorMessage });
     return;
   }
 
   try {
-    const response = await addProduct(newProduct.value);
+    // Barkod boşsa 1 ata, değilse kendi değerini kullan
+    const barcodeValue = newProduct.value.barcode.trim() === ""
+  ? Math.floor(Math.random() * 1000000).toString()
+  : newProduct.value.barcode;
+
+      // API'ye gönderilecek veri
+    const payload = {
+      ...newProduct.value,
+      barcode: barcodeValue, // Boşsa 1, değilse orijinal değer
+      CompanyName: "DEFAULT_COMPANY", // Sabit şirket adı
+    };
+
+    const response = await addProduct(payload);
     console.log("API Yanıtı:", response);
 
-    // Direkt olarak newProduct'ı ekleyin (API yanıtına güvenmiyorsanız)
+    // Yeni ürünü listeye ekle
     const newItem = {
-      barcode: newProduct.value.barcode,
+      barcode: barcodeValue, // Burada da aynı değeri kullan
       description: newProduct.value.description,
       price: newProduct.value.price,
       quantity: newProduct.value.quantity,
-      toplamFiyat: (newProduct.value.price * newProduct.value.quantity).toFixed(2)
+      toplamFiyat: (newProduct.value.price * newProduct.value.quantity).toFixed(2),
     };
 
     rows.value.push(newItem);
@@ -345,7 +370,12 @@ const addRow = async () => {
     $q.notify({ type: "positive", message: "Ürün başarıyla eklendi!" });
   } catch (error) {
     console.error("Ürün ekleme hatası:", error);
-    $q.notify({ type: "negative", message: "Ürün eklenirken hata oluştu!" });
+    $q.notify({
+      type: "negative",
+      message: error.response?.data?.errors?.CompanyName
+        ? `Hata: ${error.response.data.errors.CompanyName}`
+        : "Ürün eklenirken hata oluştu!",
+    });
   }
 };
 const deleteRow = (row: Product) => {
