@@ -14,10 +14,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/maintenance',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/CustomerPage.vue') }],
+    children: [{ path: '', component: () => import('pages/maintenance.vue') }],
   },
   {
-    path: '/admin',
+    path: '/admin',  
     component: () => import('layouts/adminLayout.vue'),
     children: [{ path: '', component: () => import('pages/welcome.vue') }],
   },
