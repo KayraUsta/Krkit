@@ -339,8 +339,9 @@ const addRow = async () => {
   try {
     // Barkod boşsa 1 ata, değilse kendi değerini kullan
     const barcodeValue = newProduct.value.barcode.trim() === ""
-  ? Math.floor(Math.random() * 1000000).toString()
+  ? "FKS" + Math.floor(Math.random() * 1000000).toString()
   : newProduct.value.barcode;
+
 
       // API'ye gönderilecek veri
     const payload = {

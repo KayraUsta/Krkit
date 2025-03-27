@@ -2,51 +2,61 @@
   <q-layout view="lHh Lpr lFf">
     <q-page-container class="q-pa-md">
       <div class="table-container">
-        <div class="header-section q-mb-md">
-          <q-img src="https://r.resimlink.com/FBGpL.png" alt="logo" height="130px" width="300px" class="q-mb-md" />
+        <div class="header-section q-mb-md text-center">
+          <q-img
+            src="https://r.resimlink.com/FBGpL.png"
+            alt="logo"
+            height="130px"
+            width="300px"
+            class="q-mb-md"
+          />
+        </div>
 
-
-
-        <q-table :rows="rows" :columns="columns" :rows-per-page="rows.length" class="q-mb-md">
-          <template v-slot:body="props">
-            <q-tr :props="props">
-              <q-td v-for="col in props.cols" :key="col.name">
-                <q-input
-                  v-if="col.name !== 'toplamFiyat'"
-                  v-model="props.row[col.name]"
-                  :placeholder="col.label"
-                  dense
-                  filled
-                  @input="calculateTotal(props.row)"
-                />
-                <q-input v-else v-model="props.row[col.name]" dense filled readonly class="text-right" />
-              </q-td>
-              <q-td>
-
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
-
-
-
+        <div class="markup-table">
+          <table>
+            <thead>
+              <tr>
+                <th v-for="col in columns" :key="col.name">
+                  {{ col.label }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, index) in rows" :key="index">
+                <td v-for="col in columns" :key="col.name">
+                  <q-input
+                    v-if="col.name !== 'toplamFiyat'"
+                    v-model="row[col.name]"
+                    :placeholder="col.label"
+                    dense
+                    filled
+                    @input="calculateTotal(row)"
+                  />
+                  <q-input
+                    v-else
+                    v-model="row[col.name]"
+                    dense
+                    filled
+                    readonly
+                    class="text-right"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      </div>
-
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-
-
 import { product } from 'src/composables/product';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 const { getAllProduct } = product();
-
 
 const rows = ref([]);
 
@@ -68,16 +78,10 @@ const calculateTotal = (row) => {
 
 const veriModeli = ref({
   Barcode: "",
-
 });
+
 const fetchProducts = async (verimodeli) => {
   try {
-    // console.log(verimodeli.value, "verimodeli");
-
-    // if (verimodeli.value.Barcode === "") {
-    //   verimodeli.value.Barcode = null;
-    //   console.log("Barkod Numarası Girilmedi");
-    // }
     const response = await getAllProduct(veriModeli.value);
     console.log("API Yanıtı:", response);
 
@@ -97,12 +101,54 @@ const fetchProducts = async (verimodeli) => {
     console.error("Ürünler getirilirken hata oluştu:", error);
   }
 };
+
 onMounted(() => {
   fetchProducts();
 });
 </script>
 
 <style scoped>
+.header-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
+.markup-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
+.markup-table table {
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+.markup-table th {
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.markup-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.markup-table tr:last-child td {
+  border-bottom: none;
+}
+
+.markup-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
 </style>

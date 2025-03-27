@@ -16,14 +16,14 @@
             class="full-width"
             dense
           />
-          <!-- <q-input
+          <q-input
             filled
             v-model="quantity"
             label="Miktar"
             type="number"
             class="full-width"
             dense
-          /> -->
+          />
           <q-input
             filled
             v-model="productDescription"
@@ -31,13 +31,6 @@
             class="full-width"
             dense
           />
-          <!-- <q-input
-            filled
-            v-model="companyName"
-            label="Şirket İsmi"
-            class="full-width"
-            dense
-          /> -->
           <q-input
             filled
             v-model="price"
@@ -72,8 +65,8 @@ const $q = useQuasar()
 const barcodeNumber = ref('')
 const productDescription = ref('')
 const price = ref('')
-const companyName = ref('')
-const quantity = ref('')
+const quantity = ref(1)
+const defaultCompanyName = "ABC Şirketi" // Default şirket ismi
 
 const saveStock = async () => {
   if (!barcodeNumber.value || !productDescription.value || !price.value) {
@@ -85,15 +78,15 @@ const saveStock = async () => {
   }
 
   try {
-    const response = await addProduct({
+    const productRequest = {
+      barcode: barcodeNumber.value,
+      description: productDescription.value,
+      price: Number(price.value),
+      companyName: defaultCompanyName, // Default değeri kullanıyoruz
+      quantity: Number(quantity.value)
+    }
 
-        barcode: barcodeNumber.value,
-        description: productDescription.value,
-        price: price.value,
-        // companyName: companyName.value,
-        // quantity: quantity.value,
-
-      })
+    const response = await addProduct(productRequest)
 
     if (!response.ok) throw new Error('Stok kaydedilemedi')
 
@@ -102,13 +95,15 @@ const saveStock = async () => {
       message: 'Stok başarıyla kaydedildi!',
     })
 
+    // Formu temizle
     barcodeNumber.value = ''
     productDescription.value = ''
     price.value = ''
+    quantity.value = 1
   } catch (error) {
     $q.notify({
       type: 'negative',
-      message: 'Bir hata oluştu!',
+      message: 'Bir hata oluştu: ' + error.message,
     })
     console.error(error)
   }
@@ -116,7 +111,7 @@ const saveStock = async () => {
 </script>
 
 <style scoped>
-/* Sayfa Ortalamak İçin */
+/* Stiller aynı kalıyor */
 .q-page-container {
   display: flex;
   justify-content: center;
@@ -124,7 +119,6 @@ const saveStock = async () => {
   height: 80vh;
 }
 
-/* Kart Tasarımı */
 .form-card {
   width: 100%;
   max-width: 400px;
@@ -134,14 +128,12 @@ const saveStock = async () => {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Başlık Stili */
 h4 {
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
 }
 
-/* Kaydet Butonu */
 .save-button {
   width: 100%;
   padding: 12px;
@@ -156,7 +148,6 @@ h4 {
   color: white;
 }
 
-/* Responsive için Genişlik Ayarı */
 .full-width {
   width: 100%;
 }
