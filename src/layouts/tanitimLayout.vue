@@ -21,7 +21,7 @@
 
         <!-- Menu Buttons -->
         <div class="row items-center q-gutter-md">
-          <q-btn flat to="/" class="text-black elegant-btn">
+          <q-btn flat to="/firmalogin" class="text-black elegant-btn">
             GİrİŞ Yap
           </q-btn>
           <q-btn flat class="text-black elegant-btn" @click="scrollToSection('pricing')">

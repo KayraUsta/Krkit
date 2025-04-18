@@ -1,4 +1,8 @@
 <template>
+  <link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+  rel="stylesheet"
+/>
   <div class="login-container">
     <div class="login-card">
       <img src="https://r.resimlink.com/FBGpL.png" alt="Logo" class="logo" />
@@ -110,53 +114,83 @@ const togglePasswordVisibility = () => {
 </script>
 
 <style scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #adefff, #ffd5ea);
-}
-
-.login-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  width: 350px;
-}
-
-.logo {
-  width: 280px;
-}
-
-.login-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.input-field {
-  margin-bottom: 1rem;
-}
-
-.password-field {
-  position: relative;
-}
-
-.eye-icon {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-.login-button {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-}
-</style>
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #fce4ec, #e0f7fa);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .login-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 380px;
+    transition: all 0.3s ease;
+  }
+  
+  .logo {
+    width: 250px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .login-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+  
+  .input-field {
+    margin-bottom: 1rem;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .q-input__control {
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .password-field {
+    position: relative;
+  }
+  
+  .eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .eye-icon:hover q-icon {
+    color: #ec407a;
+  }
+  
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 14px rgba(236, 64, 122, 0.3);
+  }
+  
+  .login-button:hover {
+    background-color: #ec407a !important;
+    transform: scale(1.02);
+  }
+  
+  .register-text {
+    margin-top: 1.2rem;
+    font-size: 0.75rem;
+    color: #666;
+  }
+  </style>
+  

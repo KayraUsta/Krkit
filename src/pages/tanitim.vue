@@ -1,11 +1,11 @@
-<!-- src/pages/Home.vue -->
+```vue
 <template>
   <q-page>
     <!-- Hero Section -->
     <section class="hero-section flex flex-center">
       <div class="text-center">
-        <h1 class="text-h2 text-black animate__animated animate__fadeInDown">TARASAT</h1>
-        <p class="text-h5 text-grey-8 q-mt-md animate__animated animate__fadeInUp animate__delay-1s">
+        <h1 class="text-h2 text-white animate__animated animate__fadeInDown">TARASAT</h1>
+        <p class="text-h5 text-white q-mt-md animate__animated animate__fadeInUp animate__delay-1s">
           Barkodla kolay liste oluşturun, takibinizi hızlandırın
         </p>
         <q-btn
@@ -19,26 +19,27 @@
     </section>
 
     <!-- Hakkımızda Section -->
-    <section id="about" class="section about-section q-py-xl">
+    <section id="about" class="section about-section q-py-lg">
       <div class="container">
         <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': aboutVisible }">
           Hakkımızda
         </h2>
-        <div class="row q-mt-lg">
-          <div class="col-md-6 col-sm-12 q-pr-md animate__animated" :class="{ 'animate__fadeInLeft': aboutVisible }">
-            <p class="text-body1">
+        <div class="row q-mt-md">
+          <div class="col-md-6 col-sm-12 q-pr-sm animate__animated" :class="{ 'animate__fadeInLeft': aboutVisible }">
+            <p class="text-body2">
               Tarasat, barkod okuma ve liste takip sistemleriyle iş süreçlerinizi kolaylaştırır. 5 yılı aşkın deneyimimizle, kullanıcı dostu çözümler sunuyoruz.
             </p>
-            <p class="text-body1 q-mt-md">
+            <p class="text-body2 q-mt-sm">
               Teknolojiye olan tutkumuzla, envanter yönetiminden raporlamaya kadar her adımda yanınızdayız.
             </p>
-            <q-btn color="black" text-color="white" label="Daha Fazla Bilgi" class="q-mt-md" />
+            <q-btn color="black" text-color="white" label="Daha Fazla Bilgi" size="sm" class="q-mt-sm" />
           </div>
-          <div class="col-md-6 col-sm-12 q-pl-md animate__animated" :class="{ 'animate__fadeInRight': aboutVisible }">
+          <div class="col-md-6 col-sm-12 q-pl-sm animate__animated" :class="{ 'animate__fadeInRight': aboutVisible }">
             <q-img
-              src="https://picsum.photos/id/237/800/500"
+              src="src/assets/stok.webp"
               alt="Tarasat Hakkında"
-              class="rounded-borders shadow-5"
+              class="rounded-borders shadow-2"
+              style="max-width: 100%; height: auto;"
             />
           </div>
         </div>
@@ -46,16 +47,16 @@
     </section>
 
     <!-- Hizmetlerimiz Section -->
-    <section id="services" class="section services-section bg-grey-2 q-py-xl">
+    <section id="services" class="section services-section bg-grey-2 q-py-lg">
       <div class="container">
         <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': servicesVisible }">
           Hizmetlerimiz
         </h2>
-        <div class="row q-mt-xl">
+        <div class="row q-mt-md q-col-gutter-sm">
           <div
             v-for="(service, index) in services"
             :key="index"
-            class="col-md-4 col-sm-6 col-xs-12 q-pa-md animate__animated"
+            class="col-md-4 col-sm-6 col-xs-12 q-pa-sm animate__animated"
             :class="{
               'animate__fadeInUp': servicesVisible,
               'animate__delay-1s': index === 1,
@@ -63,10 +64,17 @@
             }"
           >
             <q-card class="service-card">
-              <q-img :src="service.image" :alt="service.title" basic />
-              <q-card-section>
-                <h3 class="text-h6">{{ service.title }}</h3>
-                <p class="text-body2 q-mt-sm">{{ service.description }}</p>
+              <q-img
+                :src="service.image"
+                :alt="service.title"
+                basic
+                ratio="1"
+                style="width: 100%; height: auto;"
+                class="square-image"
+              />
+              <q-card-section class="q-py-sm">
+                <h3 class="text-subtitle1">{{ service.title }}</h3>
+                <p class="text-caption q-mt-xs">{{ service.description }}</p>
               </q-card-section>
             </q-card>
           </div>
@@ -75,16 +83,16 @@
     </section>
 
     <!-- Fiyatlar Section -->
-    <section id="pricing" class="section pricing-section q-py-xl">
+    <section id="pricing" class="section pricing-section q-py-lg">
       <div class="container">
         <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': pricingVisible }">
           Fiyatlar
         </h2>
-        <div class="row q-mt-xl">
+        <div class="row q-mt-md q-col-gutter-sm">
           <div
             v-for="(plan, index) in pricingPlans"
             :key="index"
-            class="col-md-4 col-sm-12 q-pa-md animate__animated"
+            class="col-md-4 col-sm-12 q-pa-sm animate__animated"
             :class="{
               'animate__fadeInLeft': pricingVisible && index === 0,
               'animate__fadeInUp': pricingVisible && index === 1,
@@ -94,26 +102,27 @@
             }"
           >
             <q-card class="pricing-card" :class="{ 'popular-plan': plan.popular }">
-              <q-card-section>
+              <q-card-section class="q-py-sm">
                 <div v-if="plan.popular" class="popular-badge">Popüler</div>
-                <h3 class="text-h5 text-center">{{ plan.name }}</h3>
-                <div class="price text-center q-mt-md">
-                  <span class="text-h3">{{ plan.price }}</span>
-                  <span class="text-body2">/{{ plan.period }}</span>
+                <h3 class="text-subtitle1 text-center">{{ plan.name }}</h3>
+                <div class="price text-center q-mt-sm">
+                  <span class="text-h6">{{ plan.price }}</span>
+                  <span class="text-caption">/{{ plan.period }}</span>
                 </div>
-                <ul class="q-mt-lg">
-                  <li v-for="(feature, fIndex) in plan.features" :key="fIndex" class="q-py-xs">
-                    <q-icon name="check" color="black" /> {{ feature }}
+                <ul class="q-mt-sm">
+                  <li v-for="(feature, fIndex) in plan.features" :key="fIndex" class="q-py-xs text-caption">
+                    <q-icon name="check" color="black" size="xs" /> {{ feature }}
                   </li>
                 </ul>
               </q-card-section>
-              <q-card-actions class="q-px-md q-pb-md">
+              <q-card-actions class="q-px-sm q-pb-sm">
                 <q-btn
                   color="black"
                   text-color="white"
                   :outline="!plan.popular"
                   :glossy="plan.popular"
                   :label="plan.buttonText"
+                  size="sm"
                   class="full-width"
                 />
               </q-card-actions>
@@ -124,12 +133,12 @@
     </section>
 
     <!-- Galeri Section -->
-    <section id="gallery" class="section gallery-section q-py-xl">
+    <section id="gallery" class="section gallery-section q-py-lg">
       <div class="container">
         <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': galleryVisible }">
           Galeri
         </h2>
-        <div class="row q-mt-lg q-col-gutter-md">
+        <div class="row q-mt-md q-col-gutter-sm">
           <div
             v-for="(image, index) in galleryImages"
             :key="index"
@@ -143,8 +152,9 @@
           >
             <q-img
               :src="image"
-              class="gallery-image rounded-borders shadow-2"
+              class="gallery-image rounded-borders shadow-1"
               ratio="1"
+              style="width: 100%; height: auto;"
               @click="openImageDialog(image)"
             />
           </div>
@@ -152,60 +162,60 @@
       </div>
 
       <q-dialog v-model="imageDialog">
-        <q-img :src="selectedImage" style="max-width: 90vw; max-height: 90vh" />
+        <q-img :src="selectedImage" style="max-width: 80vw; max-height: 80vh" />
       </q-dialog>
     </section>
 
     <!-- İletişim Section -->
-    <section id="contact" class="section contact-section bg-grey-2 q-py-xl">
+    <section id="contact" class="section contact-section bg-grey-2 q-py-lg">
       <div class="container">
         <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': contactVisible }">
           İletişim
         </h2>
-        <div class="row q-mt-xl">
-          <div class="col-md-6 col-sm-12 q-pr-md animate__animated" :class="{ 'animate__fadeInLeft': contactVisible }">
-            <h3 class="text-h5">Bize Ulaşın</h3>
-            <p class="text-body1 q-mt-md">
+        <div class="row q-mt-md">
+          <div class="col-md-6 col-sm-12 q-pr-sm animate__animated" :class="{ 'animate__fadeInLeft': contactVisible }">
+            <h3 class="text-subtitle1">Bize Ulaşın</h3>
+            <p class="text-caption q-mt-sm">
               Tarasat ile ilgili sorularınız için bizimle iletişime geçin.
             </p>
-
-            <div class="contact-info q-mt-lg">
-              <div class="row items-center q-mb-md">
-                <q-icon name="place" size="sm" class="q-mr-sm" />
-                <span>1234 Şirket Adresi, İstanbul, Türkiye</span>
+            <div class="contact-info q-mt-md">
+              <div class="row items-center q-mb-sm">
+                <q-icon name="place" size="xs" class="q-mr-sm" />
+                <span class="text-caption">1234 Şirket Adresi, İstanbul, Türkiye</span>
               </div>
-              <div class="row items-center q-mb-md">
-                <q-icon name="phone" size="sm" class="q-mr-sm" />
-                <span>+90 555 123 45 67</span>
+              <div class="row items-center q-mb-sm">
+                <q-icon name="phone" size="xs" class="q-mr-sm" />
+                <span class="text-caption">+90 555 123 45 67</span>
               </div>
-              <div class="row items-center q-mb-md">
-                <q-icon name="email" size="sm" class="q-mr-sm" />
-                <span>info@tarasat.com</span>
+              <div class="row items-center q-mb-sm">
+                <q-icon name="email" size="xs" class="q-mr-sm" />
+                <span class="text-caption">info@tarasat.com</span>
               </div>
             </div>
-
-            <div class="social-links q-mt-xl">
-              <q-btn round color="black" icon="facebook" class="q-mr-sm" />
-              <q-btn round color="black" icon="twitter" class="q-mr-sm" />
-              <q-btn round color="black" icon="instagram" class="q-mr-sm" />
-              <q-btn round color="black" icon="linkedin" />
+            <div class="social-links q-mt-md">
+              <q-btn round color="black" icon="facebook" size="sm" class="q-mr-xs" />
+              <q-btn round color="black" icon="twitter" size="sm" class="q-mr-xs" />
+              <q-btn round color="black" icon="instagram" size="sm" class="q-mr-xs" />
+              <q-btn round color="black" icon="linkedin" size="sm" />
             </div>
           </div>
-          <div class="col-md-6 col-sm-12 q-pl-md animate__animated" :class="{ 'animate__fadeInRight': contactVisible }">
+          <div class="col-md-6 col-sm-12 q-pl-sm animate__animated" :class="{ 'animate__fadeInRight': contactVisible }">
             <q-form @submit="onSubmit" class="contact-form">
               <q-input
                 v-model="form.name"
                 label="Adınız"
                 outlined
-                class="q-mb-md"
+                dense
+                class="q-mb-sm"
                 :rules="[val => !!val || 'Bu alan zorunludur']"
               />
               <q-input
                 v-model="form.email"
                 label="E-posta"
                 outlined
+                dense
                 type="email"
-                class="q-mb-md"
+                class="q-mb-sm"
                 :rules="[
                   val => !!val || 'Bu alan zorunludur',
                   val => /.+@.+\..+/.test(val) || 'Geçerli bir e-posta adresi girin',
@@ -215,14 +225,16 @@
                 v-model="form.phone"
                 label="Telefon"
                 outlined
-                class="q-mb-md"
+                dense
+                class="q-mb-sm"
               />
               <q-input
                 v-model="form.message"
                 label="Mesajınız"
                 outlined
+                dense
                 type="textarea"
-                class="q-mb-md"
+                class="q-mb-sm"
                 :rules="[val => !!val || 'Bu alan zorunludur']"
               />
               <q-btn
@@ -230,6 +242,7 @@
                 type="submit"
                 color="black"
                 text-color="white"
+                size="sm"
                 class="full-width"
               />
             </q-form>
@@ -254,17 +267,22 @@ const services = ref([
   {
     title: 'Barkod Taraması',
     description: 'Hızlı ve doğru barkod okuma ile envanterinizi anında kaydedin.',
-    image: 'https://picsum.photos/id/250/800/500',
+    image: 'src/assets/barkod.jpg',
   },
   {
-    title: 'Liste Oluşturma',
+    title: 'Liste Oluşturma ve Takibi',
     description: 'Kategorilere göre özelleştirilmiş listeler oluşturun ve düzenleyin.',
-    image: 'https://picsum.photos/id/251/800/500',
+    image: 'src/assets/liste.jpg',
   },
   {
-    title: 'Takip ve Raporlama',
+    title: 'Stok Takip ve Raporlama',
     description: 'Gerçek zamanlı takip ve detaylı raporlarla iş süreçlerinizi optimize edin.',
-    image: 'https://picsum.photos/id/252/800/500',
+    image: 'src/assets/stok.webp',
+  },
+  {
+    title: 'Cari Alacak/Verecek Takibi',
+    description: 'Gerçek zamanlı takip ve detaylı raporlarla iş süreçlerinizi optimize edin.',
+    image: 'src/assets/alacak.png',
   },
 ]);
 
@@ -273,7 +291,7 @@ const pricingPlans = ref([
     name: 'Temel Paket',
     price: '₺299',
     period: 'ay',
-    features: ['100 Barkod Taraması', 'Basit Liste Oluşturma', 'E-posta Desteği'],
+    features: ['Stok Girişi', 'Liste Oluşturma ve takibi', 'Cari Takibi'],
     buttonText: 'Başla',
     popular: false,
   },
@@ -281,29 +299,18 @@ const pricingPlans = ref([
     name: 'Profesyonel Paket',
     price: '₺799',
     period: 'ay',
-    features: ['Sınırsız Barkod Taraması', 'Gelişmiş Liste Yönetimi', 'Raporlama', 'Öncelikli Destek'],
+    features: ['Detaylı Stok Takibi', 'Gelişmiş Liste Yönetimi', 'Gelişmiş Raporlama', 'Öncelikli Destek'],
     buttonText: 'Popüler Seçim',
     popular: true,
   },
-  {
-    name: 'Kurumsal Paket',
-    price: '₺1499',
-    period: 'ay',
-    features: ['Sınırsız Barkod Taraması', 'Özel Liste Şablonları', 'Tam Raporlama', '7/24 Destek'],
-    buttonText: 'İletişime Geç',
-    popular: false,
-  },
+ 
 ]);
 
 const galleryImages = ref([
-  'https://picsum.photos/id/10/800/800',
-  'https://picsum.photos/id/11/800/800',
-  'https://picsum.photos/id/12/800/800',
-  'https://picsum.photos/id/13/800/800',
-  'https://picsum.photos/id/14/800/800',
-  'https://picsum.photos/id/15/800/800',
-  'https://picsum.photos/id/16/800/800',
-  'https://picsum.photos/id/17/800/800',
+  'src/assets/aaa.jpg',
+  'src/assets/aaa.jpg',
+  'src/assets/aaa.jpg',
+  'src/assets/aaa.jpg',
 ]);
 
 const imageDialog = ref(false);
@@ -349,7 +356,7 @@ const handleScroll = () => {
   }
 
   const gallerySection = document.querySelector('.gallery-section');
-  if (gallerySection && scrollPosition > gallerySection.offsetTop + 100) {
+  if ( gallerySection && scrollPosition > gallerySection.offsetTop + 100) {
     galleryVisible.value = true;
   }
 
@@ -367,22 +374,48 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
+
+
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 .hero-section {
   height: 100vh;
-  background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8), rgba(0, 0, 0, 0.3)),
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
               url('https://r.resimlink.com/HZrXJ0zo5TiR.webp') no-repeat center center;
   background-size: cover;
   font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-.section {
-  padding: 80px 0;
-  font-family: 'Poppins', sans-serif;
+.text-h2 {
+  font-weight: 600;
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.text-h5 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    .text-h2 {
+      font-size: 2rem;
+    }
+
+    .text-h5 {
+      font-size: 1.2rem;
+    }
+  }
 }
 
 .about-section,
@@ -397,9 +430,9 @@ onUnmounted(() => {
 }
 
 .section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 30px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
   position: relative;
   display: inline-block;
   color: #000;
@@ -407,85 +440,96 @@ onUnmounted(() => {
   &::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
+    width: 60px;
+    height: 2px;
     background: #000;
   }
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -15px;
+  margin: 0 -10px;
 }
 
 [class*="col-"] {
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
 .col-md-3 { width: 25%; }
 .col-md-4 { width: 33.33%; }
 .col-md-6 { width: 50%; }
 .col-sm-6 { width: 50%; }
-.col-sm-12 { width: 100%; }
-.col-xs-12 { width: 100%; }
+.col-sm-12 { width: 50%; }
+.col-xs-12 { width: 50%; }
 
 .text-h2 {
-  font-weight: 700;
-  font-size: 3rem;
+  font-weight: 600;
+  font-size: 2.5rem;
   color: #000;
 }
 
 .text-h5 {
   font-weight: 400;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: #333;
 }
 
-.text-h6 {
-  font-weight: 700;
+.text-subtitle1 {
+  font-weight: 600;
+  font-size: 1rem;
   color: #000;
-}
-
-.text-body1 {
-  font-weight: 400;
-  color: #333;
 }
 
 .text-body2 {
   font-weight: 400;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.text-caption {
+  font-weight: 400;
+  font-size: 0.8rem;
   color: #333;
 }
 
 .service-card {
   height: 100%;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .service-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
+}
+
+.square-image {
+  aspect-ratio: 1/1;
+  object-fit: cover;
 }
 
 .pricing-card {
   position: relative;
   height: 100%;
-  transition: transform 0.3s ease;
-  border: 2px solid transparent;
+  transition: transform 0.2s ease;
+  border: 1px solid #eee;
   background-color: #fff;
+  border-radius: 8px;
 }
 
 .pricing-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
 }
 
 .popular-plan {
@@ -494,14 +538,14 @@ onUnmounted(() => {
 
 .popular-badge {
   position: absolute;
-  top: -12px;
-  right: 20px;
+  top: -10px;
+  right: 15px;
   background: #000;
   color: #fff;
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 
 .price {
@@ -510,18 +554,21 @@ onUnmounted(() => {
 
 .gallery-image {
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
+  border-radius: 8px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
 }
 
 .gallery-image:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .contact-form {
   background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 .contact-info span {
@@ -531,17 +578,21 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .section {
-    padding: 50px 0;
+    padding: 30px 0;
   }
 
   .hero-section {
     .text-h2 {
-      font-size: 2rem;
+      font-size: 1.8rem;
     }
 
     .text-h5 {
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
+  }
+
+  .section-title {
+    font-size: 1.5rem;
   }
 
   .col-md-3,
@@ -550,5 +601,12 @@ onUnmounted(() => {
   .col-sm-6 {
     width: 100%;
   }
+
+  .square-image,
+  .gallery-image {
+    max-width: 150px;
+    margin: 0 auto;
+  }
 }
 </style>
+```
