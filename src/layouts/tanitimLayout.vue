@@ -2,44 +2,125 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <!-- Minimal HEADER -->
-    <q-header class="bg-white text-dark q-px-xl q-py-xs shadow-1">
-      <q-toolbar class="flex justify-between items-center">
-        <!-- Logo -->
-        <q-toolbar-title>
-          <q-img
-            src="src/assets/image11.png"
-            alt="Tarasat Logo"
-            style="width: 100px; height: auto"
-            class="q-my-xs"
-          />
-        </q-toolbar-title>
+    <q-header class="bg-white text-dark shadow-1">
+  <q-toolbar>
+    <!-- Mobile Menu Button (only shows on small screens) -->
+    <q-btn
+      flat
+      dense
+      round
+      icon="menu"
+      aria-label="Menu"
+      class="lt-md"
+      @click="toggleLeftDrawer"
+    />
 
-        <!-- Centered Slogan -->
-        <div class="slogan text-black text-weight-regular">
-          Tarasat: Lİste ve Takİp Uygulaması
-        </div>
+    <!-- Logo - Shows on all screens -->
+    <q-toolbar-title class="row items-center">
+      <q-img
+        src="src/assets/image11.png"
+        alt="Tarasat Logo"
+        style="width: 100px; height: auto; min-width: 100px"
+        class="q-mr-sm "
+      />
 
-        <!-- Menu Buttons -->
-        <div class="row items-center q-gutter-md">
-          <q-btn flat to="/firmalogin" class="text-black elegant-btn">
-            <q-icon name="login" size="sm" class="q-mr-sm" />
-            GİrİŞ Yap
-          </q-btn>
-          <q-btn flat class="text-black elegant-btn" @click="scrollToSection('contact')">
-            <q-icon name="shopping_cart" size="sm" class="q-mr-sm" />
-            İletİşİm
-          </q-btn>
-          <q-btn flat class="text-black elegant-btn" @click="scrollToSection('whyTarasat')">
-            <q-icon name="question_mark" size="sm" class="q-mr-sm" />
-            neden Tarasat?
-          </q-btn>
-          <q-btn flat class="text-black elegant-btn" @click="scrollToSection('pricing')">
-            <q-icon name="sell" size="sm" class="q-mr-sm" />
-            fiyatlandırma
-          </q-btn>
-        </div>
-      </q-toolbar>
-    </q-header>
+      <!-- Slogan (hidden on mobile) -->
+      <div class="slogan text-black text-weight-regular gt-sm">
+        Tarasat: Liste ve Takip Uygulaması
+      </div>
+    </q-toolbar-title>
+
+    <!-- Desktop Menu Buttons (hidden on mobile) -->
+    <div class="row items-center q-gutter-sm gt-md">
+      <q-btn
+        flat
+        to="/firmalogin"
+        class="text-black elegant-btn"
+        no-caps
+      >
+        <q-icon name="login" size="sm" class="q-mr-xs" />
+        Giriş Yap
+      </q-btn>
+      <q-btn
+        flat
+        class="text-black elegant-btn"
+        no-caps
+        @click="scrollToSection('contact')"
+      >
+        <q-icon name="shopping_cart" size="sm" class="q-mr-xs" />
+        İletişim
+      </q-btn>
+      <q-btn
+        flat
+        class="text-black elegant-btn"
+        no-caps
+        @click="scrollToSection('whyTarasat')"
+      >
+        <q-icon name="question_mark" size="sm" class="q-mr-xs" />
+        Neden Tarasat?
+      </q-btn>
+      <q-btn
+        flat
+        class="text-black elegant-btn"
+        no-caps
+        @click="scrollToSection('pricing')"
+      >
+        <q-icon name="sell" size="sm" class="q-mr-xs" />
+        Fiyatlandırma
+      </q-btn>
+    </div>
+
+    <!-- Mobile Login Button (only shows on small screens) -->
+    <q-btn
+      flat
+      dense
+      round
+      icon="login"
+      aria-label="Login"
+      class="lt-md"
+      to="/firmalogin"
+    />
+  </q-toolbar>
+
+  <!-- Mobile Drawer Menu (for small screens) -->
+  <q-drawer
+    v-model="leftDrawerOpen"
+    side="left"
+    bordered
+    behavior="mobile"
+    class="bg-white"
+  >
+    <q-list>
+      <q-item clickable @click="scrollToSection('whyTarasat')">
+        <q-item-section avatar>
+          <q-icon name="question_mark" />
+        </q-item-section>
+        <q-item-section>Neden Tarasat?</q-item-section>
+      </q-item>
+
+      <q-item clickable @click="scrollToSection('pricing')">
+        <q-item-section avatar>
+          <q-icon name="sell" />
+        </q-item-section>
+        <q-item-section>Fiyatlandırma</q-item-section>
+      </q-item>
+
+      <q-item clickable @click="scrollToSection('contact')">
+        <q-item-section avatar>
+          <q-icon name="shopping_cart" />
+        </q-item-section>
+        <q-item-section>İletişim</q-item-section>
+      </q-item>
+
+      <q-item clickable to="/firmalogin">
+        <q-item-section avatar>
+          <q-icon name="login" />
+        </q-item-section>
+        <q-item-section>Giriş Yap</q-item-section>
+      </q-item>
+    </q-list>
+  </q-drawer>
+</q-header>
 
     <!-- Page Content -->
     <q-page-container>
@@ -80,7 +161,7 @@
      <!-- Pricing Section -->
      <div id="pricing" class="pricing-section  q-px-xl q-py-xl">
   <div class="text-center q-mb-xl">
-    <h2 class="text-h3 text-weight-bold q-mb-sm">Fiyatlandırma</h2>
+    <h2 class="text-h4 text-weight-bold q-mb-sm">Fiyatlandırma</h2>
     <p class="text-subtitle1">Size uygun planı seçin ve hemen başlayın</p>
   </div>
 
@@ -142,7 +223,7 @@
     <!-- Contact Section -->
     <div id="contact" class="contact-section q-px-xl q-py-xl bg-gradient-to-b from-indigo-9 to-indigo-11">
   <div class="text-center q-mb-xl">
-    <h2 class="text-h3 text-weight-bold q-mb-sm">Bizimle İletişime Geçin</h2>
+    <h2 class="text-h4 text-weight-bold q-mb-sm">Bizimle İletişime Geçin</h2>
     <p class="text-subtitle1">Sorularınız veya satın alma işlemi için bize ulaşın</p>
   </div>
 
@@ -243,6 +324,13 @@ const contactForm = ref({
   message: ''
 });
 
+const leftDrawerOpen = ref(false);
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+
+
 function submitContactForm() {
   // Formu gönderme işlemi burada yapılır (örnek log)
   console.log("Form Gönderildi:", contactForm.value);
@@ -301,20 +389,7 @@ const pricingPlans = [
     popular: true,
     buttonText: 'Başlat'
   },
-  {
-    name: 'Kurumsal',
-    description: 'Büyük ölçekli işletmeler için',
-    price: 'Özel Fiyat',
-    period: 'yıl',
-    features: [
-      'Sınırsız ürün',
-      'Özel raporlar',
-      'Öncelikli destek',
-      'Sınırsız kullanıcı',
-      'Özel entegrasyonlar'
-    ],
-    buttonText: 'Başlat'
-  }
+
 ]
 
 
@@ -491,5 +566,6 @@ body {
     font-size: 1rem;
   }
 }
+
 
 </style>
