@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/maintenance.vue') }],
   },
   {
-    path: '/admin',  
+    path: '/admin',
     component: () => import('layouts/adminLayout.vue'),
     children: [{ path: '', component: () => import('pages/welcome.vue') }],
   },
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    children: [{ path: '', component: () => import('pages/login.vue') }],
+    children: [{ path: '', component: () => import('layouts/tanitimLayout.vue') }],
   },
   {
     path: '/firmalogin',
