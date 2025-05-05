@@ -2,123 +2,134 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <!-- Minimal HEADER -->
-    <q-header class="bg-white text-dark shadow-1">
-  <q-toolbar>
-    <!-- Mobile Menu Button (only shows on small screens) -->
-    <q-btn
-      flat
-      dense
-      round
-      icon="menu"
-      aria-label="Menu"
-      class="lt-md"
-      @click="toggleLeftDrawer"
-    />
-
-    <!-- Logo - Shows on all screens -->
-    <q-toolbar-title class="row items-center">
-      <q-img
-        src="src/assets/image11.png"
-        alt="Tarasat Logo"
-        style="width: 100px; height: auto; min-width: 100px"
-        class="q-mr-sm "
-      />
-
-      <!-- Slogan (hidden on mobile) -->
-      <div class="slogan text-black text-weight-regular gt-sm">
-        Tarasat: Liste ve Takip Uygulaması
-      </div>
-    </q-toolbar-title>
-
-    <!-- Desktop Menu Buttons (hidden on mobile) -->
-    <div class="row items-center q-gutter-sm gt-md">
+  <q-header class="bg-white text-dark shadow-1">
+  <q-toolbar class="q-px-lg">
+    <!-- Menü butonu ve "Menu" yazısı (tüm ekran boyutlarında) -->
+    <div class="row items-center">
       <q-btn
         flat
-        to="/firmalogin"
-        class="text-black elegant-btn"
-        no-caps
-      >
-        <q-icon name="login" size="sm" class="q-mr-xs" />
-        Giriş Yap
-      </q-btn>
-      <q-btn
-        flat
-        class="text-black elegant-btn"
-        no-caps
-        @click="scrollToSection('contact')"
-      >
-        <q-icon name="shopping_cart" size="sm" class="q-mr-xs" />
-        İletişim
-      </q-btn>
-      <q-btn
-        flat
-        class="text-black elegant-btn"
-        no-caps
-        @click="scrollToSection('whyTarasat')"
-      >
-        <q-icon name="question_mark" size="sm" class="q-mr-xs" />
-        Neden Tarasat?
-      </q-btn>
-      <q-btn
-        flat
-        class="text-black elegant-btn"
-        no-caps
-        @click="scrollToSection('pricing')"
-      >
-        <q-icon name="sell" size="sm" class="q-mr-xs" />
-        Fiyatlandırma
-      </q-btn>
+        dense
+        round
+        icon="menu"
+        aria-label="Menu"
+        @click="toggleLeftDrawer"
+        class="q-mr-sm"
+        />
+        MENÜ
     </div>
 
-    <!-- Mobile Login Button (only shows on small screens) -->
+    <!-- Logo -->
+    <q-img
+      src="src/assets/image11.png"
+      alt="Tarasat Logo"
+      style="width: 100px; height: auto; min-width: 100px"
+      class="q-mx-md"
+    />
+
+    <!-- Slogan (tam ortada) -->
+    <q-toolbar-title class="slogan text-black text-weight-regular gt-xs">
+      Tarasat: Liste ve Takip Uygulaması
+    </q-toolbar-title>
+
+    <!-- Giriş Yap butonu (sağ tarafta) -->
     <q-btn
       flat
-      dense
-      round
-      icon="login"
-      aria-label="Login"
-      class="lt-md"
       to="/firmalogin"
-    />
+      class="text-black"
+      no-caps
+    >
+      <q-icon name="login" size="sm" class="q-mr-xs" />
+      <span>Giriş Yap</span>
+    </q-btn>
   </q-toolbar>
 
-  <!-- Mobile Drawer Menu (for small screens) -->
+  <!-- Modern sol menü -->
   <q-drawer
     v-model="leftDrawerOpen"
     side="left"
     bordered
     behavior="mobile"
-    class="bg-white"
+    class="bg-white text-dark"
+    :width="280"
   >
-    <q-list>
-      <q-item clickable @click="scrollToSection('whyTarasat')">
-        <q-item-section avatar>
-          <q-icon name="question_mark" />
-        </q-item-section>
-        <q-item-section>Neden Tarasat?</q-item-section>
-      </q-item>
+    <q-scroll-area class="fit">
+      <!-- Menü başlık ve kapat butonu -->
+      <div class="row items-center justify-between q-pa-sm bg-grey-2">
+        <div class="text-h6 q-pl-sm">Menü</div>
+        <q-btn
+          flat
+          round
+          dense
+          icon="close"
+          @click="toggleLeftDrawer"
+          class="text-dark"
+        />
+      </div>
 
-      <q-item clickable @click="scrollToSection('pricing')">
-        <q-item-section avatar>
-          <q-icon name="sell" />
-        </q-item-section>
-        <q-item-section>Fiyatlandırma</q-item-section>
-      </q-item>
+      <q-list padding class="menu-list">
+        <q-item 
+          clickable 
+          v-ripple
+          @click="handleMenuItemClick('whyTarasat')"
+          class="menu-item"
+        >
+          <q-item-section avatar>
+            <q-icon name="question_mark" color="primary" />
+          </q-item-section>
+          <q-item-section class="text-weight-medium">Neden Tarasat?</q-item-section>
+          <q-item-section avatar>
+            <q-icon name="chevron_right" />
+          </q-item-section>
+        </q-item>
 
-      <q-item clickable @click="scrollToSection('contact')">
-        <q-item-section avatar>
-          <q-icon name="shopping_cart" />
-        </q-item-section>
-        <q-item-section>İletişim</q-item-section>
-      </q-item>
+        <q-item 
+          clickable 
+          v-ripple
+          @click="handleMenuItemClick('pricing')"
+          class="menu-item"
+        >
+          <q-item-section avatar>
+            <q-icon name="sell" color="primary" />
+          </q-item-section>
+          <q-item-section class="text-weight-medium">Fiyatlandırma</q-item-section>
+          <q-item-section avatar>
+            <q-icon name="chevron_right" />
+          </q-item-section>
+        </q-item>
 
-      <q-item clickable to="/firmalogin">
-        <q-item-section avatar>
-          <q-icon name="login" />
-        </q-item-section>
-        <q-item-section>Giriş Yap</q-item-section>
-      </q-item>
-    </q-list>
+        <q-item 
+          clickable 
+          v-ripple
+          @click="handleMenuItemClick('contact')"
+          class="menu-item"
+        >
+          <q-item-section avatar>
+            <q-icon name="shopping_cart" color="primary" />
+          </q-item-section>
+          <q-item-section class="text-weight-medium">İletişim</q-item-section>
+          <q-item-section avatar>
+            <q-icon name="chevron_right" />
+          </q-item-section>
+        </q-item>
+
+        <q-separator class="q-my-sm" />
+
+        <q-item 
+          clickable 
+          v-ripple
+          to="/firmalogin"
+          class="menu-item bg-primary text-white"
+        >
+          <q-item-section avatar>
+            <q-icon name="login" color="white" />
+          </q-item-section>
+          <q-item-section class="text-weight-bold">Giriş Yap</q-item-section>
+          <q-item-section avatar>
+            <q-icon name="chevron_right" color="white" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-scroll-area>
   </q-drawer>
 </q-header>
 
@@ -127,8 +138,19 @@
       <!-- Hero Section -->
       <div class="hero-section bg-indigo-10 text-white q-px-xl q-pt-xl q-pb-lg">
   <div class="row items-center q-col-gutter-xl">
+    
     <div class="col-md-6 order-md-2">
-      <q-img src="src/assets/alacak.png" class="alacakpng" />
+      <video
+      class="alacakpng"
+      autoplay
+      muted
+      loop
+      playsinline
+    >
+      <source src="src/assets/videoplayback.mp4" type="video/mp4">
+      Tarayıcınız video etiketini desteklemiyor.
+    </video>
+    
     </div>
     <div class="col-md-6 order-md-1">
       <h1 class="text-h2 text-weight-bolder q-mb-sm">Tarasat ile Tanışın</h1>
@@ -394,22 +416,32 @@ const pricingPlans = [
 
 
 
-const scrollToSection = (sectionId) => {
-  // Eğer Home sayfasındaysak, doğrudan kaydır
+const handleMenuItemClick = async (section) => {
+  // Menüyü kapat
+  leftDrawerOpen.value = false;
+  
+  // 100ms bekle (menü animasyonu için)
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  // Eğer ana sayfadaysak direkt scroll yap
   if (router.currentRoute.value.path === '/') {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSection(section);
   } else {
-    // Farklı bir sayfadaysak, önce Home'a yönlendir, sonra kaydır
-    router.push('/').then(() => {
-      setTimeout(() => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100); // Küçük bir gecikme, sayfa yüklenmesini bekler
+    // Değilse önce ana sayfaya yönlendir
+    await router.push('/');
+    // Sonra scroll yap
+    nextTick(() => {
+      scrollToSection(section);
+    });
+  }
+};
+
+const scrollToSection = (sectionId) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
     });
   }
 };
@@ -418,52 +450,12 @@ const scrollToSection = (sectionId) => {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
+
+
 body {
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
   background-color: #f9f9f9;
-}
-
-.q-header {
-  height: 110px;
-}
-
-.q-toolbar {
-  min-height: 64px;
-  padding: 0 16px;
-}
-
-.slogan {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  font-weight: 550;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: #000000;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.elegant-btn {
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  padding: 6px 16px;
-  border-radius: 8px;
-  background: transparent;
-  color: #333;
-  transition: background 0.3s ease;
-}
-
-.elegant-btn:hover {
-  background-color: rgba(25, 118, 210, 0.1);
-}
-
-.q-icon {
-  font-size: 1rem;
-  color: #000;
 }
 
 .hero-section {
@@ -472,20 +464,6 @@ body {
   padding: 80px 24px;
 }
 
-.hero-section h1 {
-  font-size: 2.4rem;
-}
-
-.hero-section p {
-  font-size: 1.2rem;
-}
-
-.alacakpng {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  display: block;
-}
 
 .feature-card {
   height: 100%;
@@ -565,7 +543,12 @@ body {
   .hero-section p {
     font-size: 1rem;
   }
+  .alacakpng{
+  height: 100%;
+  width: 100%;
 }
-
-
+}
+.slogan{
+  margin-left: 24%;
+}
 </style>

@@ -1,612 +1,439 @@
-```vue
 <template>
-  <q-page>
-    <!-- Hero Section -->
-    <section class="hero-section flex flex-center">
-      <div class="text-center">
-        <h1 class="text-h2 text-white animate__animated animate__fadeInDown">TARASAT</h1>
-        <p class="text-h5 text-white q-mt-md animate__animated animate__fadeInUp animate__delay-1s">
-          Barkodla kolay liste oluşturun, takibinizi hızlandırın
-        </p>
-        <q-btn
-          color="black"
-          text-color="white"
-          label="Keşfet"
-          class="q-mt-lg animate__animated animate__fadeInUp animate__delay-2s"
-          @click="scrollToSection('about')"
-        />
-      </div>
-    </section>
+  
+    <!-- Page Content -->
+    <q-page-container>
+      <!-- Hero Section -->
+      <div class="hero-section bg-indigo-10 text-white q-px-xl q-pt-xl q-pb-lg">
+  <div class="row items-center q-col-gutter-xl">
+    <div class="col-md-6 order-md-2">
+      <q-img src="src/assets/alacak.png" class="alacakpng" />
+    </div>
+    <div class="col-md-6 order-md-1">
+      <h1 class="text-h2 text-weight-bolder q-mb-sm">Tarasat ile Tanışın</h1>
+      <p class="text-h6 q-mb-lg">Barkodlu takip hiç bu kadar keyifli olmamıştı. Renkli, hızlı ve yaratıcı bir deneyim sizi bekliyor!</p>
+      <q-btn color="yellow" text-color="dark" label="Hemen İncele" size="lg" class="q-mt-sm" />
+    </div>
+  </div>
+</div>
 
-    <!-- Hakkımızda Section -->
-    <section id="about" class="section about-section q-py-lg">
-      <div class="container">
-        <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': aboutVisible }">
-          Hakkımızda
-        </h2>
-        <div class="row q-mt-md">
-          <div class="col-md-6 col-sm-12 q-pr-sm animate__animated" :class="{ 'animate__fadeInLeft': aboutVisible }">
-            <p class="text-body2">
-              Tarasat, barkod okuma ve liste takip sistemleriyle iş süreçlerinizi kolaylaştırır. 5 yılı aşkın deneyimimizle, kullanıcı dostu çözümler sunuyoruz.
-            </p>
-            <p class="text-body2 q-mt-sm">
-              Teknolojiye olan tutkumuzla, envanter yönetiminden raporlamaya kadar her adımda yanınızdayız.
-            </p>
-            <q-btn color="black" text-color="white" label="Daha Fazla Bilgi" size="sm" class="q-mt-sm" />
-          </div>
-          <div class="col-md-6 col-sm-12 q-pl-sm animate__animated" :class="{ 'animate__fadeInRight': aboutVisible }">
-            <q-img
-              src="src/assets/stok.webp"
-              alt="Tarasat Hakkında"
-              class="rounded-borders shadow-2"
-              style="max-width: 100%; height: auto;"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Hizmetlerimiz Section -->
-    <section id="services" class="section services-section bg-grey-2 q-py-lg">
-      <div class="container">
-        <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': servicesVisible }">
-          Hizmetlerimiz
-        </h2>
-        <div class="row q-mt-md q-col-gutter-sm">
-          <div
-            v-for="(service, index) in services"
-            :key="index"
-            class="col-md-4 col-sm-6 col-xs-12 q-pa-sm animate__animated"
-            :class="{
-              'animate__fadeInUp': servicesVisible,
-              'animate__delay-1s': index === 1,
-              'animate__delay-2s': index === 2,
-            }"
-          >
-            <q-card class="service-card">
-              <q-img
-                :src="service.image"
-                :alt="service.title"
-                basic
-                ratio="1"
-                style="width: 100%; height: auto;"
-                class="square-image"
-              />
-              <q-card-section class="q-py-sm">
-                <h3 class="text-subtitle1">{{ service.title }}</h3>
-                <p class="text-caption q-mt-xs">{{ service.description }}</p>
-              </q-card-section>
+
+      <!-- Features Section -->
+      <div id="whyTarasat" class="features-section q-px-xl q-py-xl">
+        <h2 class="text-h4 text-center text-weight-bold q-mb-xl">Neden Tarasat?</h2>
+
+        <div class="row q-col-gutter-xl">
+          <div class="col-md-4" v-for="(feature, index) in features" :key="index">
+            <q-card
+              class="feature-card text-center q-pa-md"
+              :class="'animate__animated animate__fadeInUp animate__delay-' + (index+1) + 's'"
+            >
+              <q-icon :name="feature.icon" size="xl" :color="feature.color" class="q-mb-md" />
+              <h3 class="text-h5 text-weight-bold q-mb-sm">{{ feature.title }}</h3>
+              <p>{{ feature.description }}</p>
             </q-card>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Fiyatlar Section -->
-    <section id="pricing" class="section pricing-section q-py-lg">
-      <div class="container">
-        <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': pricingVisible }">
-          Fiyatlar
-        </h2>
-        <div class="row q-mt-md q-col-gutter-sm">
+     <!-- Pricing Section -->
+     <div id="pricing" class="pricing-section  q-px-xl q-py-xl">
+  <div class="text-center q-mb-xl">
+    <h2 class="text-h4 text-weight-bold q-mb-sm">Fiyatlandırma</h2>
+    <p class="text-subtitle1">Size uygun planı seçin ve hemen başlayın</p>
+  </div>
+
+  <div class="row justify-center q-col-gutter-xl">
+    <div
+      class="col-md-4"
+      v-for="(plan, index) in pricingPlans"
+      :key="index"
+    >
+      <q-card
+        class="pricing-card text-center q-pa-md shadow-4 full-height-card"
+        :class="{ 'bg-white text-primary scale-popular': plan.popular }"
+        style="border-radius: 20px; transition: 0.3s ease-in-out; cursor: pointer; display: flex; flex-direction: column; height: 100%;"
+        @mouseover="hovered = index"
+        @mouseleave="hovered = null"
+        :style="{ transform: hovered === index ? 'translateY(-5px)' : 'none' }"
+      >
+        <q-card-section>
           <div
-            v-for="(plan, index) in pricingPlans"
-            :key="index"
-            class="col-md-4 col-sm-12 q-pa-sm animate__animated"
-            :class="{
-              'animate__fadeInLeft': pricingVisible && index === 0,
-              'animate__fadeInUp': pricingVisible && index === 1,
-              'animate__fadeInRight': pricingVisible && index === 2,
-              'animate__delay-1s': index === 1,
-              'animate__delay-2s': index === 2,
-            }"
+            v-if="plan.popular"
+            class="popular-badge q-mb-sm text-uppercase text-white bg-accent"
+            style="padding: 4px 12px; border-radius: 999px; display: inline-block;"
           >
-            <q-card class="pricing-card" :class="{ 'popular-plan': plan.popular }">
-              <q-card-section class="q-py-sm">
-                <div v-if="plan.popular" class="popular-badge">Popüler</div>
-                <h3 class="text-subtitle1 text-center">{{ plan.name }}</h3>
-                <div class="price text-center q-mt-sm">
-                  <span class="text-h6">{{ plan.price }}</span>
-                  <span class="text-caption">/{{ plan.period }}</span>
-                </div>
-                <ul class="q-mt-sm">
-                  <li v-for="(feature, fIndex) in plan.features" :key="fIndex" class="q-py-xs text-caption">
-                    <q-icon name="check" color="black" size="xs" /> {{ feature }}
-                  </li>
-                </ul>
-              </q-card-section>
-              <q-card-actions class="q-px-sm q-pb-sm">
-                <q-btn
-                  color="black"
-                  text-color="white"
-                  :outline="!plan.popular"
-                  :glossy="plan.popular"
-                  :label="plan.buttonText"
-                  size="sm"
-                  class="full-width"
-                />
-              </q-card-actions>
-            </q-card>
+            Popüler
           </div>
-        </div>
-      </div>
-    </section>
+          <h3 class="text-h5 text-weight-bold">{{ plan.name }}</h3>
+          <p class="text-subtitle2 q-mt-sm q-mb-md">{{ plan.description }}</p>
+          <div class="price q-my-lg">
+            <span class="text-h3 text-weight-bold">{{ plan.price }}</span>
+            <span class="text-subtitle2">/{{ plan.period }}</span>
+          </div>
+          <q-list dense class="q-mx-auto" style="max-width: 240px;">
+            <q-item v-for="(feature, i) in plan.features" :key="i">
+              <q-item-section avatar>
+                <q-icon name="check_circle" color="positive" />
+              </q-item-section>
+              <q-item-section>{{ feature }}</q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
 
-    <!-- Galeri Section -->
-    <section id="gallery" class="section gallery-section q-py-lg">
-      <div class="container">
-        <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': galleryVisible }">
-          Galeri
-        </h2>
-        <div class="row q-mt-md q-col-gutter-sm">
-          <div
-            v-for="(image, index) in galleryImages"
-            :key="index"
-            class="col-md-3 col-sm-6 col-xs-12 animate__animated"
-            :class="{
-              'animate__fadeIn': galleryVisible,
-              'animate__delay-1s': index === 1 || index === 5,
-              'animate__delay-2s': index === 2 || index === 6,
-              'animate__delay-3s': index === 3 || index === 7,
-            }"
+        <!-- Push button to bottom -->
+        <q-card-actions class="q-mt-auto q-px-md q-pt-none q-pb-lg">
+          <q-btn
+            :label="plan.buttonText"
+            size="lg"
+            class="full-width"
+            style="border-radius: 12px; background: linear-gradient(to right, #00C6FF, #0072FF); color: white;"
+            unelevated
+          />
+        </q-card-actions>
+      </q-card>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Contact Section -->
+    <div id="contact" class="contact-section q-px-xl q-py-xl bg-gradient-to-b from-indigo-9 to-indigo-11">
+  <div class="text-center q-mb-xl">
+    <h2 class="text-h4 text-weight-bold q-mb-sm">Bizimle İletişime Geçin</h2>
+    <p class="text-subtitle1">Sorularınız veya satın alma işlemi için bize ulaşın</p>
+  </div>
+
+  <div class="row justify-center">
+    <div class="col-md-6 col-sm-10">
+      <q-form @submit.prevent="submitContactForm" class="bg-white shadow-10 rounded-borders-xl q-px-lg q-py-lg">
+        <div class="q-gutter-y-md">
+          <q-input
+            filled
+            label="Adınız"
+            v-model="contactForm.name"
+            required
+            placeholder="Adınızı girin"
+            label-color="indigo-10"
+            input-class="text-indigo-10"
+            :rules="[val => !!val || 'Bu alan zorunludur']"
           >
-            <q-img
-              :src="image"
-              class="gallery-image rounded-borders shadow-1"
-              ratio="1"
-              style="width: 100%; height: auto;"
-              @click="openImageDialog(image)"
+            <template v-slot:prepend>
+              <q-icon name="person" color="indigo-7" />
+            </template>
+          </q-input>
+
+          <q-input
+            filled
+            label="E-posta"
+            type="email"
+            v-model="contactForm.email"
+            required
+            placeholder="E-posta adresinizi girin"
+            label-color="indigo-10"
+            input-class="text-indigo-10"
+            :rules="[
+              val => !!val || 'Bu alan zorunludur',
+              val => /.+@.+\..+/.test(val) || 'Geçerli bir e-posta girin'
+            ]"
+          >
+            <template v-slot:prepend>
+              <q-icon name="email" color="indigo-7" />
+            </template>
+          </q-input>
+
+          <q-input
+            filled
+            label="Mesajınız"
+            type="textarea"
+            v-model="contactForm.message"
+            autogrow
+            required
+            placeholder="Mesajınızı buraya yazın"
+            label-color="indigo-10"
+            input-class="text-indigo-10"
+            :rules="[val => !!val || 'Bu alan zorunludur']"
+          >
+            <template v-slot:prepend>
+              <q-icon name="message" color="indigo-7" />
+            </template>
+          </q-input>
+
+          <div class="text-center q-pt-md">
+            <q-btn
+              label="Mesajı Gönder"
+              type="submit"
+              color="indigo"
+              class="q-px-xl q-py-sm text-bold rounded-buttons-lg"
+              size="1.1rem"
+              no-caps
+              glossy
             />
           </div>
         </div>
-      </div>
+      </q-form>
+    </div>
+  </div>
+</div>
+    </q-page-container>
 
-      <q-dialog v-model="imageDialog">
-        <q-img :src="selectedImage" style="max-width: 80vw; max-height: 80vh" />
-      </q-dialog>
-    </section>
-
-    <!-- İletişim Section -->
-    <section id="contact" class="section contact-section bg-grey-2 q-py-lg">
-      <div class="container">
-        <h2 class="section-title text-center animate__animated" :class="{ 'animate__fadeInUp': contactVisible }">
-          İletişim
-        </h2>
-        <div class="row q-mt-md">
-          <div class="col-md-6 col-sm-12 q-pr-sm animate__animated" :class="{ 'animate__fadeInLeft': contactVisible }">
-            <h3 class="text-subtitle1">Bize Ulaşın</h3>
-            <p class="text-caption q-mt-sm">
-              Tarasat ile ilgili sorularınız için bizimle iletişime geçin.
-            </p>
-            <div class="contact-info q-mt-md">
-              <div class="row items-center q-mb-sm">
-                <q-icon name="place" size="xs" class="q-mr-sm" />
-                <span class="text-caption">1234 Şirket Adresi, İstanbul, Türkiye</span>
-              </div>
-              <div class="row items-center q-mb-sm">
-                <q-icon name="phone" size="xs" class="q-mr-sm" />
-                <span class="text-caption">+90 555 123 45 67</span>
-              </div>
-              <div class="row items-center q-mb-sm">
-                <q-icon name="email" size="xs" class="q-mr-sm" />
-                <span class="text-caption">info@tarasat.com</span>
-              </div>
-            </div>
-            <div class="social-links q-mt-md">
-              <q-btn round color="black" icon="facebook" size="sm" class="q-mr-xs" />
-              <q-btn round color="black" icon="twitter" size="sm" class="q-mr-xs" />
-              <q-btn round color="black" icon="instagram" size="sm" class="q-mr-xs" />
-              <q-btn round color="black" icon="linkedin" size="sm" />
-            </div>
-          </div>
-          <div class="col-md-6 col-sm-12 q-pl-sm animate__animated" :class="{ 'animate__fadeInRight': contactVisible }">
-            <q-form @submit="onSubmit" class="contact-form">
-              <q-input
-                v-model="form.name"
-                label="Adınız"
-                outlined
-                dense
-                class="q-mb-sm"
-                :rules="[val => !!val || 'Bu alan zorunludur']"
-              />
-              <q-input
-                v-model="form.email"
-                label="E-posta"
-                outlined
-                dense
-                type="email"
-                class="q-mb-sm"
-                :rules="[
-                  val => !!val || 'Bu alan zorunludur',
-                  val => /.+@.+\..+/.test(val) || 'Geçerli bir e-posta adresi girin',
-                ]"
-              />
-              <q-input
-                v-model="form.phone"
-                label="Telefon"
-                outlined
-                dense
-                class="q-mb-sm"
-              />
-              <q-input
-                v-model="form.message"
-                label="Mesajınız"
-                outlined
-                dense
-                type="textarea"
-                class="q-mb-sm"
-                :rules="[val => !!val || 'Bu alan zorunludur']"
-              />
-              <q-btn
-                label="Gönder"
-                type="submit"
-                color="black"
-                text-color="white"
-                size="sm"
-                class="full-width"
-              />
-            </q-form>
-          </div>
-        </div>
-      </div>
-    </section>
-  </q-page>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-
-const form = ref({
-  name: '',
-  email: '',
-  phone: '',
-  message: '',
-});
-
-const services = ref([
-  {
-    title: 'Barkod Taraması',
-    description: 'Hızlı ve doğru barkod okuma ile envanterinizi anında kaydedin.',
-    image: 'src/assets/barkod.jpg',
-  },
-  {
-    title: 'Liste Oluşturma ve Takibi',
-    description: 'Kategorilere göre özelleştirilmiş listeler oluşturun ve düzenleyin.',
-    image: 'src/assets/liste.jpg',
-  },
-  {
-    title: 'Stok Takip ve Raporlama',
-    description: 'Gerçek zamanlı takip ve detaylı raporlarla iş süreçlerinizi optimize edin.',
-    image: 'src/assets/stok.webp',
-  },
-  {
-    title: 'Cari Alacak/Verecek Takibi',
-    description: 'Gerçek zamanlı takip ve detaylı raporlarla iş süreçlerinizi optimize edin.',
-    image: 'src/assets/alacak.png',
-  },
-]);
-
-const pricingPlans = ref([
-  {
-    name: 'Temel Paket',
-    price: '₺299',
-    period: 'ay',
-    features: ['Stok Girişi', 'Liste Oluşturma ve takibi', 'Cari Takibi'],
-    buttonText: 'Başla',
-    popular: false,
-  },
-  {
-    name: 'Profesyonel Paket',
-    price: '₺799',
-    period: 'ay',
-    features: ['Detaylı Stok Takibi', 'Gelişmiş Liste Yönetimi', 'Gelişmiş Raporlama', 'Öncelikli Destek'],
-    buttonText: 'Popüler Seçim',
-    popular: true,
-  },
- 
-]);
-
-const galleryImages = ref([
-  'src/assets/aaa.jpg',
-  'src/assets/aaa.jpg',
-  'src/assets/aaa.jpg',
-  'src/assets/aaa.jpg',
-]);
-
-const imageDialog = ref(false);
-const selectedImage = ref('');
-const aboutVisible = ref(false);
-const servicesVisible = ref(false);
-const pricingVisible = ref(false);
-const galleryVisible = ref(false);
-const contactVisible = ref(false);
-
-const openImageDialog = (image) => {
-  selectedImage.value = image;
-  imageDialog.value = true;
-};
-
-const onSubmit = () => {
-  console.log('Form gönderildi:', form.value);
-};
-
-const scrollToSection = (sectionId) => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
+  import { useRouter } from 'vue-router';
+  import { ref } from 'vue'
+  
+  const router = useRouter();
+  const contactForm = ref({
+    name: '',
+    email: '',
+    message: ''
+  });
+  
+  const leftDrawerOpen = ref(false);
+  
+  const toggleLeftDrawer = () => {
+    leftDrawerOpen.value = !leftDrawerOpen.value;
+  };
+  
+  
+  function submitContactForm() {
+    // Formu gönderme işlemi burada yapılır (örnek log)
+    console.log("Form Gönderildi:", contactForm.value);
+    // Temizleme
+    contactForm.value = { name: '', email: '', message: '' };
   }
-};
-
-const handleScroll = () => {
-  const scrollPosition = window.scrollY + window.innerHeight;
-
-  const aboutSection = document.querySelector('.about-section');
-  if (aboutSection && scrollPosition > aboutSection.offsetTop + 100) {
-    aboutVisible.value = true;
-  }
-
-  const servicesSection = document.querySelector('.services-section');
-  if (servicesSection && scrollPosition > servicesSection.offsetTop + 100) {
-    servicesVisible.value = true;
-  }
-
-  const pricingSection = document.querySelector('.pricing-section');
-  if (pricingSection && scrollPosition > pricingSection.offsetTop + 100) {
-    pricingVisible.value = true;
-  }
-
-  const gallerySection = document.querySelector('.gallery-section');
-  if ( gallerySection && scrollPosition > gallerySection.offsetTop + 100) {
-    galleryVisible.value = true;
-  }
-
-  const contactSection = document.querySelector('.contact-section');
-  if (contactSection && scrollPosition > contactSection.offsetTop + 100) {
-    contactVisible.value = true;
-  }
-};
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-  handleScroll();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
-
-
-</script>
-
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-.hero-section {
-  height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
-              url('https://r.resimlink.com/HZrXJ0zo5TiR.webp') no-repeat center center;
-  background-size: cover;
-  font-family: 'Poppins', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.text-h2 {
-  font-weight: 600;
-  font-size: 3rem;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.text-h5 {
-  font-weight: 400;
-  font-size: 1.5rem;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-@media (max-width: 768px) {
-  .hero-section {
-    .text-h2 {
-      font-size: 2rem;
+  const features = [
+    {
+      icon: 'qr_code_scanner',
+      color: 'primary',
+      title: 'Barkodlu Takip',
+      description: 'Ürünlerinizi barkod ile kolayca tanımlayın ve takip edin.'
+    },
+    {
+      icon: 'insights',
+      color: 'primary',
+      title: 'Gerçek Zamanlı Raporlar',
+      description: 'Anlık stok durumunu ve hareketlerini takip edin.'
+    },
+    {
+      icon: 'devices',
+      color: 'primary',
+      title: 'Çoklu Cihaz Desteği',
+      description: 'Mobil, tablet ve bilgisayardan erişim imkanı.'
     }
-
-    .text-h5 {
-      font-size: 1.2rem;
+  ]
+  
+  
+  // Pricing plans
+  const pricingPlans = [
+    {
+      name: 'Başlangıç',
+      description: 'Küçük işletmeler için',
+      price: '₺99',
+      period: 'ay',
+      features: [
+        '100 ürüne kadar',
+        'Temel raporlar',
+        'E-posta desteği',
+        '1 kullanıcı'
+      ],
+      buttonText: 'Başlat'
+    },
+    {
+      name: 'Profesyonel',
+      description: 'Orta ölçekli işletmeler için',
+      price: '₺199',
+      period: 'ay',
+      features: [
+        '500 ürüne kadar',
+        'Gelişmiş raporlar',
+        'Telefon desteği',
+        '3 kullanıcı',
+        'API erişimi'
+      ],
+      popular: true,
+      buttonText: 'Başlat'
+    },
+  
+  ]
+  
+  
+  
+  const scrollToSection = (sectionId) => {
+    // Eğer Home sayfasındaysak, doğrudan kaydır
+    if (router.currentRoute.value.path === '/') {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // Farklı bir sayfadaysak, önce Home'a yönlendir, sonra kaydır
+      router.push('/').then(() => {
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100); // Küçük bir gecikme, sayfa yüklenmesini bekler
+      });
     }
+  };
+  </script>
+  
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    background-color: #f9f9f9;
   }
-}
-
-.about-section,
-.pricing-section,
-.gallery-section {
-  background-color: #fff;
-}
-
-.services-section,
-.contact-section {
-  background-color: #f5f5f5;
-}
-
-.section-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-  position: relative;
-  display: inline-block;
-  color: #000;
-
-  &::after {
-    content: '';
+  
+  .q-header {
+    height: 110px;
+  }
+  
+  .q-toolbar {
+    min-height: 64px;
+    padding: 0 16px;
+  }
+  
+  .slogan {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 550;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #000000;
     position: absolute;
-    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
-    height: 2px;
-    background: #000;
   }
-}
-
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 10px;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -10px;
-}
-
-[class*="col-"] {
-  padding: 0 10px;
-}
-
-.col-md-3 { width: 25%; }
-.col-md-4 { width: 33.33%; }
-.col-md-6 { width: 50%; }
-.col-sm-6 { width: 50%; }
-.col-sm-12 { width: 50%; }
-.col-xs-12 { width: 50%; }
-
-.text-h2 {
-  font-weight: 600;
-  font-size: 2.5rem;
-  color: #000;
-}
-
-.text-h5 {
-  font-weight: 400;
-  font-size: 1.3rem;
-  color: #333;
-}
-
-.text-subtitle1 {
-  font-weight: 600;
-  font-size: 1rem;
-  color: #000;
-}
-
-.text-body2 {
-  font-weight: 400;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-.text-caption {
-  font-weight: 400;
-  font-size: 0.8rem;
-  color: #333;
-}
-
-.service-card {
-  height: 100%;
-  transition: transform 0.2s ease;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
-}
-
-.square-image {
-  aspect-ratio: 1/1;
-  object-fit: cover;
-}
-
-.pricing-card {
-  position: relative;
-  height: 100%;
-  transition: transform 0.2s ease;
-  border: 1px solid #eee;
-  background-color: #fff;
-  border-radius: 8px;
-}
-
-.pricing-card:hover {
-  transform: translateY(-5px);
-}
-
-.popular-plan {
-  border-color: #000;
-}
-
-.popular-badge {
-  position: absolute;
-  top: -10px;
-  right: 15px;
-  background: #000;
-  color: #fff;
-  padding: 3px 10px;
-  border-radius: 15px;
-  font-size: 0.7rem;
-  font-weight: 600;
-}
-
-.price {
-  color: #000;
-}
-
-.gallery-image {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  border-radius: 8px;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-}
-
-.gallery-image:hover {
-  transform: scale(1.03);
-}
-
-.contact-form {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-}
-
-.contact-info span {
-  font-weight: 400;
-  color: #333;
-}
-
-@media (max-width: 768px) {
-  .section {
-    padding: 30px 0;
+  
+  .elegant-btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border-radius: 8px;
+    background: transparent;
+    color: #333;
+    transition: background 0.3s ease;
   }
-
+  
+  .elegant-btn:hover {
+    background-color: rgba(25, 118, 210, 0.1);
+  }
+  
+  .q-icon {
+    font-size: 1rem;
+    color: #000;
+  }
+  
   .hero-section {
-    .text-h2 {
+    background: linear-gradient(to right, #3f51b5, #5c6bc0);
+    color: white;
+    padding: 80px 24px;
+  }
+  
+  .hero-section h1 {
+    font-size: 2.4rem;
+  }
+  
+  .hero-section p {
+    font-size: 1.2rem;
+  }
+  
+  .alacakpng {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .feature-card {
+    height: 100%;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-8px);
+  }
+  
+  
+  .scale-popular {
+    transform: scale(1.05);
+    border: 2px solid #FFEB3B;
+  }
+  
+  .popular-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: #1976D2;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+  
+  .price {
+    background: #e3f2fd;
+    padding: 12px 20px;
+    border-radius: 12px;
+    display: inline-block;
+    color: #1976D2;
+  }
+  
+  .cta-section {
+    background: #f1f5ff;
+    padding: 60px 24px;
+    border-radius: 30px;
+  }
+  
+  .cta-section h2 {
+    font-size: 2rem;
+  }
+  
+  .cta-section p {
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+  }
+  
+  .q-footer {
+    background-color: #f5f5f5;
+    font-size: 0.9rem;
+  }
+  
+  .animate__animated {
+    animation-duration: 0.6s;
+  }
+  
+  /* Mobile */
+  @media (max-width: 768px) {
+    .hero-section .row {
+      flex-direction: column-reverse;
+    }
+  
+    .slogan {
+      display: none;
+    }
+  
+    .hero-section h1 {
       font-size: 1.8rem;
     }
-
-    .text-h5 {
+  
+    .hero-section p {
       font-size: 1rem;
     }
   }
-
-  .section-title {
-    font-size: 1.5rem;
-  }
-
-  .col-md-3,
-  .col-md-4,
-  .col-md-6,
-  .col-sm-6 {
-    width: 100%;
-  }
-
-  .square-image,
-  .gallery-image {
-    max-width: 150px;
-    margin: 0 auto;
-  }
-}
-</style>
-```
+  
+  
+  </style>
+  

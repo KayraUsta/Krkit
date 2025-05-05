@@ -28,7 +28,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    children: [{ path: '', component: () => import('layouts/tanitimLayout.vue') }],
+    component: () => import('layouts/tanitimLayout.vue'),
+    
   },
   {
     path: '/firmalogin',
