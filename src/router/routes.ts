@@ -59,8 +59,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/tanitim',
-    component: () => import('layouts/tanitimLayoutiki.vue'),
-    children: [{ path: '', component: () => import('pages/tanitimiki.vue') }],
+    component: () => import('layouts/tasarimuclayout.vue'),
+    children: [{ path: '', component: () => import('pages/tasarimuc.vue') }],
   },
   // Always leave this as last one,
   // but you can also remove it
