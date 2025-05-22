@@ -201,42 +201,6 @@ $button-hover-bg: #c4b5fd;        // hoverda daha açık mor
 .gradient-footer-bottom {
   background: linear-gradient(135deg, darken($primary-gradient-start, 10%) 0%, darken($primary-gradient-end, 10%) 100%);
 }
-
-.header-container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-
-.header-logo img {
-  height: 110px;
-  transition: transform 0.3s ease;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.header-logo img:hover {
-  transform: scale(1.05);
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-.header-nav-left {
-  position: absolute;
-  left: 25%;
-}
-
-.header-nav-right {
-  position: absolute;
-  right: 25%;
-  gap: 20px;
-}
-
 .nav-item {
   color: #ffffffcc;
   text-decoration: none;
@@ -401,25 +365,6 @@ $button-hover-bg: #c4b5fd;        // hoverda daha açık mor
   background-color: #805ad5 !important; // lighter shade on hover
 }
 
-/* Drawer Stilleri */
-.mobile-drawer {
-  background: linear-gradient(135deg, $primary-gradient-start 0%, $primary-gradient-end 100%);
-  color: #ffffff;
-}
-
-.drawer-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.drawer-logo img {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.drawer-content .demo-btn {
-  margin-top: 16px;
-}
 
 /* Footer link styles */
 .q-footer .q-item__label {
