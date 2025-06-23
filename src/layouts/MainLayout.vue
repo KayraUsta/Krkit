@@ -43,7 +43,7 @@
     >
       <q-scroll-area class="fit">
         <div class="q-pa-md flex flex-center">
-          <img src="https://r.resimlink.com/FBGpL.png" class="logo" />
+          <img src="src/assets/image11.png" class="logo" />
         </div>
         
         <q-separator class="q-my-sm" />
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 export default {
@@ -93,7 +93,6 @@ export default {
       { title: 'Stok Kaydı Yap', icon: 'inventory_2', path: '/stocks' },
       { title: 'Stokları Görüntüle', icon: 'storefront', path: '/views-stocks' },
       { title: 'Yapılacaklar Listesi', icon: 'checklist', path: '/toDoList' },
-      { title: 'Müşteri Cari Hesap', icon: 'account_balance', path: '/maintenance' }
     ]
 
     function toggleLeftDrawer() {
@@ -119,8 +118,8 @@ export default {
 }
 </script>
 
+
 <style lang="scss" scoped>
-// Gradyan renkler
 .bg-gradient-header {
   background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
 }
@@ -129,7 +128,6 @@ export default {
   background: #f8f9fa;
 }
 
-// Logo stil
 .logo {
   max-width: 160px;
   height: auto;
@@ -139,37 +137,48 @@ export default {
   }
 }
 
-// Menü öğeleri
 .menu-list {
   .q-item {
     border-radius: 8px;
     margin: 0 8px;
     transition: all 0.3s ease;
-    
+    color: #555;
+
+    // Hoverda mor-pembe degrade arası renk animasyonu
     &:hover {
-      background: rgba(0, 0, 0, 0.04);
+      background: linear-gradient(90deg, #9c27b0, #e91e63);
+      color: white;
+      box-shadow: 0 0 8px rgba(156, 39, 176, 0.7);
     }
-    
+
+    // Aktif menü öğesi
     &.active-menu-item {
-      background: #e3f2fd;
-      color: var(--q-primary);
-      border-left: 4px solid var(--q-primary);
+      background: linear-gradient(90deg, #9c27b0, #e91e63);
+      color: white;
+      border-left: 4px solid #e91e63;
+      box-shadow: 0 0 10px rgba(233, 30, 99, 0.9);
+    }
+
+    .q-item__section {
+      transition: color 0.3s ease;
+    }
+
+    &.active-menu-item .q-icon {
+      color: white !important;
     }
   }
 }
 
-// Başlık aksan rengi
 .text-accent {
   color: #4fc3f7;
 }
 
-// Responsive ayarlar
 @media (max-width: 600px) {
   .logo {
     max-width: 120px;
   }
 }
-/* Hamburger Menü Animasyonları */
+
 .hamburger-btn {
   transition: transform 0.3s ease;
   &:active {
@@ -192,24 +201,20 @@ export default {
   transform: rotate(90deg);
 }
 
-/* Drawer Açılış/Kapanış Animasyonu */
 .q-drawer {
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  
+
   &--on-left {
     transform: translateX(-100%);
-    
     &.q-drawer--on {
       transform: translateX(0);
     }
   }
 }
 
-/* Overlay Efekti */
 .q-drawer__backdrop {
   transition: opacity 0.3s ease !important;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
 }
-
 </style>

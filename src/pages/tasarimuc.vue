@@ -4,8 +4,18 @@
       <q-toolbar class="q-px-xxl q-pt-lg">
         <!-- Desktop Menu -->
         <div class="text-h6 row items-center q-gutter-md desktop-only" style="margin-left: 10%;">
-          <q-btn flat label="Neden Tarasat?" class="q-mx-md text-white" />
-          <q-btn flat label="Fiyatlandırma" class="q-mx-md text-white" />
+        <q-btn
+  flat
+  label="Neden Tarasat?"
+  class="q-mx-md text-white"
+  @click="scrollTo('nedentarasat')"
+/>
+<q-btn
+  flat
+  label="Fiyatlandırma"
+  class="q-mx-md text-white"
+  @click="scrollTo('fiyatlandirma')"
+/>
           <q-btn flat label="İletişim" class="q-mx-md text-white" />
         </div>
 
@@ -38,6 +48,7 @@
           icon="login"
           unelevated
           style="margin-right: 10%;"
+            to="/firmalogin"
         />
       </q-toolbar>
     </q-header>
@@ -145,17 +156,26 @@
 
       <div class="q-mt-xl row q-gutter-md">
         <q-btn class="neumorphic-btn" color="primary" label="İncele" icon="search" unelevated />
-        <q-btn class="neumorphic-btn" color="secondary" text-color="white" label="Giriş Yap" icon="login" unelevated />
+      <q-btn
+  class="neumorphic-btn"
+  color="secondary"
+  text-color="white"
+  label="Giriş Yap"
+  icon="login"
+  unelevated
+  to="/firmalogin"
+/>
+
       </div>
 
 <br><br><br>
   </q-page>
       <!-- NEDEN TARASAT BÖLÜMÜ -->
-      <div class="q-pa-xl" style="background: linear-gradient(135deg, #6B46C1 0%, #A78BFA 100%);">
+      <div class="q-pa-xl" style="background: linear-gradient(135deg, #6B46C1 0%, #A78BFA 100%);" id="nedentarasat">
         <div class="text-h3 text-weight-bolder text-center text-white q-mb-xl" style="letter-spacing: 0.5px; font-family: 'Inter', sans-serif;">
           Neden Tarasat?
         </div>
-        <div class="row q-col-gutter-lg justify-center">
+        <div class="row q-col-gutter-lg justify-center" style="margin-left: 8%; margin-right: 8%;">
           <!-- Kart 1: Barkodlu Takip -->
           <div class="col-12 col-md-4">
             <q-card class="flex column justify-center items-center q-pa-lg neumorphic-card" style="border-radius: 12px; min-height: 240px; background: linear-gradient(145deg, #F3E8FF 0%, #E9D5FF 100%);">
@@ -223,63 +243,139 @@
           </div>
         </div>
       </div>
-          <!-- ÖNE ÇIKAN ÖZELLİKLER BÖLÜMÜ -->
-      <div class="q-pa-xl" style="background: #FFFFFF;">
-      
-        <q-card class="product-card neumorphic-card" style="border-radius: 12px; background: #F9FAFB;">
-          <button class="slider-nav left neumorphic-btn" @click="prevSlide">
-            <q-icon name="chevron_left" size="lg" color="purple-8" />
-          </button>
-          <div class="card-content">
-            <transition name="fade-slide" mode="out-in">
-              <img 
-                :key="features[currentSlide].name"
-                :src="features[currentSlide].image" 
-                :alt="features[currentSlide].name" 
-                class="card-image"
-              >
-            </transition>
-            <transition name="fade" mode="out-in">
-              <div class="card-info" :key="features[currentSlide].name">
-                <div class="text-h5 text-weight-bold text-center q-mb-sm" style="color: #6B46C1; font-family: 'Inter', sans-serif;">{{ features[currentSlide].name }}</div>
-                <div class="text-body1 text-center" style="color: #4B3A7B; line-height: 1.5; font-family: 'Inter', sans-serif;">{{ features[currentSlide].description }}</div>
-              </div>
-            </transition>
-          </div>
-          <button class="slider-nav right neumorphic-btn" @click="nextSlide">
-            <q-icon name="chevron_right" size="lg" color="purple-8" />
-          </button>
-        </q-card>
-      </div>
-<!-- MÜŞTERİ REFERANSLARI BÖLÜMÜ -->
-<div class="q-pa-xl" style="background: #FFFFFF;">
-  <div class="text-h5 text-weight-bold text-center q-mb-sm" style="color: #7C3AED; font-family: 'Inter', sans-serif;">
-    MÜŞTERİ REFERANSLARI
-  </div>
-  <div class="text-h3 text-weight-bolder text-center q-mb-md" style="color: #6B46C1; font-family: 'Inter', sans-serif;">
-    MÜŞTERİLERİN BİZİM <br> HAKKIMIZDA SÖYLEDİKLERİ
-  </div>
-  <div class="text-subtitle1 text-center q-mb-xl" style="color: #4B3A7B; line-height: 1.5; font-family: 'Inter', sans-serif; padding-left: 20%; padding-right: 20%;">
-    Müşterilerimizden aldığımız olağanüstü geri bildirimler, finansal doğruluk ve hizmet kalitesine olan sarsılmaz bağlılığımızı yansıtıyor. İşletmelerin mali süreçlerinde güvenle ilerlemelerini sağlayan çözümlerimiz, memnuniyetin ve profesyonelliğin doğal bir sonucu olarak öne çıkıyor.
-  </div>
 
-  <div class="row q-col-gutter-lg justify-center">
-    <div
-      v-for="(testimonial, index) in testimonials"
-      :key="index"
-      class="col-12 col-sm-6 col-md-4"
-    >
-      <q-card class="flex column justify-center items-center q-pa-md neumorphic-card" style="border-radius: 12px; min-height: 300px; background: #F9FAFB;">
-        <div class="text-purple-8 q-mb-md text-center" style="font-size: 1.5em; font-family: 'Inter', sans-serif;">{{ testimonial.rating }}</div>
-        <div class="text-h6 text-weight-bold text-center q-mb-md" style="color: #6B46C1; font-family: 'Inter', sans-serif;">{{ testimonial.title }}</div>
-        <div class="text-body1 text-center q-mb-md" style="color: #4B3A7B; line-height: 1.5; font-family: 'Inter', sans-serif; padding-left: 10%; padding-right: 10%;">{{ testimonial.comment }}</div>
-        <div class="text-subtitle2 text-center" style="color: #7C3AED; font-family: 'Inter', sans-serif;">{{ testimonial.name }}</div>
+      <!-- ÖZELLİKLER PANELİ -->
+<div class="q-pa-xl feature-panel">
+  <div class="row q-col-gutter-xl">
+    <!-- Sol Menü -->
+    <div class="col-12 col-md-4">
+      <q-list bordered class="rounded-xl feature-menu">
+        <q-item
+          v-for="(item, index) in featuresList"
+          :key="index"
+          clickable
+          v-ripple
+          :active="activeFeature === index"
+          active-class="feature-active"
+          class="feature-button"
+          @click="activeFeature = index"
+        >
+          <q-item-section>{{ item.label }}</q-item-section>
+        </q-item>
+      </q-list>
+    </div>
+
+    <!-- Sağ İçerik -->
+    <div class="col-12 col-md-8">
+      <q-card flat class="feature-content text-center">
+        <q-img
+          :src="featuresList[activeFeature].image"
+          style="max-width: 100%; border-radius: 16px;"
+          class="q-mb-lg"
+        />
+        <div class="text-h5 text-weight-bold q-mb-md" style="color: #6B46C1;">
+          {{ featuresList[activeFeature].label }}
+        </div>
+        <div class="text-body1 text-grey-8" style="line-height: 1.6;">
+          {{ featuresList[activeFeature].description }}
+        </div>
       </q-card>
     </div>
   </div>
 </div>
+
+<!-- MÜŞTERİ REFERANSLARI BÖLÜMÜ -->
+<div
+  class="q-pa-xl"
+  style="
+    background: url('src/assets/mutlu.jpg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+    color: #000;
+  "
+>
+hr
+  <!-- Overlay katmanı: Yazıların daha rahat okunması için -->
+  <div
+    style="
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.7); /* Beyaz transparan */
+      z-index: 0;
+    "
+  ></div>
+
+  <div style="position: relative; z-index: 1;">
+    <div
+      class="text-h3 text-weight-bolder text-center q-mb-md"
+      style="color: #6B46C1; font-family: 'Inter', sans-serif;"
+    >
+      MÜŞTERİLERİN BİZİM <br> HAKKIMIZDA SÖYLEDİKLERİ
+    </div>
+    <div
+      class="text-subtitle1 text-center q-mb-xl"
+      style="
+        color: #4B3A7B;
+        line-height: 1.5;
+        font-family: 'Inter', sans-serif;
+        padding-left: 20%;
+        padding-right: 20%;
+      "
+    >
+      <!-- İstersen buraya metin ekleyebilirsin -->
+    </div>
+
+    <div
+      class="row q-col-gutter-lg justify-center"
+      style="margin-left: 10%; margin-right: 10%;"
+    >
+      <div
+        v-for="(testimonial, index) in testimonials"
+        :key="index"
+        class="col-12 col-sm-6 col-md-4"
+      >
+        <q-card
+          class="flex column justify-center items-center q-pa-md neumorphic-card"
+          style="border-radius: 12px; min-height: 300px; background: #F9FAFB;"
+        >
+          <div
+            class="text-purple-8 q-mb-md text-center"
+            style="font-size: 1.5em; font-family: 'Inter', sans-serif;"
+          >
+            {{ testimonial.rating }}
+          </div>
+          <div
+            class="text-h6 text-weight-bold text-center q-mb-md"
+            style="color: #6B46C1; font-family: 'Inter', sans-serif;"
+          >
+            {{ testimonial.title }}
+          </div>
+          <div
+            class="text-body1 text-center q-mb-md"
+            style="
+              color: #4B3A7B;
+              line-height: 1.5;
+              font-family: 'Inter', sans-serif;
+              padding-left: 10%;
+              padding-right: 10%;
+            "
+          >
+            {{ testimonial.comment }}
+          </div>
+          <div
+            class="text-subtitle2 text-center"
+            style="color: #7C3AED; font-family: 'Inter', sans-serif;"
+          >
+            {{ testimonial.name }}
+          </div>
+        </q-card>
+      </div>
+    </div>
+  </div>
+</div>
+
  <!-- FİYATLANDIRMA BÖLÜMÜ -->
-      <div class="q-pa-xl" style="background: #FFFFFF;">
+      <div class="q-pa-xl" style="background: #FFFFFF; margin-left: 5%; margin-right: 5%;" id="fiyatlandirma">
         <div class="pricing-header text-center">
           <div class="text-h3 text-weight-bolder q-mb-sm" style="color: #6B46C1; font-family: 'Inter', sans-serif;">Esnek Fiyatlandırma Seçenekleri</div>
           <div class="text-subtitle1 q-mb-md" style="color: #4B3A7B; font-family: 'Inter', sans-serif;">İşinizin büyümesine yardımcı olacak doğru planı seçin</div>
@@ -297,7 +393,7 @@
           <!-- Basic Plan -->
           <div class="col-12 col-md-4">
             <q-card class="flex column neumorphic-card" style="border-radius: 12px; min-height: 450px; background: #F9FAFB;">
-              <div class="card-header q-pa-md text-center">
+              <div class="card-header q-pa-md text-center" style="height: 225px;">
                 <q-chip class="plan-badge" color="purple-8" text-color="white">Popüler</q-chip>
                 <div class="text-h5 text-weight-bold q-mb-sm" style="color: #6B46C1; font-family: 'Inter', sans-serif;">Temel Paket</div>
                 <div class="text-body1 q-mb-md" style="color: #4B3A7B; font-family: 'Inter', sans-serif;">Küçük işletmeler için ideal çözüm</div>
@@ -331,7 +427,7 @@
           <!-- Professional Plan -->
           <div class="col-12 col-md-4">
             <q-card class="flex column neumorphic-card" style="border-radius: 12px; min-height: 450px; background: #F9FAFB;">
-              <div class="card-header q-pa-md text-center">
+              <div class="card-header q-pa-md text-center" style="height: 175px;">
                 <div class="text-h5 text-weight-bold q-mb-sm" style="color: #6B46C1; font-family: 'Inter', sans-serif;">Profesyonel Paket</div>
                 <div class="text-body1 q-mb-md" style="color: #4B3A7B; font-family: 'Inter', sans-serif;">Büyüyen işletmeler için gelişmiş özellikler</div>
                 <div class="price q-mb-sm">
@@ -372,7 +468,7 @@
           <!-- Enterprise Plan -->
           <div class="col-12 col-md-4">
             <q-card class="flex column neumorphic-card" style="border-radius: 12px; min-height: 450px; background: #F9FAFB;">
-              <div class="card-header q-pa-md text-center">
+              <div class="card-header q-pa-md text-center" style="height: 225px;">
                 <div class="text-h5 text-weight-bold q-mb-sm" style="color: #6B46C1; font-family: 'Inter', sans-serif;">Kurumsal Çözüm</div>
                 <div class="text-body1 q-mb-md" style="color: #4B3A7B; font-family: 'Inter', sans-serif;">Özel ihtiyaçlarınız için özelleştirilmiş</div>
                 <div class="price q-mb-sm">
@@ -413,21 +509,83 @@ export default {
     }
   },
   setup() {
+
+      const scrollTo = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+const activeFeature = ref(0);
+const featuresList = ref([
+    {
+    label: 'Liste Oluşturma',
+    description: 'İş listelerinizi, yapılacaklarınızı düzenli bir şekilde takip edin.',
+    image: 'src/assets/rapor.jpg'
+  },
+  {
+    label: 'Kullanıcı Takibi',
+    description: 'Sistemde oturum açan tüm kullanıcıları izleyin ve geçmiş aktiviteleri raporlayın.',
+    image: 'src/assets/rapor.jpg'
+  },
+    {
+    label: 'Firma Bazlı Giriş',
+    description: 'Sistemde oturum açan tüm kullanıcıları izleyin ve geçmiş aktiviteleri raporlayın.',
+    image: 'src/assets/rapor.jpg'
+  },
+    {
+    label: 'Müşteri Bazlı Giriş',
+    description: 'Sistemde oturum açan tüm kullanıcıları izleyin ve geçmiş aktiviteleri raporlayın.',
+     image: 'src/assets/rapor.jpg'
+  },
+  {
+    label: 'Stok Ekleme/Takibi',
+    description: 'Stok giriş-çıkışlarını, kritik stok seviyelerini kolayca yönetin.',
+   image: 'src/assets/rapor.jpg'
+  },
+  {
+    label: 'Cari Ekleme/Takibi',
+    description: 'Müşteri ve tedarikçi hesaplarını detaylı şekilde inceleyin.',
+     image: 'src/assets/rapor.jpg'
+  },
+  {
+    label: 'Cari Alacak/Verecek',
+    description: 'Tahsilatlarınızı ve ödemelerinizi kolayca izleyin.',
+     image: 'src/assets/rapor.jpg'
+  },
+  {
+    label: 'Liste Takibi',
+    description: 'İş listelerinizi, yapılacaklarınızı düzenli bir şekilde takip edin.',
+     image: 'src/assets/rapor.jpg'
+  },
+   {
+    label: 'Satışçı Bazlı Raporlar',
+    description: 'Stok, cari ve kullanıcı raporlarını anlık alın, analiz edin.',
+    image: 'src/assets/rapor.jpg'
+  },
+  {
+    label: 'Detaylı Raporlar',
+    description: 'Stok, cari ve kullanıcı raporlarını anlık alın, analiz edin.',
+    image: 'src/assets/rapor.jpg'
+  }
+]);
+
     const annualBilling = ref(false);
     const currentSlide = ref(0);
     const basicFeatures = ref([
       "Barkodlu ürün takibi",
-      "Temel stok yönetimi",
+      "Stok yönetimi",
       "Gerçek zamanlı raporlar",
       "Mobil erişim",
       "E-posta desteği",
     ]);
     const proFeatures = ref([
       "Barkodlu ürün takibi",
-      "Gelişmiş stok yönetimi",
+      "Stok yönetimi",
       "Tam zamanlı raporlar ve analiz",
       "Çoklu cihaz desteği",
-      "Özel hesap yöneticisi",
+
       "7/24 telefon ve canlı destek",
     ]);
     const enterpriseFeatures = ref([
@@ -441,7 +599,7 @@ export default {
       {
         title: "PROFESYONEL & GÜVENİLİR",
         rating: "★★★★★",
-        comment: '"Son bir yıldır Tarasat ile çalışıyoruz ve aradaki fark inanılmaz. Stok takibimiz hiç bu kadar düzenli ve şeffaf olmamıştı. Ekip son derece profesyonel ve detaylara inanılmaz özen gösteriyor. Son dönemde sundukları destek, beklentilerimizi fazlasıyla aştı — gerçekten harika bir hizmetti!"',
+        comment: '"Son bir yıldır Tarasat ile çalışıyoruz ve aradaki fark inanılmaz. Stok takibimiz hiç bu kadar düzenli ve şeffaf olmamıştı. Ekip son derece profesyonel ve detaylara inanılmaz özen gösteriyor. Son dönemde sundukları destek, gerçekten harika bir hizmetti!"',
         name: "Ahmet ve Zeynep K."
       },
       {
@@ -498,6 +656,9 @@ export default {
     });
 
     return {
+        scrollTo,
+      activeFeature,
+      featuresList,
       annualBilling,
       currentSlide,
       basicFeatures,
@@ -520,6 +681,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style scoped lang="scss">
@@ -732,4 +894,47 @@ body, .q-btn, .q-chip, .q-item-label, .text-h3, .text-h5, .text-subtitle1, .text
   width: 64px;
   height: 64px;
 }
+
+.feature-panel {
+  color: white;
+  margin-left: 8%;
+  margin-right: 8%;
+}
+
+.feature-menu {
+  background: white;
+  padding: 10px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.feature-button {
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: large;
+  color: #4B3A7B;
+
+  &:hover {
+    background: rgba(107, 70, 193, 0.08);
+    transform: translateX(4px);
+  }
+}
+
+.feature-active {
+  background: #6B46C1;
+  color: white !important;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(107, 70, 193, 0.4);
+}
+
+.feature-content {
+  background: white;
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
 </style>

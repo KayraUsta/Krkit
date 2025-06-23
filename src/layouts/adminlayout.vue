@@ -50,7 +50,7 @@
     >
       <q-scroll-area class="fit">
         <div class="q-pa-md flex flex-center">
-          <img src="https://r.resimlink.com/FBGpL.png" class="logo" />
+          <img src="src/assets/image11.png" class="logo" />
         </div>
         
         <q-separator class="q-my-sm" />
@@ -95,10 +95,13 @@ export default {
     const route = useRoute()
     
     const adminMenuItems = [
-      { title: 'Kullanıcı Değiştir', icon: 'login', path: '/' },
+      { title: 'Kullanıcı Değiştir', icon: 'login', path: '/firmalogin' },
       { title: 'Kullanıcı Oluştur', icon: 'person_add', path: '/register' },
       { title: 'Kullanıcıları Görüntüle', icon: 'people', path: '/view-users' },
-      { title: 'Liste Hazırla', icon: 'list_alt', path: '/prepare-list' }
+               { title: 'Müşteri Cari Hesap', icon: 'account_balance', path: '/customer' },
+      { title: 'Müşteri Alacak/Verecek', icon: 'account_balance_wallet', path: '/transactions' },
+      { title: 'Liste Takibi', icon: 'view_list', path: '/list-tracking' },
+               { title: 'Yapılacaklar Listesi', icon: 'checklist', path: '/toDoListAdmin' }
     ]
 
     function toggleLeftDrawer() {
@@ -125,55 +128,65 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// Orijinal renk paleti
 .bg-dark {
   background-color: #2b2b2b;
+  color: #eee;
 }
 
 .bg-gradient-menu {
-  background: linear-gradient(135deg, #adefff, #ffd5ea);
+  background: linear-gradient(135deg, #9c27b0, #e91e63);
+  color: white;
+  font-weight: 600;
 }
 
-// Logo stil
 .logo {
   max-width: 160px;
   height: auto;
   transition: all 0.3s ease;
-  margin: 20px 0;
+  margin: 24px auto;
+  display: block;
   &:hover {
     transform: scale(1.05);
   }
 }
 
-// Menü öğeleri
 .menu-list {
   .q-item {
     border-radius: 8px;
     margin: 0 8px;
     transition: all 0.3s ease;
-    
+     color: #555;
+
     &:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: linear-gradient(90deg, #ba68c8, #f06292);
+      color: white;
+      box-shadow: 0 0 10px rgba(240, 98, 146, 0.7);
     }
-    
+
     &.active-menu-item {
-      background: rgba(255, 255, 255, 0.5);
-      color: #2b2b2b;
-      border-left: 4px solid #2b2b2b;
-      
+      background: linear-gradient(90deg, #7b1fa2, #c2185b);
+      color: white;
+      border-left: 4px solid #f06292;
+
       .q-icon {
-        color: #2b2b2b !important;
+        color: white !important;
       }
+    }
+
+    .q-item__section {
+      transition: color 0.3s ease;
+    }
+
+    &.active-menu-item .q-icon {
+      color: white !important;
     }
   }
 }
 
-// Başlık aksan rengi
 .text-accent {
-  color: #ffffff;
+  color: #f06292;
 }
 
-// Hamburger Menü Animasyonları
 .hamburger-btn {
   transition: transform 0.3s ease;
   &:active {
@@ -196,27 +209,23 @@ export default {
   transform: rotate(90deg);
 }
 
-// Drawer Animasyonu
 .q-drawer {
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  
+
   &--on-left {
     transform: translateX(-100%);
-    
     &.q-drawer--on {
       transform: translateX(0);
     }
   }
 }
 
-// Overlay Efekti
 .q-drawer__backdrop {
   transition: opacity 0.3s ease !important;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
 }
 
-// Responsive ayarlar
 @media (max-width: 600px) {
   .logo {
     max-width: 120px;

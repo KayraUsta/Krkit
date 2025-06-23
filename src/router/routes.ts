@@ -13,13 +13,12 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/maintenance',
-    component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/maintenance.vue') }],
   },
   {
-    path: '/admin',
+    path: '/toDoListadmin',
     component: () => import('layouts/adminLayout.vue'),
-    children: [{ path: '', component: () => import('pages/welcome.vue') }],
+    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
   },
   {
     path: '/stocks',
@@ -28,7 +27,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    component: () => import('layouts/tanitimLayout.vue'),
+      component: () => import('layouts/tasarimuclayout.vue'),
+    children: [{ path: '', component: () => import('pages/tasarimuc.vue') }],
     
   },
   {
@@ -62,11 +62,26 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/tasarimuclayout.vue'),
     children: [{ path: '', component: () => import('pages/tasarimuc.vue') }],
   },
+    {
+    path: '/customer',
+    component: () => import('layouts/adminlayout.vue'),
+    children: [{ path: '', component: () => import('pages/customer.vue') }],
+  },
+      {
+    path: '/view-customer',
+    component: () => import('layouts/adminlayout.vue'),
+    children: [{ path: '', component: () => import('pages/view-customer.vue') }],
+  },
+        {
+    path: '/transactions',
+    component: () => import('layouts/adminlayout.vue'),
+    children: [{ path: '', component: () => import('pages/transactions.vue') }],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('pages/maintenance.vue'),
   },
 ];
 

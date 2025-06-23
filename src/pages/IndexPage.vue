@@ -1,52 +1,84 @@
 <template>
-  <div class="todo-container">
-    <h1 class="title">Yapılacaklar Listesi</h1>
+  <div class="todo-wrapper">
+    <transition name="fade-slide">
+      <div class="todo-card">
+        <h2 class="todo-title">📝 Yapılacaklar Listesi</h2>
 
-    <!-- Add New To-Do -->
-    <div class="add-task-container">
-      <q-input v-model="newTask.title" class="task-input" placeholder="Görev başlığını yazın" />
-      <q-input v-model="newTask.description" class="task-input" placeholder="Görev açıklamasını yazın" />
-    </div>
-    <q-btn @click="addTask" class="add-task-btn" label="Görev Ekle" />
+        <!-- Yeni Görev Ekle -->
+        <form @submit.prevent="addTask" class="todo-form">
+          <q-input
+            v-model="newTask.title"
+            outlined
+            dense
+            label="Görev Başlığı"
+            class="todo-input"
+            color="pink-6"
+          />
+          <q-input
+            v-model="newTask.description"
+            outlined
+            dense
+            label="Görev Açıklaması"
+            class="todo-input"
+            color="pink-6"
+          />
+          <q-btn
+            type="submit"
+            label="Görev Ekle"
+            unelevated
+            class="todo-button"
+            color="pink-6"
+            no-caps
+          />
+        </form>
 
-    <!-- Task List -->
-    <div v-if="tasks.length > 0" class="tasks-list">
-      <div v-for="task in tasks" :key="task.id" class="task-card">
-        <div class="task-content">
-          <q-checkbox v-model="task.isCompleted" @change="updateTaskStatus(task)" class="task-checkbox" />
-          <div class="task-container">
-  <div :class="['task-title', { completed: task.isCompleted }]">
-    {{ task.title }}
-  </div>
-  <div v-if="task.description" class="task-description">
-    {{ task.description }}
-  </div>
-</div>
-
-
+        <!-- Görev Listesi -->
+        <div v-if="tasks.length" class="todo-tasks">
+          <div
+            v-for="task in tasks"
+            :key="task.id"
+            class="todo-task"
+          >
+            <div class="task-left">
+              <q-checkbox
+                v-model="task.isCompleted"
+                @change="updateTaskStatus(task)"
+                color="pink-6"
+              />
+              <div class="task-info">
+                <div :class="['task-title', { completed: task.isCompleted }]">
+                  {{ task.title }}
+                </div>
+                <div v-if="task.description" class="task-desc">
+                  {{ task.description }}
+                </div>
+              </div>
+            </div>
+            <div class="task-actions">
+              <q-btn icon="edit" flat dense color="orange" @click="editTask(task)" />
+              <q-btn icon="delete" flat dense color="red" @click="deleteTask(task.id)" />
+            </div>
+          </div>
         </div>
-        <div class="task-actions">
-          <q-btn @click="editTask(task)" class="edit-btn" icon="edit" />
-          <q-btn @click="deleteTask(task.id)" class="delete-btn" icon="delete" />
+
+        <div v-else class="no-tasks">
+          Henüz görev eklenmedi.
         </div>
       </div>
-    </div>
+    </transition>
 
-    <p v-else class="no-tasks">Görev bulunamadı. Yeni bir görev ekleyin!</p>
-
-    <!-- Edit Task Modal -->
+    <!-- Düzenleme Modali -->
     <div v-if="editingTask" class="modal-overlay">
       <div class="modal-content">
         <h3 class="modal-title">Görevi Düzenle</h3>
-        <q-input v-model="editingTask.title" class="modal-input" placeholder="Başlık" />
-        <div class="modal-actions">
-          <q-btn @click="updateTask" class="modal-btn save-btn" label="Kaydet" />
-          <q-btn @click="cancelEdit" class="modal-btn cancel-btn" label="İptal" />
-        </div>
+        <q-input v-model="editingTask.title" class="modal-input" label="Başlık" outlined dense />
+        <q-btn @click="updateTask" class="modal-btn save-btn" label="Kaydet" />
+        <q-btn @click="cancelEdit" class="modal-btn cancel-btn" label="İptal" />
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { useQuasar } from 'quasar';
@@ -176,158 +208,120 @@ onMounted(loadTasks);
 </script>
 
 <style scoped>
-/* Genel Tasarım */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f7f7f7;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* Yatay kaymayı engellemek için eklendi */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+.todo-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fce4ec, #e0f7fa);
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
 }
 
-.task-container {
+.todo-card {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.todo-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.todo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.todo-input {
+  width: 100%;
+}
+
+.todo-button {
+  width: 100%;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(236, 64, 122, 0.3);
+  transition: 0.3s ease;
+}
+
+.todo-button:hover {
+  background-color: #ec407a !important;
+  transform: scale(1.02);
+}
+
+.todo-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.todo-task {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.task-info {
   display: flex;
   flex-direction: column;
 }
 
 .task-title {
-  display: block; /* Ensure title is block-level */
-}
-
-.task-description {
-  display: block; /* Ensure description is block-level */
-  font-size: 0.9rem; /* Make it smaller */
-  color: #777; /* Lighter color */
-  margin-top: 4px; /* Space between title and description */
-}
-
-
-
-/* Container */
-.todo-container {
-  margin: 40px auto;
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 30px;
-  width: 100%;
-  max-width: 600px;
-  box-sizing: border-box; /* İçeriğin taşmaması için box-sizing eklendi */
-}
-
-/* Başlık */
-.title {
-  font-size: 28px;
-  text-align: center;
+  font-weight: 500;
   color: #333;
-  margin-bottom: 20px;
-  word-wrap: break-word; /* Uzun başlıkların taşmasını engellemek için eklendi */
-}
-
-/* Yeni Görev Ekleme Alanı */
-.add-task-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  flex-wrap: wrap; /* Mobilde öğelerin alt satıra geçmesini sağlamak için eklendi */
-}
-
-.task-input {
-  flex-grow: 1;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  margin-right: 10px;
-  min-width: 200px; /* Genişliği sınırlamak için eklendi */
-}
-
-.add-task-btn {
-  background-color: #6c5ce7;
-  color: white;
-  border-radius: 8px;
-  padding: 10px 18px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  min-width: 120px; /* Buton boyutunu dengelemek için eklendi */
-}
-
-.add-task-btn:hover {
-  background-color: #5e4bd3;
-}
-
-/* Görevler Listesi */
-.tasks-list {
-  margin-top: 20px;
-}
-
-.task-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-}
-
-.task-content {
-  display: flex;
-  align-items: center;
-}
-
-.task-checkbox {
-  margin-right: 15px;
-}
-
-.task-title {
-  font-size: 16px;
-  color: #333;
-  transition: color 0.3s ease;
 }
 
 .task-title.completed {
-  color: #7d7d7d;
   text-decoration: line-through;
+  color: #999;
+}
+
+.task-desc {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 4px;
 }
 
 .task-actions {
   display: flex;
-  gap: 10px;
+  gap: 0.5rem;
 }
 
-.edit-btn, .delete-btn {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.edit-btn {
-  color: #f39c12;
-}
-
-.delete-btn {
-  color: #e74c3c;
-}
-
-.edit-btn:hover {
-  color: #d35400;
-}
-
-.delete-btn:hover {
-  color: #c0392b;
+.no-tasks {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 1rem;
 }
 
 /* Modal */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -335,35 +329,33 @@ body {
 }
 
 .modal-content {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
   max-width: 400px;
-  box-sizing: border-box;
+  width: 90%;
 }
 
 .modal-title {
-  font-size: 22px;
+  font-size: 1.2rem;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
   color: #333;
 }
 
 .modal-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
 
 .modal-btn {
   width: 48%;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  margin-right: 4%;
 }
 
 .save-btn {
@@ -375,59 +367,4 @@ body {
   background-color: #bdc3c7;
   color: white;
 }
-
-.modal-btn:hover {
-  opacity: 0.9;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-
-
-  .task-input {
-    font-size: 14px;
-  }
-
-  .add-task-btn {
-    font-size: 14px;
-    padding: 8px 14px;
-    min-width: 90px; /* Buton boyutunu küçültmek için */
-  }
-
-  .task-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .task-actions {
-    margin-top: 10px;
-    gap: 5px;
-  }
-
-  .task-title {
-    font-size: 14px;
-  }
-
-  .modal-btn {
-    font-size: 14px;
-    padding: 8px 12px;
-  }
-
-  /* Görevler Listesini Aşağıya Al */
-  .tasks-list {
-    margin-top: 40px;
-  }
-
-  .add-task-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  /* Yatay Kaymayı Engellemek İçin */
-  body, .todo-container {
-    overflow-x: hidden;
-  }
-}
-
-
 </style>

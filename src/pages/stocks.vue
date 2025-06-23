@@ -1,57 +1,73 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-page-container class="q-pa-md flex flex-center">
-      <q-card class="form-card">
-        <q-card-section class="text-center">
-          <h4>📦 Stok Kaydı Yap</h4>
-        </q-card-section>
+  <div class="stock-container">
+    <transition name="fade-slide">
+      <div class="stock-form">
+        <h2 class="stock-title">📦 Stok Tanıtım Kaydı</h2>
+        <form @submit.prevent="saveStock" class="form-content">
 
-        <q-separator />
-
-        <q-card-section class="q-gutter-md">
           <q-input
-            filled
+            outlined
             v-model="barcodeNumber"
             label="Barkod Numarası"
-            class="full-width"
-            dense
-          />
+            class="input-field"
+            color="pink-6"
+          >
+            <template #prepend>
+              <q-icon name="qr_code_scanner" />
+            </template>
+          </q-input>
+
           <q-input
-            filled
-            v-model="quantity"
-            label="Miktar"
-            type="number"
-            class="full-width"
-            dense
-          />
-          <q-input
-            filled
+            outlined
             v-model="productDescription"
             label="Ürün Açıklaması"
-            class="full-width"
-            dense
-          />
+            class="input-field"
+            color="pink-6"
+          >
+            <template #prepend>
+              <q-icon name="description" />
+            </template>
+          </q-input>
+
           <q-input
-            filled
+            outlined
             v-model="price"
             label="Fiyat"
             type="number"
-            class="full-width"
-            dense
-          />
-        </q-card-section>
+            class="input-field"
+            color="pink-6"
+            suffix="₺"
+          >
+            <template #prepend>
+              <q-icon name="attach_money" />
+            </template>
+          </q-input>
 
-        <q-card-section class="q-pa-none">
+          <q-input
+            outlined
+            v-model="quantity"
+            label="Miktar"
+            type="number"
+            class="input-field"
+            color="pink-6"
+            suffix="Adet"
+          >
+            <template #prepend>
+              <q-icon name="inventory_2" />
+            </template>
+          </q-input>
+
           <q-btn
-            color="primary"
+            unelevated
+            type="submit"
+            class="stock-button"
             label="Kaydet"
-            class="save-button"
-            @click="saveStock"
+            no-caps
           />
-        </q-card-section>
-      </q-card>
-    </q-page-container>
-  </q-layout>
+        </form>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script setup>
@@ -66,7 +82,7 @@ const barcodeNumber = ref('')
 const productDescription = ref('')
 const price = ref('')
 const quantity = ref(1)
-const defaultCompanyName = "ABC Şirketi" // Default şirket ismi
+const defaultCompanyName = "ABC Şirketi"
 
 const saveStock = async () => {
   if (!barcodeNumber.value || !productDescription.value || !price.value) {
@@ -82,7 +98,7 @@ const saveStock = async () => {
       barcode: barcodeNumber.value,
       description: productDescription.value,
       price: Number(price.value),
-      companyName: defaultCompanyName, // Default değeri kullanıyoruz
+      companyName: defaultCompanyName,
       quantity: Number(quantity.value)
     }
 
@@ -95,7 +111,6 @@ const saveStock = async () => {
       message: 'Stok başarıyla kaydedildi!',
     })
 
-    // Formu temizle
     barcodeNumber.value = ''
     productDescription.value = ''
     price.value = ''
@@ -111,44 +126,72 @@ const saveStock = async () => {
 </script>
 
 <style scoped>
-/* Stiller aynı kalıyor */
-.q-page-container {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+.stock-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
+  background: linear-gradient(135deg, #fce4ec, #e0f7fa);
+  font-family: 'Poppins', sans-serif;
 }
 
-.form-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 1.5rem;
-  border-radius: 12px;
+.stock-form {
   background: #ffffff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
-h4 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
+.stock-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.save-button {
+.input-field {
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.q-input__control {
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.stock-button {
   width: 100%;
   padding: 12px;
+  border-radius: 10px;
   font-size: 1rem;
   font-weight: bold;
-  border-radius: 8px;
-  transition: 0.3s ease-in-out;
-}
-
-.save-button:hover {
-  background: #1976d2;
+  background-color: #A566D7;
   color: white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 14px rgba(165, 102, 215, 0.3);
 }
 
-.full-width {
-  width: 100%;
+.stock-button:hover {
+  background-color: #8e55c5 !important;
+  transform: scale(1.02);
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.4s ease;
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>
