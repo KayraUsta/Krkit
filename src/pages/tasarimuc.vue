@@ -175,7 +175,7 @@
         <div class="text-h3 text-weight-bolder text-center text-white q-mb-xl" style="letter-spacing: 0.5px; font-family: 'Inter', sans-serif;">
           Neden Tarasat?
         </div>
-        <div class="row q-col-gutter-lg justify-center" style="margin-left: 8%; margin-right: 8%;">
+        <div class="row q-col-gutter-lg justify-center items-stretch" style="margin-left: 8%; margin-right: 8%;">
           <!-- Kart 1: Barkodlu Takip -->
           <div class="col-12 col-md-4">
             <q-card class="flex column justify-center items-center q-pa-lg neumorphic-card" style="border-radius: 12px; min-height: 240px; background: linear-gradient(145deg, #F3E8FF 0%, #E9D5FF 100%);">
@@ -326,17 +326,17 @@ hr
     </div>
 
     <div
-      class="row q-col-gutter-lg justify-center"
+      class="row q-col-gutter-lg justify-center items-stretch"
       style="margin-left: 10%; margin-right: 10%;"
     >
       <div
         v-for="(testimonial, index) in testimonials"
         :key="index"
-        class="col-12 col-sm-6 col-md-4"
+        class="col-12 col-sm-6 col-md-4 flex"
       >
         <q-card
           class="flex column justify-center items-center q-pa-md neumorphic-card"
-          style="border-radius: 12px; min-height: 300px; background: #F9FAFB;"
+          style="border-radius: 12px; min-height: 300px; background: #F9FAFB; height: 100%;"
         >
           <div
             class="text-purple-8 q-mb-md text-center"
@@ -389,7 +389,7 @@ hr
           />
         </div>
 
-        <div class="row q-col-gutter-lg justify-center">
+        <div class="row q-col-gutter-lg justify-center items-stretch">
           <!-- Basic Plan -->
           <div class="col-12 col-md-4">
             <q-card class="flex column neumorphic-card" style="border-radius: 12px; min-height: 450px; background: #F9FAFB;">
